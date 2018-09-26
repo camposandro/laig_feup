@@ -25,7 +25,7 @@
         </omni>
         <!-- Spotlights -->
         <spot id="ss" enabled="tt" angle="ff" exponent="ff">
-            <location x="ff" y="ff" z="ff" w="ff”/>
+            <location x="ff" y="ff" z="ff" w="ff"/>
             <target x="ff" y="ff" z="ff"/>
             <ambient r="ff" g="ff" b="ff" a="ff"/>
             <diffuse r="ff" g="ff" b="ff" a="ff"/>
