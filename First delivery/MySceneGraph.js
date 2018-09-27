@@ -220,7 +220,6 @@ class MySceneGraph {
      * @param {views block element} viewsNode
      */
     parseViews(viewsNode) {
-        // TODO: Parse Views node
 
         this.default = this.reader.getString(viewsNode, 'default');
         if (this.default == null)
@@ -370,7 +369,6 @@ class MySceneGraph {
       * @param {ambient block element} ambientNode
       */
     parseAmbient(ambientNode) {
-        // TODO: Parse Ambient node
 
         var children = ambientNode.children;
 
@@ -435,7 +433,7 @@ class MySceneGraph {
                 else
                     backgroundValues.push(b);
                 // A
-                var a = this.reader.getFloat(children[i], 'a');
+                a = this.reader.getFloat(children[i], 'a');
                 if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
                     return "no a defined for ambient";
                 else
@@ -503,24 +501,26 @@ class MySceneGraph {
             var specularIndex = nodeNames.indexOf("specular");
 
             // Retrieves the light position.
+            var x, y, z;
+
             var locationLight = [];
             if (locationIndex != -1) {
                 // x
-                var x = this.reader.getFloat(grandChildren[locationIndex], 'x');
+                x = this.reader.getFloat(grandChildren[locationIndex], 'x');
                 if (!(x != null && !isNaN(x)))
                     return "unable to parse x-coordinate of the light location for ID = " + id;
                 else
                     locationLight.push(x);
 
                 // y
-                var y = this.reader.getFloat(grandChildren[locationIndex], 'y');
+                y = this.reader.getFloat(grandChildren[locationIndex], 'y');
                 if (!(y != null && !isNaN(y)))
                     return "unable to parse y-coordinate of the light location for ID = " + id;
                 else
                     locationLight.push(y);
 
                 // z
-                var z = this.reader.getFloat(grandChildren[locationIndex], 'z');
+                z = this.reader.getFloat(grandChildren[locationIndex], 'z');
                 if (!(z != null && !isNaN(z)))
                     return "unable to parse z-coordinate of the light location for ID = " + id;
                 else
@@ -651,21 +651,21 @@ class MySceneGraph {
 
                 if (targetIndex != -1) {
                     // x
-                    var x = this.reader.getFloat(grandChildren[targetIndex], 'x');
+                    x = this.reader.getFloat(grandChildren[targetIndex], 'x');
                     if (!(x != null && !isNaN(x)))
                         return "unable to parse x-coordinate of the light location for ID = " + id;
                     else
                         targetPos.push(x);
 
                     // y
-                    var y = this.reader.getFloat(grandChildren[targetIndex], 'y');
+                    y = this.reader.getFloat(grandChildren[targetIndex], 'y');
                     if (!(y != null && !isNaN(y)))
                         return "unable to parse y-coordinate of the target location for ID = " + id;
                     else
                         targetPos.push(y);
 
                     // z
-                    var z = this.reader.getFloat(grandChildren[targetIndex], 'z');
+                    z = this.reader.getFloat(grandChildren[targetIndex], 'z');
                     if (!(z != null && !isNaN(z)))
                         return "unable to parse z-coordinate of the target location for ID = " + id;
                     else
@@ -695,7 +695,7 @@ class MySceneGraph {
      * @param {textures block element} texturesNode
      */
     parseTextures(texturesNode) {
-        // TODO: Parse block
+        // TODO: Parse textures block
 
         console.log("Parsed textures");
 
@@ -707,10 +707,11 @@ class MySceneGraph {
      * @param {materials block element} materialsNode
      */
     parseMaterials(materialsNode) {
-        // TODO: Parse block
-        this.log("Parsed materials");
-        return null;
+        // TODO: Parse materials block
 
+        this.log("Parsed materials");
+
+        return null;
     }
 
     /**
@@ -718,6 +719,7 @@ class MySceneGraph {
      * @param {transformations block element} transformationsNode
      */
     parseTransformations(transformationsNode) {
+        // TODO: Parse transformations block
 
         /* Initial transforms.
         this.initialTranslate = [];
@@ -763,10 +765,11 @@ class MySceneGraph {
      * @param {primitives block element} primitivesNode
      */
     parsePrimitives(primitivesNode) {
-        // TODO: Parse block
-        this.log("Parsed primitives");
-        return null;
+        // TODO: Parse primitives block
 
+        this.log("Parsed primitives");
+
+        return null;
     }
 
     /**
@@ -774,8 +777,10 @@ class MySceneGraph {
      * @param {components block element} componentsNode
      */
     parseComponents(componentsNode) {
-        // TODO: Parse block
+        // TODO: Parse components block
+
         this.log("Parsed components");
+        
         return null;
 
     }
