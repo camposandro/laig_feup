@@ -5,7 +5,14 @@
 
     <!-- Views specification -->
     <views default="ss">
-        
+
+        <perspective id="ss" near="ff" far="ff" angle="ff">
+            <from x="ff" y="ff" z="ff"/>
+            <to x="ff" y="ff" z="ff"/>
+        </perspective>
+
+        <ortho id="ss" near="ff" far="ff" left="ff" right="ff" top="ff" bottom="ff"/>
+    
     </views>
 
     <!-- Ilumination parameters -->
@@ -17,7 +24,7 @@
     <!-- Light sources -->
     <lights>
         <!-- Lights -->
-        <omni id="ss" enabled="tt">
+        <omni id="ss" enabled="ff">
             <location x="ff" y="ff" z="ff" w="ff"/>
             <ambient r="ff" g="ff" b="ff" a="ff"/>
             <diffuse r="ff" g="ff" b="ff" a="ff"/>
@@ -85,7 +92,7 @@
                 <material id="ss"/>
             </materials>
            
-            <texture id="ss" length_s="ff" length_t="ff" />
+            <texture id="ss" length_s="ff" length_t="ff"/>
 
             <children>
                 <componentref id="ss"/>

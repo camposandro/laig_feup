@@ -81,10 +81,8 @@ class MySceneGraph {
         // Reads the names of the nodes to an auxiliary buffer.
         var nodeNames = [];
 
-        for (var i = 0; i < nodes.length; i++) {
+        for (var i = 0; i < nodes.length; i++)
             nodeNames.push(nodes[i].nodeName);
-            console.log(nodeNames);
-        }
 
         var error;
         var index;
@@ -210,8 +208,8 @@ class MySceneGraph {
 
         if (this.root == null)
             return "unable to parse root object";
-
-        // axis_length optional?
+        else if (this.axis_length == null)
+            return "unable to parse axis length";
 
         this.log("Parsed scene");
 
@@ -229,84 +227,132 @@ class MySceneGraph {
         if (this.default == null)
             return "unable to parse default view";
 
-        // 'default' default view ?
-
         var children = viewsNode.children;
+        var grandChildren = [];
 
-        var nodeNames = [];
-        for (var i = 0; i < children.length; i++)
-            nodeNames.push(children[i].nodeName);
+        for (var i = 0; i < children.length; i++) {
 
-        var indexPerspective = nodeNames.indexOf("perspective");
-        var indexOrtho = nodeNames.indexOf("ortho");
-
-        var pId, pNear, pFar, pAngle, fx, fy, fz, tx, ty, tz,  oId, oNear, oFar, oLeft, oRight, oTop, oBottom;
-    
-
-        if (indexPerspective == -1) {
-            this.onXMLMinorError("<perspective> tag missing");
-        } else {
-            pId = this.reader.getString(children[indexPerspective], 'id');
-
-            pNear = this.reader.getFloat(children[indexPerspective], 'near');
-            if (!(pNear != null && !isNaN(pNear)))
-                return "unable to parse 'near' of the perspective ID = " + pId;
-
-            pFar = this.reader.getFloat(children[indexPerspective], 'far');
-            if (!(pFar != null && !isNaN(pFar)))
-                return "unable to parse 'far' of the perspective ID = " + pId;
-
-            pAngle = this.reader.getFloat(children[indexPerspective], 'angle');
-            if (!(pAngle != null && !isNaN(pAngle)))
-                return "unable to parse 'angle' of the perspective ID = " + pId;
-
-            var grandChildren = children[indexPerspective].children;
-
-            nodeNames = [];
-            for (var i = 0; i < grandChildren.length; i++)
-                nodeNames.push(grandChildren[i].nodeName);
-
-            var indexFrom = nodeNames.indexOf("from");
-            if (indexFrom == -1)
-                this.onXMLMinorError("perspective's <from> tag missing");
-            else {
-                fx = this.reader.getFloat(grandChildren[indexFrom], 'x');
-                if (!(fx != null && !isNaN(fx)))
-                    return "unable to parse 'from x' of the perspective ID = " + pId;
-
-                fy = this.reader.getFloat(grandChildren[indexFrom], 'y');
-                if (!(fy != null && !isNaN(fy)))
-                    return "unable to parse 'from y' of the perspective ID = " + pId;
-
-                fz = this.reader.getFloat(grandChildren[indexFrom], 'z');
-                if (!(pAngle != null && !isNaN(pAngle)))
-                    return "unable to parse 'from z' of the perspective ID = " + pId;
+            if (children[i].nodeName != "perspective" && children[i].nodeName != "ortho") {
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                continue;
             }
 
-            var indexTo = nodeNames.indexOf("to");
-            if (indexTo == -1)
-                this.onXMLMinorError("perspective's <to> tag missing");
-            else {
-                tx = this.reader.getFloat(grandChildren[indexTo], 'x');
-                ty = this.reader.getFloat(grandChildren[indexTo], 'y');
-                tz = this.reader.getFloat(grandChildren[indexTo], 'z');
+            // get current id
+            var id = this.reader.getString(children[i], 'id');
+            if (!(id != null && !isNaN(id)))
+                return "no ID defined for perspective";
+
+            // get current near value
+            var near = this.reader.getFloat(children[i], 'near');
+            if (!(near != null && !isNaN(near))) {
+                this.onXMLMinorError("near value missing for perspective ID = " + id + "; assuming near = 0.1");
+                near = 0.1;
+            }
+
+            // get current far value
+            var far = this.reader.getFloat(children[i], 'far');
+            if (!(far != null && !isNaN(far))) {
+                this.onXMLMinorError("near value missing for perspective ID = " + id + "; assuming far = 500");
+                far = 500;
+            }
+
+            // specific perspective parameters
+            if (children[i].nodeName == "perspective") {
+
+                // get angle
+                var angle = this.reader.getFloat(children[i], 'angle');
+                if (!(angle != null && !isNaN(angle)))
+                    return "angle value missing for perspective ID = " + id;
+
+                // check the existence of only 1 'from' and 'to' tags
+                if (children[i].getElementsByTagName('from').length != 1)
+                    return "no more than one <from> tag may be defined in a perspective";
+
+                if (children[i].getElementsByTagName('to').length != 1)
+                    return "no more than one <to> tag may be defined in a perspective";
+
+                // get perspective
+                var fromPos = [], toPos = [];
+
+                for (var k = 0; k < grandChildren.length; k++) {
+
+                    if (grandChildren[i].nodeName == "from") {
+                        // x
+                        var x = this.reader.getFloat(grandChildren[i], 'x');
+                        if (!(x != null && !isNaN(x)))
+                            return "unable to parse x-coordinate of the perspective of ID = " + id;
+                        else
+                            fromPos.push(x);
+
+                        // y
+                        var y = this.reader.getFloat(grandChildren[i], 'y');
+                        if (!(y != null && !isNaN(y)))
+                            return "unable to parse y-coordinate of the perspective of ID = " + id;
+                        else
+                            fromPos.push(y);
+
+                        // z
+                        var z = this.reader.getFloat(grandChildren[i], 'x');
+                        if (!(z != null && !isNaN(z)))
+                            return "unable to parse z-coordinate of the perspective of ID = " + id;
+                        else
+                            fromPos.push(z);
+
+                    } else if (grandChildren[i].nodeName == "to") {
+
+                        // x
+                        var x = this.reader.getFloat(grandChildren[i], 'x');
+                        if (!(x != null && !isNaN(x)))
+                            return "unable to parse x-coordinate of the perspective of ID = " + id;
+                        else
+                            toPos.push(x);
+
+                        // y
+                        var y = this.reader.getFloat(grandChildren[i], 'y');
+                        if (!(y != null && !isNaN(y)))
+                            return "unable to parse y-coordinate of the perspective of ID = " + id;
+                        else
+                            toPos.push(y);
+
+                        // z
+                        var z = this.reader.getFloat(grandChildren[i], 'x');
+                        if (!(z != null && !isNaN(z)))
+                            return "unable to parse z-coordinate of the perspective of ID = " + id;
+                        else
+                            toPos.push(z);
+
+                    } else {
+                        this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
+                        continue;
+                    }
+                }
+
+                // add to perspective array
+                this.perspective[id].push([near, far, angle, fromPos, toPos]);
+
+                // specific ortho parameters
+            } else if (children[i].nodeName == "ortho") {
+
+                var left = this.reader.getFloat(children[i], 'left');
+                if (!(left != null && !isNaN(left)))
+                    return "left value missing for ortho ID = " + id;
+
+                var right = this.reader.getFloat(children[i], 'right');
+                if (!(right != null && !isNaN(right)))
+                    return "right value missing for ortho ID = " + id;
+
+                var top = this.reader.getFloat(children[i], 'right');
+                if (!(top != null && !isNaN(top)))
+                    return "top value missing for ortho ID = " + id;
+
+                var bottom = this.reader.getFloat(children[i], 'right');
+                if (!(bottom != null && !isNaN(bottom)))
+                    return "bottom value missing for ortho ID = " + id;
+
+                // add to ortho array
+                this.ortho[id].push(near, far, left, right, top, bottom);
             }
         }
-
-        if (indexOrtho == -1) {
-            this.onXMLMinorError("<ortho> tag missing");
-        } else {
-            oId = this.reader.getString(children[indexOrtho], 'id');
-            oNear = this.reader.getFloat(children[indexOrtho], 'near');
-            oFar = this.reader.getFloat(children[indexOrtho], 'far');
-            oLeft = this.reader.getFloat(children[indexOrtho], 'left');
-            oRight = this.reader.getFloat(children[indexOrtho], 'right');
-            oTop = this.reader.getFloat(children[indexOrtho], 'top');
-            oBottom = this.reader.getFloat(children[indexOrtho], 'bottom');
-        }
-
-        // TODO: refactor to parse common parameters and store views ....
-        this.views = [];
 
         this.log("Parsed views");
 
@@ -338,7 +384,6 @@ class MySceneGraph {
         var numLights = 0;
 
         var grandChildren = [];
-        var nodeNames = [];
 
         // Any number of lights.
         for (var i = 0; i < children.length; i++) {
@@ -349,48 +394,31 @@ class MySceneGraph {
             }
 
             // Get id of the current light.
-            var lightId = this.reader.getString(children[i], 'id');
-            if (lightId == null)
+            var id = this.reader.getString(children[i], 'id');
+            if (id == null)
                 return "no ID defined for light";
 
             // Checks for repeated IDs.
-            if (this.lights[lightId] != null)
-                return "ID must be unique for each light (conflict: ID = " + lightId + ")";
+            if (this.lights[id] != null)
+                return "ID must be unique for each light (conflict: ID = " + id + ")";
 
             // Light enable/disable
             var enabled = this.reader.getFloat(children[i], 'enabled');
             if (enabled == null) {
-                this.onXMLMinorError("enabled value missing for ID = " + lightId + "; assuming 'enabled = true'");
+                this.onXMLMinorError("enabled value missing for ID = " + id + "; assuming 'enabled = true'");
             } else {
                 if (enabled != 0 && enabled != 1) {
                     this.onXMLMinorError("unable to parse enable component of the 'enable light' field for ID = " +
-                        lightId + "; assuming 'value = true'");
+                        id + "; assuming 'value = true'");
                     enabled = 1;
-                }
-            }
-
-            // Spotlights exclusive info
-            var angle, exponent;
-            if (children[i].nodeName == "spot") {
-                angle = this.reader.getFloat(children[i], 'angle');
-                if (!(angle != null && !isNaN(angle))) {
-                    this.onXMLMinorError("angle value missing for ID = " + lightId + "; assuming 'angle = 0'");
-                    angle = 0;
-                }
-
-                exponent = this.reader.getFloat(children[i], 'exponent');
-                if (!(exponent != null && !isNaN(exponent))) {
-                    this.onXMLMinorError("exponent value missing for ID = " + lightId + "; assuming 'exponent = 0'");
-                    exponent = 0;
                 }
             }
 
             grandChildren = children[i].children;
 
             nodeNames = [];
-            for (var j = 0; j < grandChildren.length; j++) {
+            for (var j = 0; j < grandChildren.length; j++)
                 nodeNames.push(grandChildren[j].nodeName);
-            }
 
             // Gets common indices of each element.
             var locationIndex = nodeNames.indexOf("location");
@@ -404,33 +432,33 @@ class MySceneGraph {
                 // x
                 var x = this.reader.getFloat(grandChildren[locationIndex], 'x');
                 if (!(x != null && !isNaN(x)))
-                    return "unable to parse x-coordinate of the light location for ID = " + lightId;
+                    return "unable to parse x-coordinate of the light location for ID = " + id;
                 else
                     locationLight.push(x);
 
                 // y
                 var y = this.reader.getFloat(grandChildren[locationIndex], 'y');
                 if (!(y != null && !isNaN(y)))
-                    return "unable to parse y-coordinate of the light location for ID = " + lightId;
+                    return "unable to parse y-coordinate of the light location for ID = " + id;
                 else
                     locationLight.push(y);
 
                 // z
                 var z = this.reader.getFloat(grandChildren[locationIndex], 'z');
                 if (!(z != null && !isNaN(z)))
-                    return "unable to parse z-coordinate of the light location for ID = " + lightId;
+                    return "unable to parse z-coordinate of the light location for ID = " + id;
                 else
                     locationLight.push(z);
 
                 // w
                 var w = this.reader.getFloat(grandChildren[locationIndex], 'w');
                 if (!(w != null && !isNaN(w) && w >= 0 && w <= 1))
-                    return "unable to parse x-coordinate of the light location for ID = " + lightId;
+                    return "unable to parse x-coordinate of the light location for ID = " + id;
                 else
                     locationLight.push(w);
             }
             else
-                return "light location undefined for ID = " + lightId;
+                return "light location undefined for ID = " + id;
 
             // Retrieves the ambient component.
             var ambientIllumination = [];
@@ -464,7 +492,7 @@ class MySceneGraph {
                     ambientIllumination.push(a);
             }
             else
-                return "ambient component undefined for ID = " + lightId;
+                return "ambient component undefined for ID = " + id;
 
             // Retrieves the diffuse component.
             var diffuseIllumination = [];
@@ -498,7 +526,7 @@ class MySceneGraph {
                     diffuseIllumination.push(a);
             }
             else
-                return "diffuse component undefined for ID = " + lightId;
+                return "diffuse component undefined for ID = " + id;
 
             // TODO: Retrieve the specular component
             var specularIllumination = [];
@@ -506,37 +534,69 @@ class MySceneGraph {
                 // R
                 var r = this.reader.getFloat(grandChildren[specularIndex], 'r');
                 if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
-                    return "unable to parse R component of the specular illumination for ID = " + lightId;
+                    return "unable to parse R component of the specular illumination for ID = " + id;
                 else
                     specularIllumination.push(r);
 
                 // G
                 var g = this.reader.getFloat(grandChildren[specularIndex], 'g');
                 if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
-                    return "unable to parse G component of the specular illumination for ID = " + lightId;
+                    return "unable to parse G component of the specular illumination for ID = " + id;
                 else
                     specularIllumination.push(g);
 
                 // B
                 var b = this.reader.getFloat(grandChildren[specularIndex], 'b');
                 if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
-                    return "unable to parse B component of the specular illumination for ID = " + lightId;
+                    return "unable to parse B component of the specular illumination for ID = " + id;
                 else
                     specularIllumination.push(b);
 
                 // A
                 var a = this.reader.getFloat(grandChildren[specularIndex], 'a');
                 if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
-                    return "unable to parse A component of the specular illumination for ID = " + lightId;
+                    return "unable to parse A component of the specular illumination for ID = " + id;
                 else
                     specularIllumination.push(a);
             }
             else
-                return "specular component undefined for ID = " + lightId;
+                return "specular component undefined for ID = " + id;
 
-            // TODO: Store Light global information.
-            this.lights[lightId] = [enabled, locationLight, ambientIllumination, diffuseIllumination, specularIllumination];
-            // separate omni from lights ?
+            // get target if it is a spot
+            if (children[i].nodeName == "spot") {
+
+                var targetIndex = nodeNames.indexOf("target");
+
+                // Retrieves the target position.
+                var targetPos = [];
+
+                if (targetIndex != -1) {
+                    // x
+                    var x = this.reader.getFloat(grandChildren[targetIndex], 'x');
+                    if (!(x != null && !isNaN(x)))
+                        return "unable to parse x-coordinate of the light location for ID = " + id;
+                    else
+                        targetPos.push(x);
+
+                    // y
+                    var y = this.reader.getFloat(grandChildren[targetIndex], 'y');
+                    if (!(y != null && !isNaN(y)))
+                        return "unable to parse y-coordinate of the target location for ID = " + id;
+                    else
+                        targetPos.push(y);
+
+                    // z
+                    var z = this.reader.getFloat(grandChildren[targetIndex], 'z');
+                    if (!(z != null && !isNaN(z)))
+                        return "unable to parse z-coordinate of the target location for ID = " + id;
+                    else
+                        targetPos.push(z);
+                }
+
+                this.spotlights.push([id, enabled, angle, exponent, location, target, ambient, diffuse, specular]);
+
+            } else
+                this.omni.push([id, enabled, location, ambient, diffuse, specular]);
 
             numLights++;
         }
@@ -584,36 +644,36 @@ class MySceneGraph {
         this.initialTranslate = [];
         this.initialScaling = [];
         this.initialRotations = [];
-
+    
         // Gets indices of each element.
         var translationIndex = nodeNames.indexOf("translation");
         var thirdRotationIndex = nodeNames.indexOf("rotation");
         var secondRotationIndex = nodeNames.indexOf("rotation", thirdRotationIndex + 1);
         var firstRotationIndex = nodeNames.lastIndexOf("rotation");
         var scalingIndex = nodeNames.indexOf("scale");
-
+    
         // Checks if the indices are valid and in the expected order.
         // Translation.
         this.initialTransforms = mat4.create();
         mat4.identity(this.initialTransforms);
-
+    
         if (translationIndex == -1)
             this.onXMLMinorError("initial translation undefined; assuming T = (0, 0, 0)");
         else {
             var tx = this.reader.getFloat(children[translationIndex], 'x');
             var ty = this.reader.getFloat(children[translationIndex], 'y');
             var tz = this.reader.getFloat(children[translationIndex], 'z');
-
+    
             if (tx == null || ty == null || tz == null) {
                 tx = 0;
                 ty = 0;
                 tz = 0;
                 this.onXMLMinorError("failed to parse coordinates of initial translation; assuming zero");
             }
-
+    
             //TODO: Save translation data
         }
-
+    
         // TODO: Parse block
         this.log("Parsed transformations");
         return null;*/
