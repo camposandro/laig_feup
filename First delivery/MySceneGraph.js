@@ -46,7 +46,6 @@ class MySceneGraph {
         this.reader.open('scenes/' + filename, this);
     }
 
-
     /*
      * Callback to be executed after successful reading
      */
@@ -73,6 +72,7 @@ class MySceneGraph {
      * @param {XML root element} rootElement
      */
     parseXMLFile(rootElement) {
+
         if (rootElement.nodeName != "yas")
             return "root tag <yas> missing";
 
@@ -84,8 +84,7 @@ class MySceneGraph {
         for (var i = 0; i < nodes.length; i++)
             nodeNames.push(nodes[i].nodeName);
 
-        var error;
-        var index;
+        var error, index;
 
         // Processes each node, verifying errors.
 
@@ -204,13 +203,13 @@ class MySceneGraph {
     parseScene(sceneNode) {
 
         this.root = this.reader.getString(sceneNode, 'root');
-        this.axis_length = this.reader.getFloat(sceneNode, 'axis_length');
-
         if (this.root == null)
             return "unable to parse root object";
-        else if (this.axis_length == null)
-            return "unable to parse axis length";
 
+        this.axis_length = this.reader.getFloat(sceneNode, 'axis_length');
+        if (!(this.axis_length != null && !isNaN(this.axis_length)))
+            return "unable to parse axis length";
+        
         this.log("Parsed scene");
 
         return null;
@@ -239,22 +238,26 @@ class MySceneGraph {
 
             // get current id
             var id = this.reader.getString(children[i], 'id');
-            if (!(id != null && !isNaN(id)))
+            if (id == null)
                 return "no ID defined for perspective";
 
             // get current near value
             var near = this.reader.getFloat(children[i], 'near');
             if (!(near != null && !isNaN(near))) {
-                this.onXMLMinorError("near value missing for perspective ID = " + id + "; assuming near = 0.1");
+                this.onXMLMinorError("near value missing for perspective ID = " + id +
+                    "; assuming near = 0.1");
                 near = 0.1;
             }
 
             // get current far value
             var far = this.reader.getFloat(children[i], 'far');
             if (!(far != null && !isNaN(far))) {
-                this.onXMLMinorError("near value missing for perspective ID = " + id + "; assuming far = 500");
+                this.onXMLMinorError("near value missing for perspective ID = " + id +
+                    "; assuming far = 500");
                 far = 500;
             }
+
+            grandChildren = children[i].children;
 
             // specific perspective parameters
             if (children[i].nodeName == "perspective") {
@@ -276,23 +279,26 @@ class MySceneGraph {
 
                 for (var k = 0; k < grandChildren.length; k++) {
 
+                    var x, y, z;
+
                     if (grandChildren[i].nodeName == "from") {
+
                         // x
-                        var x = this.reader.getFloat(grandChildren[i], 'x');
+                        x = this.reader.getFloat(grandChildren[i], 'x');
                         if (!(x != null && !isNaN(x)))
                             return "unable to parse x-coordinate of the perspective of ID = " + id;
                         else
                             fromPos.push(x);
 
                         // y
-                        var y = this.reader.getFloat(grandChildren[i], 'y');
+                        y = this.reader.getFloat(grandChildren[i], 'y');
                         if (!(y != null && !isNaN(y)))
                             return "unable to parse y-coordinate of the perspective of ID = " + id;
                         else
                             fromPos.push(y);
 
                         // z
-                        var z = this.reader.getFloat(grandChildren[i], 'x');
+                        z = this.reader.getFloat(grandChildren[i], 'z');
                         if (!(z != null && !isNaN(z)))
                             return "unable to parse z-coordinate of the perspective of ID = " + id;
                         else
@@ -301,21 +307,21 @@ class MySceneGraph {
                     } else if (grandChildren[i].nodeName == "to") {
 
                         // x
-                        var x = this.reader.getFloat(grandChildren[i], 'x');
+                        x = this.reader.getFloat(grandChildren[i], 'x');
                         if (!(x != null && !isNaN(x)))
                             return "unable to parse x-coordinate of the perspective of ID = " + id;
                         else
                             toPos.push(x);
 
                         // y
-                        var y = this.reader.getFloat(grandChildren[i], 'y');
+                        y = this.reader.getFloat(grandChildren[i], 'y');
                         if (!(y != null && !isNaN(y)))
                             return "unable to parse y-coordinate of the perspective of ID = " + id;
                         else
                             toPos.push(y);
 
                         // z
-                        var z = this.reader.getFloat(grandChildren[i], 'x');
+                        z = this.reader.getFloat(grandChildren[i], 'z');
                         if (!(z != null && !isNaN(z)))
                             return "unable to parse z-coordinate of the perspective of ID = " + id;
                         else
@@ -359,10 +365,10 @@ class MySceneGraph {
         return null;
     }
 
-   /**
-     * Parses the <ambient> block.
-     * @param {ambient block element} ambientNode
-     */
+    /**
+      * Parses the <ambient> block.
+      * @param {ambient block element} ambientNode
+      */
     parseAmbient(ambientNode) {
         // TODO: Parse Ambient node
 
@@ -371,73 +377,76 @@ class MySceneGraph {
         this.ambientValues = [];
         this.backgroundValues = [];
 
+        for (var i = 0; i < children.length; i++) {
 
-        for (var i = 0; i < 2; i++) {
             if (children[i].nodeName != "ambient" && children[i].nodeName != "background") {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
                 continue;
             }
-            
+
+            var r, g, b, a;
+
             // Retrieves the ambient values.
-            if(children[i].nodeName == "ambient") {
+            if (children[i].nodeName == "ambient") {
+
                 // R
-                var ambientR = this.reader.getFloat(children[i], 'r');
-                if (ambientR == null)
+                r = this.reader.getFloat(children[i], 'r');
+                if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
                     return "no r defined for ambient";
                 else
-                    ambientValues.push(ambientR);
+                    ambientValues.push(r);
                 // G
-                var ambientG = this.reader.getFloat(children[i], 'g');
-                if (ambientG == null)
+                g = this.reader.getFloat(children[i], 'g');
+                if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
                     return "no g defined for ambient";
                 else
-                    ambientValues.push(ambientG);
+                    ambientValues.push(g);
                 // B
-                var ambientB = this.reader.getFloat(children[i], 'b');
-                if (ambientB == null)
+                b = this.reader.getFloat(children[i], 'b');
+                if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
                     return "no b defined for ambient";
                 else
-                    ambientValues.push(ambientB);
+                    ambientValues.push(b);
                 // A
-                var ambientA = this.reader.getFloat(children[i], 'a');
-                if (ambientA == null)
+                a = this.reader.getFloat(children[i], 'a');
+                if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
                     return "no a defined for ambient";
                 else
-                    ambientValues.push(ambientA);
-            }
+                    ambientValues.push(a);
 
-            if(children[i].nodeName == "background") {
-            // R
-            var backgroundR = this.reader.getFloat(children[i], 'r');
-            if (backgroundR == null)
-                return "no r defined for ambient";
-            else
-                backgroundValues.push(backgroundR);
-            // G
-            var backgroundG = this.reader.getFloat(children[i], 'g');
-            if (backgroundG == null)
-                return "no g defined for ambient";
-            else
-                backgroundValues.push(backgroundG);
-            // B
-            var backgroundB = this.reader.getFloat(children[i], 'b');
-            if (backgroundB == null)
-                return "no b defined for ambient";
-            else
-                backgroundValues.push(backgroundB);
-            // A
-            var backgroundA = this.reader.getFloat(children[i], 'a');
-            if (backgroundA == null)
-                return "no a defined for ambient";
-            else
-                backgroundValues.push(backgroundA);
-       }
-    }
+            } else if (children[i].nodeName == "background") {
+
+                // R
+                r = this.reader.getFloat(children[i], 'r');
+                if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
+                    return "no r defined for ambient";
+                else
+                    backgroundValues.push(r);
+                // G
+                g = this.reader.getFloat(children[i], 'g');
+                if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
+                    return "no g defined for ambient";
+                else
+                    backgroundValues.push(g);
+                // B
+                b = this.reader.getFloat(children[i], 'b');
+                if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
+                    return "no b defined for ambient";
+                else
+                    backgroundValues.push(b);
+                // A
+                var a = this.reader.getFloat(children[i], 'a');
+                if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
+                    return "no a defined for ambient";
+                else
+                    backgroundValues.push(a);
+            }
+        }
+
         this.log("Parsed ambient");
 
         return null;
     }
-
 
     /**
      * Parses the <lights> node.
@@ -446,11 +455,10 @@ class MySceneGraph {
     parseLights(lightsNode) {
 
         var children = lightsNode.children;
+        var grandChildren = [];
 
         this.lights = [];
         var numLights = 0;
-
-        var grandChildren = [];
 
         // Any number of lights.
         for (var i = 0; i < children.length; i++) {
@@ -471,12 +479,13 @@ class MySceneGraph {
 
             // Light enable/disable
             var enabled = this.reader.getFloat(children[i], 'enabled');
-            if (enabled == null) {
-                this.onXMLMinorError("enabled value missing for ID = " + id + "; assuming 'enabled = true'");
+            if (!(enabled != null && !isNaN(enabled))) {
+                this.onXMLMinorError("enabled value missing for ID = " + id +
+                    "; assuming 'enabled = true'");
             } else {
                 if (enabled != 0 && enabled != 1) {
-                    this.onXMLMinorError("unable to parse enable component of the 'enable light' field for ID = " +
-                        id + "; assuming 'value = true'");
+                    this.onXMLMinorError("unable to parse enable component of the" +
+                        "'enable light' field for ID = " + id + "; assuming 'value = true'");
                     enabled = 1;
                 }
             }
@@ -527,32 +536,35 @@ class MySceneGraph {
             else
                 return "light location undefined for ID = " + id;
 
+            
+            var r, g, b, a;
+
             // Retrieves the ambient component.
             var ambientIllumination = [];
             if (ambientIndex != -1) {
                 // R
-                var r = this.reader.getFloat(grandChildren[ambientIndex], 'r');
+                r = this.reader.getFloat(grandChildren[ambientIndex], 'r');
                 if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
                     return "unable to parse R component of the ambient illumination for ID = " + lightId;
                 else
                     ambientIllumination.push(r);
 
                 // G
-                var g = this.reader.getFloat(grandChildren[ambientIndex], 'g');
+                g = this.reader.getFloat(grandChildren[ambientIndex], 'g');
                 if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
                     return "unable to parse G component of the ambient illumination for ID = " + lightId;
                 else
                     ambientIllumination.push(g);
 
                 // B
-                var b = this.reader.getFloat(grandChildren[ambientIndex], 'b');
+                b = this.reader.getFloat(grandChildren[ambientIndex], 'b');
                 if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
                     return "unable to parse B component of the ambient illumination for ID = " + lightId;
                 else
                     ambientIllumination.push(b);
 
                 // A
-                var a = this.reader.getFloat(grandChildren[ambientIndex], 'a');
+                a = this.reader.getFloat(grandChildren[ambientIndex], 'a');
                 if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
                     return "unable to parse A component of the ambient illumination for ID = " + lightId;
                 else
@@ -565,28 +577,28 @@ class MySceneGraph {
             var diffuseIllumination = [];
             if (diffuseIndex != -1) {
                 // R
-                var r = this.reader.getFloat(grandChildren[diffuseIndex], 'r');
+                r = this.reader.getFloat(grandChildren[diffuseIndex], 'r');
                 if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
                     return "unable to parse R component of the diffuse illumination for ID = " + lightId;
                 else
                     diffuseIllumination.push(r);
 
                 // G
-                var g = this.reader.getFloat(grandChildren[diffuseIndex], 'g');
+                g = this.reader.getFloat(grandChildren[diffuseIndex], 'g');
                 if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
                     return "unable to parse G component of the diffuse illumination for ID = " + lightId;
                 else
                     diffuseIllumination.push(g);
 
                 // B
-                var b = this.reader.getFloat(grandChildren[diffuseIndex], 'b');
+                b = this.reader.getFloat(grandChildren[diffuseIndex], 'b');
                 if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
                     return "unable to parse B component of the diffuse illumination for ID = " + lightId;
                 else
                     diffuseIllumination.push(b);
 
                 // A
-                var a = this.reader.getFloat(grandChildren[diffuseIndex], 'a');
+                a = this.reader.getFloat(grandChildren[diffuseIndex], 'a');
                 if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
                     return "unable to parse A component of the diffuse illumination for ID = " + lightId;
                 else
@@ -599,28 +611,28 @@ class MySceneGraph {
             var specularIllumination = [];
             if (specularIndex != -1) {
                 // R
-                var r = this.reader.getFloat(grandChildren[specularIndex], 'r');
+                r = this.reader.getFloat(grandChildren[specularIndex], 'r');
                 if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
                     return "unable to parse R component of the specular illumination for ID = " + id;
                 else
                     specularIllumination.push(r);
 
                 // G
-                var g = this.reader.getFloat(grandChildren[specularIndex], 'g');
+                g = this.reader.getFloat(grandChildren[specularIndex], 'g');
                 if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
                     return "unable to parse G component of the specular illumination for ID = " + id;
                 else
                     specularIllumination.push(g);
 
                 // B
-                var b = this.reader.getFloat(grandChildren[specularIndex], 'b');
+                b = this.reader.getFloat(grandChildren[specularIndex], 'b');
                 if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
                     return "unable to parse B component of the specular illumination for ID = " + id;
                 else
                     specularIllumination.push(b);
 
                 // A
-                var a = this.reader.getFloat(grandChildren[specularIndex], 'a');
+                a = this.reader.getFloat(grandChildren[specularIndex], 'a');
                 if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
                     return "unable to parse A component of the specular illumination for ID = " + id;
                 else
