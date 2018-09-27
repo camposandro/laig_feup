@@ -359,13 +359,80 @@ class MySceneGraph {
         return null;
     }
 
-    /**
+   /**
      * Parses the <ambient> block.
      * @param {ambient block element} ambientNode
      */
     parseAmbient(ambientNode) {
         // TODO: Parse Ambient node
 
+        var children = ambientNode.children;
+
+        this.ambientValues = [];
+        this.backgroundValues = [];
+
+
+        for (var i = 0; i < 2; i++) {
+            if (children[i].nodeName != "ambient" && children[i].nodeName != "background") {
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                continue;
+            }
+            
+            // Retrieves the ambient values.
+            if(children[i].nodeName == "ambient") {
+                // R
+                var ambientR = this.reader.getFloat(children[i], 'r');
+                if (ambientR == null)
+                    return "no r defined for ambient";
+                else
+                    ambientValues.push(ambientR);
+                // G
+                var ambientG = this.reader.getFloat(children[i], 'g');
+                if (ambientG == null)
+                    return "no g defined for ambient";
+                else
+                    ambientValues.push(ambientG);
+                // B
+                var ambientB = this.reader.getFloat(children[i], 'b');
+                if (ambientB == null)
+                    return "no b defined for ambient";
+                else
+                    ambientValues.push(ambientB);
+                // A
+                var ambientA = this.reader.getFloat(children[i], 'a');
+                if (ambientA == null)
+                    return "no a defined for ambient";
+                else
+                    ambientValues.push(ambientA);
+            }
+
+            if(children[i].nodeName == "background") {
+            // R
+            var backgroundR = this.reader.getFloat(children[i], 'r');
+            if (backgroundR == null)
+                return "no r defined for ambient";
+            else
+                backgroundValues.push(backgroundR);
+            // G
+            var backgroundG = this.reader.getFloat(children[i], 'g');
+            if (backgroundG == null)
+                return "no g defined for ambient";
+            else
+                backgroundValues.push(backgroundG);
+            // B
+            var backgroundB = this.reader.getFloat(children[i], 'b');
+            if (backgroundB == null)
+                return "no b defined for ambient";
+            else
+                backgroundValues.push(backgroundB);
+            // A
+            var backgroundA = this.reader.getFloat(children[i], 'a');
+            if (backgroundA == null)
+                return "no a defined for ambient";
+            else
+                backgroundValues.push(backgroundA);
+       }
+    }
         this.log("Parsed ambient");
 
         return null;
