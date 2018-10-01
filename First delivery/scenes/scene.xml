@@ -1,48 +1,46 @@
 <yas>
 
     <!-- Initial values -->
-    <scene root="root" axis_length="ff"/>
+    <scene root="root" axis_length="0.25"/>
 
     <!-- Views specification -->
-    <views default="ss">
+    <views default="tempView">
 
-        <perspective id="ss" near="ff" far="ff" angle="ff">
-            <from x="ff" y="ff" z="ff"/>
-            <to x="ff" y="ff" z="ff"/>
+        <perspective id="1" near="0.1" far="500" angle="1">
+            <from x="10" y="0" z="0"/>
+            <to x="-10" y="0" z="0"/>
         </perspective>
 
-        <ortho id="ss" near="ff" far="ff" left="ff" right="ff" top="ff" bottom="ff"/>
+        <ortho id="2" near="0.1" far="500" left="-10" right="10" top="10" bottom="-10"/>
     
     </views>
 
     <!-- Ilumination parameters -->
     <ambient>
-        <ambient r="ff" g="ff" b="ff" a="ff"/>
-        <background r="ff" g="ff" b="ff" a="ff"/>
+        <ambient r="0.3" g="0.5" b="1" a="1"/>
+        <background r="0" g="0" b="0" a="1"/>
     </ambient>
 
     <!-- Light sources -->
     <lights>
         <!-- Lights -->
-        <omni id="ss" enabled="ff">
-            <location x="ff" y="ff" z="ff" w="ff"/>
-            <ambient r="ff" g="ff" b="ff" a="ff"/>
-            <diffuse r="ff" g="ff" b="ff" a="ff"/>
-            <specular r="ff" g="ff" b="ff" a="ff"/>
+        <omni id="1" enabled="1">
+            <location x="0" y="30" z="0" w="1"/>
+            <ambient r="0" g="0" b="0" a="0"/>
+            <diffuse r="0.8" g="0.8" b="0.8" a="0.8"/>
+            <specular r="0.1" g="0.1" b="0.1" a="0.1"/>
         </omni>
-        <!-- Spotlights -->
-        <spot id="ss" enabled="tt" angle="ff" exponent="ff">
-            <location x="ff" y="ff" z="ff" w="ff"/>
-            <target x="ff" y="ff" z="ff"/>
-            <ambient r="ff" g="ff" b="ff" a="ff"/>
-            <diffuse r="ff" g="ff" b="ff" a="ff"/>
-            <specular r="ff" g="ff" b="ff" a="ff"/>
-        </spot>
+        <omni id="2" enabled="0">
+            <location x="20" y="0" z="0" w="1"/>
+            <ambient r="0" g="0" b="0" a="0"/>
+            <diffuse r="0.6" g="0.6" b="0.6" a="0.5"/>
+            <specular r="0.2" g="0.2" b="0.2" a="0.3"/>
+        </omni>
     </lights>
 
     <!-- Textures -->
     <textures>
-        <texture id="ss" file="ss"/>
+        <texture id="1" file="textures/vaporwave.png"/>
     </textures>
 
     <!-- Materials -->
