@@ -3,11 +3,13 @@
  */
 class MyView extends MyEntity {
 
-	constructor(id, near, far){
+	/**
+     * @constructor
+     * @param {id, near, far} 
+     */
+	constructor(id, near, far) {
 		super(id);
 		this.near = near;
 		this.far = far;
-
 	}
-	
 }
