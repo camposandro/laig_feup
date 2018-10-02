@@ -91,7 +91,7 @@ class MySceneGraph {
         if ((index = nodeNames.indexOf("scene")) == -1)
             return "tag <scene> missing";
         else {
-            if (index != SCENE_INDEX - 1)
+            if (index != SCENE_INDEX)
                 this.onXMLMinorError("tag <scene> out of order");
 
             //Parse scene block
@@ -103,7 +103,7 @@ class MySceneGraph {
         if ((index = nodeNames.indexOf("views")) == -1)
             return "tag <views> missing";
         else {
-            if (index != VIEWS_INDEX - 1)
+            if (index != VIEWS_INDEX)
                 this.onXMLMinorError("tag <views> out of order");
 
             //Parse views block
@@ -115,7 +115,7 @@ class MySceneGraph {
         if ((index = nodeNames.indexOf("ambient")) == -1)
             return "tag <ambient> missing";
         else {
-            if (index != AMBIENT_INDEX - 1)
+            if (index != AMBIENT_INDEX)
                 this.onXMLMinorError("tag <ambient> out of order");
 
             //Parse ambient block
@@ -127,7 +127,7 @@ class MySceneGraph {
         if ((index = nodeNames.indexOf("lights")) == -1)
             return "tag <lights> missing";
         else {
-            if (index != LIGHTS_INDEX - 1)
+            if (index != LIGHTS_INDEX)
                 this.onXMLMinorError("tag <lights> out of order");
 
             //Parse lights block
@@ -139,7 +139,7 @@ class MySceneGraph {
         if ((index = nodeNames.indexOf("textures")) == -1)
             return "tag <textures> missing";
         else {
-            if (index != TEXTURES_INDEX - 1)
+            if (index != TEXTURES_INDEX)
                 this.onXMLMinorError("tag <textures> out of order");
 
             //Parse textures block
@@ -151,7 +151,7 @@ class MySceneGraph {
         if ((index = nodeNames.indexOf("materials")) == -1)
             return "tag <materials> missing";
         else {
-            if (index != MATERIALS_INDEX - 1)
+            if (index != MATERIALS_INDEX)
                 this.onXMLMinorError("tag <materials> out of order");
 
             //Parse MATERIALS block
@@ -163,7 +163,7 @@ class MySceneGraph {
         if ((index = nodeNames.indexOf("transformations")) == -1)
             return "tag <transformations> missing";
         else {
-            if (index != TRANSFORMATIONS_INDEX - 1)
+            if (index != TRANSFORMATIONS_INDEX)
                 this.onXMLMinorError("tag <transformations> out of order");
 
             //Parse transformations block
@@ -175,7 +175,7 @@ class MySceneGraph {
         if ((index = nodeNames.indexOf("primitives")) == -1)
             return "tag <materials> missing";
         else {
-            if (index != PRIMITIVES_INDEX - 1)
+            if (index != PRIMITIVES_INDEX)
                 this.onXMLMinorError("tag <primitives> out of order");
 
             //Parse primitives block
@@ -187,7 +187,7 @@ class MySceneGraph {
         if ((index = nodeNames.indexOf("components")) == -1)
             return "tag <components> missing";
         else {
-            if (index != COMPONENTS_INDEX - 1)
+            if (index != COMPONENTS_INDEX)
                 this.onXMLMinorError("tag <components> out of order");
 
             //Parse components block
@@ -205,7 +205,7 @@ class MySceneGraph {
         if (this.root == null)
             return "unable to parse root object";
 
-        this.referenceLength = this.reader.getFloat(sceneNode, 'axis_length');
+        this.referenceLength = this.reader.getFloat(sceneNode, 'referenceLength');
         if (!(this.referenceLength != null && !isNaN(this.referenceLength)))
             return "unable to parse axis referenceLength";
 
@@ -659,7 +659,7 @@ class MySceneGraph {
                         targetPos.push(z);
                 }
 
-                this.lights[id] = new MySpotlight(id, enabled, angle, exponent, location, target, ambient, diffuse, specular);
+                this.lights[id] = new MySpotlight(id, enabled, location, ambient, diffuse, specular, angle, exponent, target);
             }
             else
                 this.lights[id] = new MyOmni(id, enabled, location, ambient, diffuse, specular);
@@ -708,7 +708,7 @@ class MySceneGraph {
             if (file == null)
                 return "no file defined for texture";
 
-            this.textures.push(new MyTexture(id, file));
+            this.textures[id] = new MyTexture(id, file);
         }
 
         console.log("Parsed textures");
