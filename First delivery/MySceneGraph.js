@@ -717,59 +717,278 @@ class MySceneGraph {
     }
 
     /**
-     * Parses the <materials> node.
-     * @param {materials block element} materialsNode
-     */
-    parseMaterials(materialsNode) {
-        // TODO: Parse materials block
-        this.log("Parsed materials");
-        return null;
-    }
+         * Parses the <materials> node.
+         * @param {materials block element} materialsNode
+         */
+        parseMaterials(materialsNode) {
+            this.materials = [];
+            var children = materialsNode.children;
+            var grandChildren = [];
+
+            for (var i = 0; i < children.length; i++) {
+
+                if (children[i].nodeName != "material") {
+                    this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                    continue;
+                }
+
+                // get current id
+                var id = this.reader.getString(children[i], 'id');
+                if (!(id != null))
+                    return "no ID defined for transformation";
+                // get current shininess
+                var shininess = this.reader.getString(children[i], 'shininess');
+                if (!(shininess != null)&& !isNaN(shininess))
+                    return "no shininess defined for transformation";
+
+                grandChildren = children[i].children;
+                var r,g,b,a;
+                var specular = [],emission = [],ambient = [],diffuse = []; 
+
+                for (var k = 0; k < grandChildren.length; k++) {
+                    
+                    //emission
+                    if (grandChildren[k].nodeName == 'emission') {
+                        // r
+                        r = this.reader.getFloat(grandChildren[k], 'r');
+                        if (r == null || isNaN(r))
+                            return "no r defined for emission";
+
+                        // g
+                        g = this.reader.getFloat(grandChildren[k], 'g');
+                        if (g == null || isNaN(g))
+                            return "no g defined for emission";
+
+                        // b
+                        b = this.reader.getFloat(grandChildren[k], 'b');
+                        if (b == null || isNaN(b))
+                            return "no b defined for emission";
+
+                        // a
+                        a = this.reader.getFloat(grandChildren[k], 'a');
+                        if (a == null || isNaN(a))
+                            return "no b defined for emission";
+                        emission = [r,g,b];
+                    }
+
+                    //ambient
+                    if (grandChildren[k].nodeName == 'ambient') {
+                        // r
+                        r = this.reader.getFloat(grandChildren[k], 'r');
+                        if (r == null || isNaN(r))
+                            return "no r defined for ambient";
+
+                        // g
+                        g = this.reader.getFloat(grandChildren[k], 'g');
+                        if (g == null || isNaN(g))
+                            return "no g defined for ambient";
+
+                        // b
+                        b = this.reader.getFloat(grandChildren[k], 'b');
+                        if (b == null || isNaN(b))
+                            return "no b defined for ambient";
+
+                        // a
+                        a = this.reader.getFloat(grandChildren[k], 'a');
+                        if (a == null || isNaN(a))
+                            return "no b defined for ambient";
+
+                        ambient = [r,g,b];
+                    }
+                    //diffuse
+                    if (grandChildren[k].nodeName == 'diffuse') {
+                        // r
+                        r = this.reader.getFloat(grandChildren[k], 'r');
+                        if (r == null || isNaN(r))
+                            return "no r defined for diffuse";
+
+                        // g
+                        g = this.reader.getFloat(grandChildren[k], 'g');
+                        if (g == null || isNaN(g))
+                            return "no g defined for diffuse";
+
+                        // b
+                        b = this.reader.getFloat(grandChildren[k], 'b');
+                        if (b == null || isNaN(b))
+                            return "no b defined for diffuse";
+
+                        // a
+                        a = this.reader.getFloat(grandChildren[k], 'a');
+                        if (a == null || isNaN(a))
+                            return "no b defined for diffuse";
+
+                        diffuse = [r,g,b];
+                    }
+
+                    //specular
+                    if (grandChildren[k].nodeName == 'specular') {
+                        // r
+                        r = this.reader.getFloat(grandChildren[k], 'r');
+                        if (r == null || isNaN(r))
+                            return "no r defined for specular";
+
+                        // g
+                        g = this.reader.getFloat(grandChildren[k], 'g');
+                        if (g == null || isNaN(g))
+                            return "no g defined for specular";
+
+                        // b
+                        b = this.reader.getFloat(grandChildren[k], 'b');
+                        if (b == null || isNaN(b))
+                            return "no b defined for specular";
+
+                        // a
+                        a = this.reader.getFloat(grandChildren[k], 'a');
+                        if (a == null || isNaN(a))
+                            return "no b defined for specular";
+
+                        specular = [r,g,b];
+                    }
+                }
+                this.materials.push(new MyMaterial(id,shininess, emission,ambient,diffuse,specular));
+            }
+
+            this.log("Parsed materials");
+            return null;
+
+        }
 
     /**
      * Parses the <transformations> node.
      * @param {transformations block element} transformationsNode
      */
-    parseTransformations(transformationsNode) {
-        // TODO: Parse transformations block
-        
-        /* Initial transforms.
-        this.initialTranslate = [];
-        this.initialScaling = [];
-        this.initialRotations = [];
-    
-        // Gets indices of each element.
-        var translationIndex = nodeNames.indexOf("translation");
-        var thirdRotationIndex = nodeNames.indexOf("rotation");
-        var secondRotationIndex = nodeNames.indexOf("rotation", thirdRotationIndex + 1);
-        var firstRotationIndex = nodeNames.lastIndexOf("rotation");
-        var scalingIndex = nodeNames.indexOf("scale");
-    
-        // Checks if the indices are valid and in the expected order.
-        // Translation.
-        this.initialTransforms = mat4.create();
-        mat4.identity(this.initialTransforms);
-    
-        if (translationIndex == -1)
-            this.onXMLMinorError("initial translation undefined; assuming T = (0, 0, 0)");
-        else {
-            var tx = this.reader.getFloat(children[translationIndex], 'x');
-            var ty = this.reader.getFloat(children[translationIndex], 'y');
-            var tz = this.reader.getFloat(children[translationIndex], 'z');
-    
-            if (tx == null || ty == null || tz == null) {
-                tx = 0;
-                ty = 0;
-                tz = 0;
-                this.onXMLMinorError("failed to parse coordinates of initial translation; assuming zero");
+     /**
+         * Parses the <transformations> node.
+         * @param {transformations block element} transformationsNode
+         */
+        parseTransformations(transformationsNode) {
+            // TODO: Parse transformations block
+
+            //Initial transforms.
+            this.initialTranslate = [];
+            this.initialScaling = [];
+            this.initialRotations = [];
+
+            var nodeNames = [];
+            /*
+                    for (var i = 0; i < nodes.length; i++)
+                        nodeNames.push(nodes[i].nodeName);
+            */
+            // Gets indices of each element.
+            /* var translationIndex = nodeNames.indexOf("translation");
+            var rotationIndex = nodeNames.indexOf("rotation");
+            var scalingIndex = nodeNames.indexOf("rotation", thirdRotationIndex + 1);
+            var firstRotationIndex = nodeNames.lastIndexOf("rotation");
+            var scalingIndex = nodeNames.indexOf("scale");
+        */
+            this.transformations = [];
+            var children = transformationsNode.children;
+            var grandChildren = [];
+
+
+            for (var i = 0; i < children.length; i++) {
+
+                if (children[i].nodeName != "transformation") {
+                    this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                    continue;
+                }
+
+                // get current id
+                var id = this.reader.getString(children[i], 'id');
+
+                if (!(id != null))
+                    return "no ID defined for transformation";
+                var trans = new MyTransformation(id);
+
+                grandChildren = children[i].children;
+                var x, y, z, angle, axis;
+
+                for (var k = 0; k < grandChildren.length; k++) {
+                    //if its a translation
+                    if (grandChildren[k].nodeName == 'translate') {
+                        // x
+                        x = this.reader.getFloat(grandChildren[k], 'x');
+                        if (x == null || isNaN(x))
+                            return "no r defined for translate";
+
+                        // y
+                        y = this.reader.getFloat(grandChildren[k], 'y');
+                        if (y == null || isNaN(y))
+                            return "no y defined for translate";
+
+                        // z
+                        z = this.reader.getFloat(grandChildren[k], 'z');
+                        if (z == null || isNaN(z))
+                            return "no z defined for translate";
+
+                        trans.addTransformation(new MyTranslation(x, y, z));
+                    }
+
+                    //if its a scale
+                    if (grandChildren[k].nodeName == 'scale') {
+                        // x
+                        x = this.reader.getFloat(grandChildren[k], 'x');
+                        if (x == null || isNaN(x))
+                            return "no r defined for scale";
+
+                        // y
+                        y = this.reader.getFloat(grandChildren[k], 'y');
+                        if (y == null || isNaN(y))
+                            return "no y defined for scale";
+
+                        // z
+                        z = this.reader.getFloat(grandChildren[k], 'z');
+                        if (z == null || isNaN(z))
+                            return "no z defined for scale";
+
+                        trans.push(new MyScaling(x, y, z));
+                    }
+                    //if its a rotation
+                    if (grandChildren[k].nodeName == 'rotate') {
+                        // axis
+                        axis = this.reader.getString(grandChildren[k], 'axis');
+                        if (axis == null)
+                            return "no axis defined for rotate";
+
+                        // angle
+                        angle = this.reader.getFloat(grandChildren[k], 'angle');
+                        if (angle == null || isNaN(angle))
+                            return "no angle defined for rotate";
+
+                        trans.addTransformation(new MyRotation(axis, angle));
+                    }
+
+
+                }
+                this.transformations.push(trans);
             }
-    
-            //TODO: Save translation data
+            /*
+
+            // Checks if the indices are valid and in the expected order.
+            // Translation.
+            this.initialTransforms = mat4.create();
+            mat4.identity(this.initialTransforms);
+            //this.initialTransforms.translate(1,1,1);
+            if (translationIndex == -1)
+                this.onXMLMinorError("initial translation undefined; assuming T = (0, 0, 0)");
+            else {
+                var tx = this.reader.getFloat(children[translationIndex], 'x');
+                var ty = this.reader.getFloat(children[translationIndex], 'y');
+                var tz = this.reader.getFloat(children[translationIndex], 'z');
+        
+                if (tx == null || ty == null || tz == null) {
+                    tx = 0;
+                    ty = 0;
+                    tz = 0;
+                    this.onXMLMinorError("failed to parse coordinates of initial translation; assuming zero");
+                }
+        
+                //TODO: Save translation data
+            }
+        */
+            this.log("Parsed transformations");
+            return null;
         }
-    
-        this.log("Parsed transformations");
-        return null;*/
-    }
 
     /**
      * Parses the <primitives> node.
