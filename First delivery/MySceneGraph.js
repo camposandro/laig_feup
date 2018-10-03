@@ -1149,10 +1149,7 @@ class MySceneGraph {
 
                     this.primitives[id] = new MyTorus(id, inner, outer, slices, loops);
                 }
-
-
             }
-            this.transformations.push(trans);
         }
 
 
