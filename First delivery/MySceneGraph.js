@@ -731,6 +731,7 @@ class MySceneGraph {
          * @param {materials block element} materialsNode
          */
     parseMaterials(materialsNode) {
+
         this.materials = [];
         var children = materialsNode.children;
         var grandChildren = [];
@@ -855,7 +856,8 @@ class MySceneGraph {
                     specular = [r, g, b];
                 }
             }
-            this.materials.push(new MyMaterial(id, shininess, emission, ambient, diffuse, specular));
+
+            this.materials[id] = new MyMaterial(id, shininess, emission, ambient, diffuse, specular);
         }
 
         this.log("Parsed materials");
@@ -864,37 +866,19 @@ class MySceneGraph {
     }
 
     /**
-     * Parses the <transformations> node.
-     * @param {transformations block element} transformationsNode
-     */
-    /**
-        * Parses the <transformations> node.
-        * @param {transformations block element} transformationsNode
-        */
+    * Parses the <transformations> node.
+    * @param {transformations block element} transformationsNode
+    */
     parseTransformations(transformationsNode) {
-        // TODO: Parse transformations block
 
         //Initial transforms.
         this.initialTranslate = [];
         this.initialScaling = [];
         this.initialRotations = [];
 
-        var nodeNames = [];
-        /*
-                for (var i = 0; i < nodes.length; i++)
-                    nodeNames.push(nodes[i].nodeName);
-        */
-        // Gets indices of each element.
-        /* var translationIndex = nodeNames.indexOf("translation");
-        var rotationIndex = nodeNames.indexOf("rotation");
-        var scalingIndex = nodeNames.indexOf("rotation", thirdRotationIndex + 1);
-        var firstRotationIndex = nodeNames.lastIndexOf("rotation");
-        var scalingIndex = nodeNames.indexOf("scale");
-    */
         this.transformations = [];
         var children = transformationsNode.children;
         var grandChildren = [];
-
 
         for (var i = 0; i < children.length; i++) {
 
@@ -906,12 +890,14 @@ class MySceneGraph {
             // get current id
             var id = this.reader.getString(children[i], 'id');
 
-            if (!(id != null))
+            if (id == null)
                 return "no ID defined for transformation";
+
             var trans = new MyTransformation(id);
 
-            grandChildren = children[i].children;
             var x, y, z, angle, axis;
+
+            grandChildren = children[i].children;
 
             for (var k = 0; k < grandChildren.length; k++) {
                 //if its a translation
@@ -967,37 +953,13 @@ class MySceneGraph {
 
                     trans.addTransformation(new MyRotation(axis, angle));
                 }
-
-
             }
-            this.transformations.push(trans);
-        }
-        /*
 
-        // Checks if the indices are valid and in the expected order.
-        // Translation.
-        this.initialTransforms = mat4.create();
-        mat4.identity(this.initialTransforms);
-        //this.initialTransforms.translate(1,1,1);
-        if (translationIndex == -1)
-            this.onXMLMinorError("initial translation undefined; assuming T = (0, 0, 0)");
-        else {
-            var tx = this.reader.getFloat(children[translationIndex], 'x');
-            var ty = this.reader.getFloat(children[translationIndex], 'y');
-            var tz = this.reader.getFloat(children[translationIndex], 'z');
-    
-            if (tx == null || ty == null || tz == null) {
-                tx = 0;
-                ty = 0;
-                tz = 0;
-                this.onXMLMinorError("failed to parse coordinates of initial translation; assuming zero");
-            }
-    
-            //TODO: Save translation data
+            this.transformations[id] = trans;
         }
-    */
+
         this.log("Parsed transformations");
-        
+
         return null;
     }
 
@@ -1053,7 +1015,7 @@ class MySceneGraph {
                     if (y2 == null || isNaN(y2))
                         return "no y2 defined for translate";
 
-                    this.primitives[id] = new MyRectangle(id, x, y, x2, y2);
+                    this.primitives[id] = new MyRectangle(this.scene, id, x, y, x2, y2);
                 }
 
                 //if its a sphere
@@ -1073,7 +1035,7 @@ class MySceneGraph {
                     if (stacks == null || isNaN(stacks))
                         return "no stacks defined for sphere";
 
-                    this.primitives[id] = new MySphere(id, x, y, x2, y2);
+                    this.primitives[id] = new MySphere(this.scene, id, x, y, x2, y2);
                 }
 
                 //if its a triangle
@@ -1123,7 +1085,7 @@ class MySceneGraph {
                     if (z3 == null || isNaN(z3))
                         return "no z3 defined for triangle";
 
-                    this.primitives[id] = new MyTriangle(id, x, y, z, x2, y2, z2, x3, y3, z3);
+                    this.primitives[id] = new MyTriangle(this.scene, id, x, y, z, x2, y2, z2, x3, y3, z3);
                 }
                 //if its a torus
                 if (grandChildren[k].nodeName == 'torus') {
@@ -1147,17 +1109,14 @@ class MySceneGraph {
                     if (loops == null || isNaN(loops))
                         return "no loops defined for torus";
 
-                    this.primitives[id] = new MyTorus(id, inner, outer, slices, loops);
+                    this.primitives[id] = new MyTorus(this.scene, id, inner, outer, slices, loops);
                 }
             }
         }
 
-
-
-
         this.log("Parsed primitives");
-        return null;
 
+        return null;
     }
 
     /**
@@ -1168,7 +1127,6 @@ class MySceneGraph {
         // TODO: Parse components block
         this.log("Parsed components");
         return null;
-
     }
 
     /*
