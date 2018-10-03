@@ -1006,7 +1006,158 @@ class MySceneGraph {
      * @param {primitives block element} primitivesNode
      */
     parsePrimitives(primitivesNode) {
-        // TODO: Parse primitives block
+
+
+        this.primitives = [];
+        var children = primitivesNode.children;
+        var grandChildren = [];
+
+        for (var i = 0; i < children.length; i++) {
+
+            if (children[i].nodeName != "primitive") {
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                continue;
+            }
+
+            // get current id
+            var id = this.reader.getString(children[i], 'id');
+
+            if (!(id != null))
+                return "no ID defined for primitive";
+
+
+            grandChildren = children[i].children;
+            var x, y, z, x2, y2, z2, x3, y3, z3, radius, slices, stacks, inner, outer, loops;
+
+            for (var k = 0; k < grandChildren.length; k++) {
+                //if its a rectangle
+                if (grandChildren[k].nodeName == 'rectangle') {
+                    // x
+                    x = this.reader.getFloat(grandChildren[k], 'x1');
+                    if (x == null || isNaN(x))
+                        return "no x defined for rectangle";
+
+                    // y
+                    y = this.reader.getFloat(grandChildren[k], 'y1');
+                    if (y == null || isNaN(y))
+                        return "no y defined for rectangle";
+
+                    // x2
+                    x2 = this.reader.getFloat(grandChildren[k], 'x2');
+                    if (x2 == null || isNaN(x2))
+                        return "no x2 defined for rectangle";
+
+
+                    // y2
+                    y2 = this.reader.getFloat(grandChildren[k], 'y2');
+                    if (y2 == null || isNaN(y2))
+                        return "no y2 defined for translate";
+
+                    this.primitives[id] = new MyRectangle(id, x, y, x2, y2);
+                }
+
+                //if its a sphere
+                if (grandChildren[k].nodeName == 'sphere') {
+                    // radius
+                    radius = this.reader.getFloat(grandChildren[k], 'radius');
+                    if (radius == null || isNaN(radius))
+                        return "no radius defined for sphere";
+
+                    // slices
+                    slices = this.reader.getFloat(grandChildren[k], 'slices');
+                    if (slices == null || isNaN(slices))
+                        return "no slices defined for sphere";
+
+                    // stacks
+                    stacks = this.reader.getFloat(grandChildren[k], 'stacks');
+                    if (stacks == null || isNaN(stacks))
+                        return "no stacks defined for sphere";
+
+                    this.primitives[id] = new MySphere(id, x, y, x2, y2);
+                }
+
+                //if its a triangle
+                if (grandChildren[k].nodeName == 'triangle') {
+                    // x
+                    x = this.reader.getFloat(grandChildren[k], 'x1');
+                    if (x == null || isNaN(x))
+                        return "no x defined for triangle";
+
+                    // y
+                    y = this.reader.getFloat(grandChildren[k], 'y1');
+                    if (y == null || isNaN(y))
+                        return "no y defined for triangle";
+
+                    // z
+                    z = this.reader.getFloat(grandChildren[k], 'z1');
+                    if (z == null || isNaN(z))
+                        return "no z defined for triangle";
+
+                    // x2
+                    x2 = this.reader.getFloat(grandChildren[k], 'x2');
+                    if (x2 == null || isNaN(x2))
+                        return "no x2 defined for triangle";
+
+                    // y2
+                    y2 = this.reader.getFloat(grandChildren[k], 'y2');
+                    if (y2 == null || isNaN(y2))
+                        return "no y2 defined for triangle";
+
+                    // z2
+                    z2 = this.reader.getFloat(grandChildren[k], 'z2');
+                    if (z2 == null || isNaN(z2))
+                        return "no z2 defined for triangle";
+
+                    // x3
+                    x3 = this.reader.getFloat(grandChildren[k], 'x3');
+                    if (x3 == null || isNaN(x3))
+                        return "no x2 defined for triangle";
+
+                    // y3
+                    y3 = this.reader.getFloat(grandChildren[k], 'y3');
+                    if (y3 == null || isNaN(y3))
+                        return "no y3 defined for triangle";
+
+                    // z3
+                    z3 = this.reader.getFloat(grandChildren[k], 'z3');
+                    if (z3 == null || isNaN(z3))
+                        return "no z3 defined for triangle";
+
+                    this.primitives[id] = new MyTriangle(id, x, y, z, x2, y2, z2, x3, y3, z3);
+                }
+                //if its a torus
+                if (grandChildren[k].nodeName == 'torus') {
+                    // inner
+                    inner = this.reader.getFloat(grandChildren[k], 'inner');
+                    if (inner == null || isNaN(inner))
+                        return "no inner defined for torus";
+
+                    // outer
+                    outer = this.reader.getFloat(grandChildren[k], 'outer');
+                    if (outer == null || isNaN(outer))
+                        return "no outer defined for torus";
+
+                    // slices
+                    slices = this.reader.getFloat(grandChildren[k], 'slices');
+                    if (slices == null || isNaN(slices))
+                        return "no slices defined for torus";
+
+                    // loops
+                    loops = this.reader.getFloat(grandChildren[k], 'loops');
+                    if (loops == null || isNaN(loops))
+                        return "no loops defined for torus";
+
+                    this.primitives[id] = new MyTorus(id, inner, outer, slices, loops);
+                }
+
+
+            }
+            this.transformations.push(trans);
+        }
+
+
+
+
         this.log("Parsed primitives");
         return null;
 
