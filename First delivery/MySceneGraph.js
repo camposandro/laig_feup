@@ -238,7 +238,7 @@ class MySceneGraph {
 
             // get current id
             var id = this.reader.getString(children[i], 'id');
-            if (!(id != null && !isNaN(id)))
+            if (id == null)
                 return "no ID defined for perspective";
 
             // get current near value
@@ -724,7 +724,6 @@ class MySceneGraph {
         // TODO: Parse materials block
         this.log("Parsed materials");
         return null;
-
     }
 
     /**
