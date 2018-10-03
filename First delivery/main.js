@@ -12,9 +12,27 @@ function getUrlVars() {
 }
 	 
 //Include additional files here
-serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'MyInterface.js', 
-'MyEntity.js', 'MyView.js', 'MyViewPerspective.js', 'MyViewOrtho.js', 'MyAmbient.js',
-'MyLight.js', 'MyOmni.js','MySpotlight.js', 'MyTexture.js',
+serialInclude(['lib/CGF.js', 
+'XMLscene.js', 
+'MySceneGraph.js', 
+'MyInterface.js', 
+'entities/MyEntity.js', 
+'entities/MyView.js', 
+'entities/MyAmbient.js',
+'entities/MyLight.js', 
+'entities/MyOmni.js',
+'entities/MySpotlight.js', 
+'entities/MyTexture.js',
+'entities/MyMaterial.js',
+'entities/MyRotation.js',
+'entities/MyScaling.js',
+'entities/MyTranslation.js',
+'entities/MyTransformation.js',
+'primitives/MyCylinder.js',
+'primitives/MyRectangle.js',
+'primitives/MySphere.js',
+'primitives/MyTorus.js',
+'primitives/MyTriangle.js',
 
 main=function()
 {

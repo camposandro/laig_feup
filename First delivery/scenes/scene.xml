@@ -4,11 +4,11 @@
     <scene root="root" referenceLength="3"/>
 
     <!-- Views specification -->
-    <views default="onlyView">
+    <views default="1">
 
-        <perspective id="1" near="0.1" far="500" angle="1">
-            <from x="10" y="0" z="0"/>
-            <to x="-10" y="0" z="0"/>
+        <perspective id="1" near="0.1" far="500" angle="20">
+            <from x="15" y="15" z="15"/>
+            <to x="0" y="0" z="0"/>
         </perspective>
 
         <ortho id="2" near="0.1" far="500" left="-10" right="10" top="10" bottom="-10"/>

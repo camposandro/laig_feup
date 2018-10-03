@@ -42,11 +42,12 @@ class XMLscene extends CGFscene {
     initCameras() {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
     }
+
     /**
      * Initializes the scene lights with the values read from the XML file.
      */
     initLights() {
-        
+
         // Lights index.
         var i = 0;
 
@@ -57,7 +58,7 @@ class XMLscene extends CGFscene {
 
             if (this.graph.lights.hasOwnProperty(key)) {
                 var light = this.graph.lights[key];
-                
+
                 this.lights[i].setPosition(light.location[0], light.location[1], light.location[2], light.location[3]);
                 this.lights[i].setAmbient(light.ambient[0], light.ambient[1], light.ambient[2], light.ambient[3]);
                 this.lights[i].setDiffuse(light.diffuse[0], light.diffuse[1], light.diffuse[2], light.diffuse[3]);
@@ -82,23 +83,23 @@ class XMLscene extends CGFscene {
      */
     onGraphLoaded() {
 
-        // set default camera view
-        this.camera.near = this.graph.views[1].near;
-        this.camera.far = this.graph.views[1].far;
+        // set parsed default camera
+        this.camera = this.graph.defCamera;
+        this.interface.setActiveCamera(this.camera);
 
         // Change axis reference length according to parsed graph
         this.axis = new CGFaxis(this, this.graph.referenceLength);
 
         // Change ambient and background details according to parsed graph
-        this.setGlobalAmbientLight(this.graph.ambient['r'], 
-                            this.graph.ambient['g'], 
-                            this.graph.ambient['b'], 
-                            this.graph.ambient['a']);
-                            
-        this.gl.clearColor(this.graph.background['r'], 
-                            this.graph.background['g'], 
-                            this.graph.background['b'], 
-                            this.graph.background['a']);
+        this.setGlobalAmbientLight(this.graph.ambient['r'],
+            this.graph.ambient['g'],
+            this.graph.ambient['b'],
+            this.graph.ambient['a']);
+
+        this.gl.clearColor(this.graph.background['r'],
+            this.graph.background['g'],
+            this.graph.background['b'],
+            this.graph.background['a']);
 
         this.initLights();
 
@@ -135,7 +136,7 @@ class XMLscene extends CGFscene {
             var i = 0;
             for (var key in this.lightValues) {
                 if (this.lightValues.hasOwnProperty(key)) {
-                    if (this.lightValues[key]) {
+                    if (this.lightValues[key].enabled) {
                         this.lights[i].setVisible(true);
                         this.lights[i].enable();
                     }
@@ -143,7 +144,9 @@ class XMLscene extends CGFscene {
                         this.lights[i].setVisible(false);
                         this.lights[i].disable();
                     }
+
                     this.lights[i].update();
+
                     i++;
                 }
             }
