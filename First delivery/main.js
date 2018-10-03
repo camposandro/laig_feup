@@ -34,6 +34,8 @@ serialInclude(['lib/CGF.js',
 'primitives/MyTorus.js',
 'primitives/MyTriangle.js',
 'primitives/MyCircle.js',
+'entities/MyComponents.js',
+	       
 
 main=function()
 {
