@@ -1,7 +1,7 @@
 <yas>
 
     <!-- Initial values -->
-    <scene root="root" referenceLength="0.25"/>
+    <scene root="root" referenceLength="3"/>
 
     <!-- Views specification -->
     <views default="onlyView">
@@ -18,7 +18,7 @@
     <!-- Ilumination parameters -->
     <ambient>
         <ambient r="0.3" g="0.5" b="1" a="1"/>
-        <background r="0" g="0" b="0" a="1"/>
+        <background r="0.7" g="0.4" b="1" a="1"/>
     </ambient>
 
     <!-- Light sources -->
