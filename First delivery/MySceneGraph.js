@@ -1125,8 +1125,103 @@ class MySceneGraph {
      */
     parseComponents(componentsNode) {
         // TODO: Parse components block
+/*
+        this.components = [];
+        var children = componentsNode.children;
+        var grandChildren = [];
+        
+
+        for (var i = 0; i < children.length; i++) {
+
+            if (children[i].nodeName != "component") {
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                continue;
+            }
+
+            // get current id
+            var id = this.reader.getString(children[i], 'id');
+            var comp = new MyComponent(id);
+            if (!(id != null))
+                return "no ID defined for primitive";
+
+
+            grandChildren = children[i].children;
+            var id2;
+            for (var k = 0; k < grandChildren.length; k++) {
+                //if its a transformation
+                if (grandChildren[k].nodeName == 'transformation') {
+                    grandGrandChildren = grandChildren[i].children;
+
+                    for (var l = 0; l < grandGrandChildren.length; k++) {
+                        if(grandGrandChildren[l].nodeName == 'transformationref'){
+                            var id2 = this.reader.getString(grandGrandChildren[l], 'id2');
+                            if (id2 == null || isNaN(id2))
+                                return "no id defined for transformationref";
+
+                            comp.addTransformations(this.transformations[id2]);   
+                        }
+                            
+                        if(grandGrandChildren[l].nodeName == 'translate'){
+                            var id2 = this.reader.getString(grandGrandChildren[l], 'id2');
+                            if (id2 == null || isNaN(id2))
+                                return "no id defined for transformationref";
+                        }
+                        
+                    }
+
+                    
+                }
+
+                //if its a material
+                if (grandChildren[k].nodeName == 'material') {
+                    // id2
+                    id2 = this.reader.getFloat(grandChildren[k], 'id');
+                    if (id2 == null || isNaN(id2))
+                        return "no id defined for material";
+
+                    comp.addTransformations(this.materials[id2]);   
+                }
+
+                //if its a material
+                if (grandChildren[k].nodeName == 'material') {
+                    // id2
+                    id2 = this.reader.getFloat(grandChildren[k], 'id');
+                    if (id2 == null || isNaN(id2))
+                        return "no id defined for material";
+
+                    comp.addTransformations(this.materials[id2]);   
+                }
+
+                //if its a torus
+                if (grandChildren[k].nodeName == 'torus') {
+                    // inner
+                    inner = this.reader.getFloat(grandChildren[k], 'inner');
+                    if (inner == null || isNaN(inner))
+                        return "no inner defined for torus";
+
+                    // outer
+                    outer = this.reader.getFloat(grandChildren[k], 'outer');
+                    if (outer == null || isNaN(outer))
+                        return "no outer defined for torus";
+
+                    // slices
+                    slices = this.reader.getFloat(grandChildren[k], 'slices');
+                    if (slices == null || isNaN(slices))
+                        return "no slices defined for torus";
+
+                    // loops
+                    loops = this.reader.getFloat(grandChildren[k], 'loops');
+                    if (loops == null || isNaN(loops))
+                        return "no loops defined for torus";
+
+                    this.primitives[id] = new MyTorus(id, inner, outer, slices, loops);
+                }
+            }
+        }
+        */
         this.log("Parsed components");
         return null;
+
     }
 
     /*
