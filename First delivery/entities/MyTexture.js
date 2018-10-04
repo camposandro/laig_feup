@@ -5,10 +5,13 @@ class MyTexture extends MyEntity {
 
 	/**
      * @constructor
-     * @param {id, file}
+     * @param {id}
      */
     constructor(id, file) {
+
         super(id);
-        this.file = file;
+        this.appearence = new CGFappearance(this.scene);
+        //this.appearence.loadTexture(file);
+        //this.appearence.setTextureWrap('REPEAT','REPEAT');
     }
 }
