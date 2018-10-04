@@ -1282,7 +1282,7 @@ class MySceneGraph {
                         for (var l = 0; l < grandGrandChildren.length; l++) {
                             var id2 = this.reader.getString(grandGrandChildren[l], 'id');
                           
-                            comp.addPrimitivet(this.primitives[id2]);
+                            comp.addPrimitive(this.primitives[id2]);
                         }
                     }
                 }
