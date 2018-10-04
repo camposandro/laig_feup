@@ -900,12 +900,13 @@ class MySceneGraph {
             grandChildren = children[i].children;
 
             for (var k = 0; k < grandChildren.length; k++) {
+                
                 //if its a translation
                 if (grandChildren[k].nodeName == 'translate') {
                     // x
                     x = this.reader.getFloat(grandChildren[k], 'x');
                     if (x == null || isNaN(x))
-                        return "no r defined for translate";
+                        return "no x defined for translate";
 
                     // y
                     y = this.reader.getFloat(grandChildren[k], 'y');
@@ -917,15 +918,16 @@ class MySceneGraph {
                     if (z == null || isNaN(z))
                         return "no z defined for translate";
 
-                    trans.addTransformation(new MyTranslation(x, y, z));
+                    trans.addTranslation(new MyTranslation(x, y, z));
                 }
-
+                
+                
                 //if its a scale
                 if (grandChildren[k].nodeName == 'scale') {
                     // x
                     x = this.reader.getFloat(grandChildren[k], 'x');
                     if (x == null || isNaN(x))
-                        return "no r defined for scale";
+                        return "no x defined for scale";
 
                     // y
                     y = this.reader.getFloat(grandChildren[k], 'y');
@@ -937,8 +939,10 @@ class MySceneGraph {
                     if (z == null || isNaN(z))
                         return "no z defined for scale";
 
-                    trans.push(new MyScaling(x, y, z));
+                    trans.addScale(new MyScaling(x, y, z));
                 }
+                
+                
                 //if its a rotation
                 if (grandChildren[k].nodeName == 'rotate') {
                     // axis
@@ -951,8 +955,9 @@ class MySceneGraph {
                     if (angle == null || isNaN(angle))
                         return "no angle defined for rotate";
 
-                    trans.addTransformation(new MyRotation(axis, angle));
+                    trans.addRotation(new MyRotation(angle, axis));
                 }
+                
             }
 
             this.transformations[id] = trans;
@@ -1125,7 +1130,7 @@ class MySceneGraph {
      */
     parseComponents(componentsNode) {
         // TODO: Parse components block
-/*
+
         this.components = [];
         var children = componentsNode.children;
         var grandChildren = [];
@@ -1147,82 +1152,147 @@ class MySceneGraph {
 
             grandChildren = children[i].children;
             var id2;
+            
             for (var k = 0; k < grandChildren.length; k++) {
+
                 //if its a transformation
                 if (grandChildren[k].nodeName == 'transformation') {
-                    grandGrandChildren = grandChildren[i].children;
 
-                    for (var l = 0; l < grandGrandChildren.length; k++) {
-                        if(grandGrandChildren[l].nodeName == 'transformationref'){
-                            var id2 = this.reader.getString(grandGrandChildren[l], 'id2');
+                    var grandGrandChildren = grandChildren[k].children
+                   
+                    for (var l = 0; l < grandGrandChildren.length; l++) {
+                        if(grandChildren[l].nodeName == 'transformationref'){
+                           
+                            var id2 = this.reader.getString(grandChildren[l], 'id');
                             if (id2 == null || isNaN(id2))
                                 return "no id defined for transformationref";
 
                             comp.addTransformations(this.transformations[id2]);   
                         }
                             
-                        if(grandGrandChildren[l].nodeName == 'translate'){
-                            var id2 = this.reader.getString(grandGrandChildren[l], 'id2');
-                            if (id2 == null || isNaN(id2))
-                                return "no id defined for transformationref";
+                           
+                        if(grandChildren[l].nodeName == 'translate'){
+                            var x,y,z;
+                            // x
+                            x = this.reader.getFloat(grandChildren[l], 'x');
+                            if (x == null || isNaN(x))
+                                return "no x defined for translate";
+            
+                            // y
+                            y = this.reader.getFloat(grandChildren[l], 'y');                                
+                            if (y == null || isNaN(y))
+                                return "no y defined for translate";
+            
+                            // z
+                            z = this.reader.getFloat(grandChildren[l], 'z');
+                            if (z == null || isNaN(z))
+                                return "no z defined for translate";
+                
+                            comp.addTranslation([x, y, z]);
+                        }
+
+                        if(grandChildren[l].nodeName == 'scale'){
+                            var x,y,z;
+                            // x
+                            x = this.reader.getFloat(grandChildren[l], 'x');
+                            if (x == null || isNaN(x))
+                                return "no x defined for scale";
+
+                            // y
+                            y = this.reader.getFloat(grandChildren[l], 'y');
+                            if (y == null || isNaN(y))
+                                return "no y defined for scale";
+
+                            // z
+                            z = this.reader.getFloat(grandChildren[l], 'z');
+                            if (z == null || isNaN(z))
+                                return "no z defined for scale";
+
+                            comp.addScale([x, y, z]);
+
+                        }
+                        if(grandChildren[l].nodeName == 'rotate'){
+                            // axis
+                            axis = this.reader.getString(grandChildren[l], 'axis');
+                            if (axis == null)
+                                return "no axis defined for rotate";
+
+                            // angle
+                            angle = this.reader.getFloat(grandChildren[l], 'angle');
+                            if (angle == null || isNaN(angle))
+                                return "no angle defined for rotate";
+
+                            trans.addRotation(new MyRotation(angle, axis));
+
+                            comp.addRotation([angle, axis]);
+
                         }
                         
                     }
 
-                    
+                }
+                
+                //if its the materials
+                if (grandChildren[k].nodeName == 'materials') {
+                    var grandGrandChildren = grandChildren[k].children
+                   
+                    for (var l = 0; l < grandGrandChildren.length; l++) {
+                        var id2 = this.reader.getString(grandGrandChildren[l], 'id');
+                        
+                        if (id2 == null)
+                            return "no id defined for materials";
+
+                        if(id2 == 'inherit') {
+                            comp.addMaterials(new MyMaterial(id));
+                        }
+                        else
+                            comp.addMaterials(this.materials[id2]);   
+                    }
                 }
 
-                //if its a material
-                if (grandChildren[k].nodeName == 'material') {
-                    // id2
-                    id2 = this.reader.getFloat(grandChildren[k], 'id');
-                    if (id2 == null || isNaN(id2))
-                        return "no id defined for material";
+                //if its the textures
+                if (grandChildren[k].nodeName == 'texture') {
+                     
+                    var id2 = this.reader.getString(grandChildren[k], 'id');
+                    if (id2 == null)
+                        return "no id defined for texture";
 
-                    comp.addTransformations(this.materials[id2]);   
+                    if(id2 == 'inherit') {
+                        comp.addTexture();
+                    }
+                    if(id2 == 'inherit') {
+                        comp.addNullTexture();
+                    }
+                    else
+                        comp.addTexture(this.textures[id2]);   
                 }
+                
+                //if its the children
+                if (grandChildren[k].nodeName == 'children') {
+                    var grandGrandChildren = grandChildren[k].children
 
-                //if its a material
-                if (grandChildren[k].nodeName == 'material') {
-                    // id2
-                    id2 = this.reader.getFloat(grandChildren[k], 'id');
-                    if (id2 == null || isNaN(id2))
-                        return "no id defined for material";
-
-                    comp.addTransformations(this.materials[id2]);   
+                    if (grandChildren[k].nodeName == 'componentref') {
+                        for (var l = 0; l < grandGrandChildren.length; l++) {
+                            var id2 = this.reader.getString(grandGrandChildren[l], 'id');
+                          
+                            comp.addComponent(new MyComponents(id2));
+                        }
+                    }
+                    if (grandChildren[k].nodeName == 'primitiveref') {
+                        for (var l = 0; l < grandGrandChildren.length; l++) {
+                            var id2 = this.reader.getString(grandGrandChildren[l], 'id');
+                          
+                            comp.addPrimitivet(this.primitives[id2]);
+                        }
+                    }
                 }
-
-                //if its a torus
-                if (grandChildren[k].nodeName == 'torus') {
-                    // inner
-                    inner = this.reader.getFloat(grandChildren[k], 'inner');
-                    if (inner == null || isNaN(inner))
-                        return "no inner defined for torus";
-
-                    // outer
-                    outer = this.reader.getFloat(grandChildren[k], 'outer');
-                    if (outer == null || isNaN(outer))
-                        return "no outer defined for torus";
-
-                    // slices
-                    slices = this.reader.getFloat(grandChildren[k], 'slices');
-                    if (slices == null || isNaN(slices))
-                        return "no slices defined for torus";
-
-                    // loops
-                    loops = this.reader.getFloat(grandChildren[k], 'loops');
-                    if (loops == null || isNaN(loops))
-                        return "no loops defined for torus";
-
-                    this.primitives[id] = new MyTorus(id, inner, outer, slices, loops);
-                }
-            }
-        }
-        */
-        this.log("Parsed components");
-        return null;
-
+            
+            }  
+        this.components[id] = comp; 
     }
+    this.log("Parsed components");
+        return null;
+}
 
     /*
      * Callback to be executed on any read error, showing an error on the console.
