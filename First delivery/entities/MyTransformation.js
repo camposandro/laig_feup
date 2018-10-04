@@ -9,9 +9,16 @@ class MyTransformation extends MyEntity {
      */
     constructor(id) {
      super(id);
-     this.transformations = [];
+     this.transformationsMatrix = mat4.create();
+        mat4.identity(this.transformationsMatrix);
     }
-    addTransformation(trans){
-        this.transformations.push(trans);
+    addTranslation(transformation){
+        mat4.translate(this.transformationsMatrix, this.transformationsMatrix, transformation);
+    }
+    addRotation(transformation){
+      	mat4.rotate(this.transformationsMatrix, this.transformationsMatrix, transformation.angle,transformation.vec );
+    }
+    addScale(transformation){
+    	mat4.scale(this.transformationsMatrix, this.transformationsMatrix, transformation);
     }
 }
