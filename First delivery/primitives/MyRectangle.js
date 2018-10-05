@@ -1,7 +1,7 @@
 /**
  * MyRectangle class, representing a rectangle.
  */
-class MyRectangle extends CGFobject {
+class MyRectangle extends MyPrimitive {
 
     /**
      * @constructor
@@ -15,7 +15,7 @@ class MyRectangle extends CGFobject {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
-
+        
         this.initBuffers();
     };
 
@@ -38,7 +38,7 @@ class MyRectangle extends CGFobject {
             0, 0, 1,
             0, 0, 1
         ];
-        
+
         // TODO: add texCoords
         this.primitiveType = this.scene.gl.TRIANGLES;
         this.initGLBuffers();

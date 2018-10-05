@@ -1,14 +1,14 @@
 /**
  * MyLight class, representing a light.
  */
-class MyLight extends MyEntity {
+class MyLight {
 
 	/**
      * @constructor
      * @param {id, enabled, location, ambient, diffuse, specular}
      */
 	constructor(id, enabled, location, ambient, diffuse, specular) {
-		super(id);
+		this.id = id;
         this.enabled = enabled;
         this.location = location;
         this.ambient = ambient;

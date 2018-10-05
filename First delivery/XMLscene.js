@@ -151,7 +151,7 @@ class XMLscene extends CGFscene {
                 }
             }
 
-            // Displays the scene (MySceneGraph function).
+            // Displays the scene
             this.graph.displayScene();
         }
         else {

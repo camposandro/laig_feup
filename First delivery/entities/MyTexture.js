@@ -1,17 +1,21 @@
 /**
  * MyTexture class, representing a texture.
  */
-class MyTexture extends MyEntity {
+class MyTexture {
 
 	/**
      * @constructor
      * @param {id}
      */
-    constructor(id, file) {
+    constructor(scene, id, file) {
+        
+        this.id = id;
+        this.loadTex(scene, file);
+    }
 
-        super(id);
-        this.appearence = new CGFappearance(this.scene);
-        //this.appearence.loadTexture(file);
-        //this.appearence.setTextureWrap('REPEAT','REPEAT');
+    loadTex(scene, file) {
+        this.appearence = new CGFappearance(scene);
+        this.appearence.loadTexture(file);
+        this.appearence.setTextureWrap('REPEAT','REPEAT');
     }
 }

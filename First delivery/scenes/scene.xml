@@ -1,7 +1,7 @@
 <yas>
 
     <!-- Initial values -->
-    <scene root="root" referenceLength="3"/>
+    <scene root="root" referenceLength="10"/>
 
     <!-- Views specification -->
     <views default="1">
@@ -86,8 +86,12 @@
 
     <!-- Primitive objects -->
     <primitives>
-        <primitive id="rect">
+        <primitive id="myRectangle">
             <rectangle x1="-0.5" y1="0.5" x2="0.5" y2="-0.5"/>
+        </primitive>
+
+        <primitive id="myCylinder">
+            <cylinder base="2" top="2" height="4" slices="20" stacks="20"/>
         </primitive>
     </primitives>
 
@@ -100,13 +104,13 @@
             </transformation>
 
             <materials>
-                <material id="defaultMaterial"/>
+                <material id="inherit"/>
             </materials>
            
             <texture id="1" length_s="1" length_t="1"/>
 
             <children>
-                <primitiveref id="rect"/>
+                <primitiveref id="myRectangle"/>
             </children>
         </component>
 
@@ -116,13 +120,13 @@
             </transformation>
 
             <materials>
-                <material id="defaultMaterial"/>
+                <material id="inherit"/>
             </materials>
            
             <texture id="1" length_s="1" length_t="1"/>
 
             <children>
-                <primitiveref id="rect"/>
+                <primitiveref id="myRectangle"/>
             </children>
         </component>
 
@@ -132,13 +136,13 @@
             </transformation>
 
             <materials>
-                <material id="defaultMaterial"/>
+                <material id="inherit"/>
             </materials>
            
             <texture id="1" length_s="1" length_t="1"/>
 
             <children>
-                <primitiveref id="rect"/>
+                <primitiveref id="myRectangle"/>
             </children>
         </component>
 
@@ -148,13 +152,13 @@
             </transformation>
 
             <materials>
-                <material id="defaultMaterial"/>
+                <material id="inherit"/>
             </materials>
            
             <texture id="1" length_s="1" length_t="1"/>
 
             <children>
-                <primitiveref id="rect"/>
+                <primitiveref id="myRectangle"/>
             </children>
         </component>
 
@@ -164,13 +168,13 @@
             </transformation>
 
             <materials>
-                <material id="defaultMaterial"/>
+                <material id="inherit"/>
             </materials>
            
            <texture id="1" length_s="1" length_t="1"/>
 
             <children>
-                <primitiveref id="rect"/>
+                <primitiveref id="myRectangle"/>
             </children>
         </component>
 
@@ -180,18 +184,27 @@
             </transformation>
 
             <materials>
-                <material id="defaultMaterial"/>
+                <material id="inherit"/>
             </materials>
            
             <texture id="1" length_s="1" length_t="1"/>
 
             <children>
-                <primitiveref id="rect"/>
+                <primitiveref id="myRectangle"/>
             </children>
         </component>
 
-        <!-- Vaporwave cube -->
-        <component id="cube">
+        <!-- Cube -->
+        <component id="mycube">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="defaultMaterial"/>
+            </materials>
+
+            <texture id="none" length_s="0" length_t="0"/>
+
             <children>
                 <componentref id="face1"/>
                 <componentref id="face2"/>
@@ -204,8 +217,18 @@
 
         <!-- Root element -->
         <component id="root">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="defaultMaterial"/>
+            </materials>
+
+            <texture id="none" length_s="0" length_t="0"/>
+
             <children>
-                <componentref id="cube">
+                <componentref id="myCube">
+                <primitiveref id="myCylinder">
             </children>
         </component>
 

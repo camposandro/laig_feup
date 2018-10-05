@@ -1,14 +1,14 @@
 /**
  * MyView class, representing a view.
  */
-class MyView extends MyEntity {
+class MyView {
 
 	/**
      * @constructor
      * @param {id, near, far} 
      */
 	constructor(id, near, far) {
-		super(id);
+		this.id = id;
 		this.near = near;
 		this.far = far;
 	}

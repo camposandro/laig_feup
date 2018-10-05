@@ -1,7 +1,7 @@
 /**
  * MyTriangle class, representing a triangle.
  */
-class MyTriangle extends CGFobject {
+class MyTriangle extends MyPrimitive {
 
     /**
      * @constructor
@@ -11,18 +11,24 @@ class MyTriangle extends CGFobject {
         super(scene);
 
         this.id = id;
-        this.p1 = [x1, y1, z1];
-        this.p2 = [x2, y2, z2];
-        this.p3 = [x3, y3, z3];
-
+        this.x1 = x1;
+        this.y1 = y1;
+        this.z1 = z1;
+        this.x2 = x2;
+        this.y2 = y2;
+        this.z2 = z2;
+        this.x3 = x3;
+        this.y3 = y3;
+        this.z3 = z3;
+        
         this.initBuffers();
     };
 
     initBuffers() {
         this.vertices = [
-            this.p1[0], this.p1[1], this.p1[2],
-            this.p2[0], this.p2[1], this.p2[2],
-            this.p3[0], this.p3[1], this.p3[0]
+            this.x1, this.y1, this.z1,
+            this.x2, this.y2, this.z2,
+            this.x3, this.y3, this.z3
         ];
 
         this.indices = [

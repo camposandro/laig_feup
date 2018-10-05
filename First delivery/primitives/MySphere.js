@@ -1,7 +1,7 @@
 /**
  * MySphere class, representing a sphere.
  */
-class MySphere extends MyEntity {
+class MySphere extends MyPrimitive {
 
 	/**
      * @constructor
