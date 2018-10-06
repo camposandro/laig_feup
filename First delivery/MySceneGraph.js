@@ -1123,7 +1123,7 @@ class MySceneGraph {
                     if (stacks == null || isNaN(stacks))
                         return "no stacks defined for sphere";
 
-                    this.primitives[id] = new MySphere(this.scene, id, x, y, x2, y2);
+                    this.primitives[id] = new MySphere(this.scene, id, radius, slices, stacks);
                 }
 
                 //if its a torus
@@ -1206,52 +1206,52 @@ class MySceneGraph {
 
                         var x, y, z;
 
-                        if (grandChildren[l].nodeName == 'translate') {
+                        if (grandGrandChildren[l].nodeName == 'translate') {
                             // x
-                            x = this.reader.getFloat(grandChildren[l], 'x');
+                            x = this.reader.getFloat(grandGrandChildren[l], 'x');
                             if (x == null || isNaN(x))
                                 return "no x defined for translate";
 
                             // y
-                            y = this.reader.getFloat(grandChildren[l], 'y');
+                            y = this.reader.getFloat(grandGrandChildren[l], 'y');
                             if (y == null || isNaN(y))
                                 return "no y defined for translate";
 
                             // z
-                            z = this.reader.getFloat(grandChildren[l], 'z');
+                            z = this.reader.getFloat(grandGrandChildren[l], 'z');
                             if (z == null || isNaN(z))
                                 return "no z defined for translate";
 
                             comp.addTranslation(new MyTranslation(x, y, z));
                         }
 
-                        if (grandChildren[l].nodeName == 'scale') {
+                        if (grandGrandChildren[l].nodeName == 'scale') {
                             // x
-                            x = this.reader.getFloat(grandChildren[l], 'x');
+                            x = this.reader.getFloat(grandGrandChildren[l], 'x');
                             if (x == null || isNaN(x))
                                 return "no x defined for scale";
 
                             // y
-                            y = this.reader.getFloat(grandChildren[l], 'y');
+                            y = this.reader.getFloat(grandGrandChildren[l], 'y');
                             if (y == null || isNaN(y))
                                 return "no y defined for scale";
 
                             // z
-                            z = this.reader.getFloat(grandChildren[l], 'z');
+                            z = this.reader.getFloat(grandGrandChildren[l], 'z');
                             if (z == null || isNaN(z))
                                 return "no z defined for scale";
 
                             comp.addScale(new MyScaling(x, y, z));
                         }
 
-                        if (grandChildren[l].nodeName == 'rotate') {
+                        if (grandGrandChildren[l].nodeName == 'rotate') {
                             // axis
-                            var axis = this.reader.getString(grandChildren[l], 'axis');
+                            var axis = this.reader.getString(grandGrandChildren[l], 'axis');
                             if (axis == null)
                                 return "no axis defined for rotate";
 
                             // angle
-                            var angle = this.reader.getFloat(grandChildren[l], 'angle');
+                            var angle = this.reader.getFloat(grandGrandChildren[l], 'angle');
                             if (angle == null || isNaN(angle))
                                 return "no angle defined for rotate";
 
@@ -1405,14 +1405,14 @@ class MySceneGraph {
             else if (node.texture[0] == "none")
                 node.texture = [];*/
 
-            // update 
+            // update
             mat4.multiply(node.transformationsMatrix, node.transformationsMatrix, trf);
 
             var children = node.children;
             for (var i = 0; i < children.length; i++) {
                 this.scene.pushMatrix();
                 this.processNode(children[i],
-                    node.transformationsMatrix,
+                    trf,
                     node.mat,
                     node.tex,
                     node.ls,

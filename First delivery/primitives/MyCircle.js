@@ -8,12 +8,9 @@ class MyCircle extends MyPrimitive {
      * @constructor
      * @param {scene, slices}
      */
-    constructor(scene, id, slices) {
+    constructor(scene, slices) {
         super(scene);
-
-        this.id = id;
         this.slices = slices;
-        
         this.initBuffers();
     };
 
