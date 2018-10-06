@@ -10,16 +10,19 @@ class MyTransformation {
     constructor(id) {
         this.id = id;
 
-        this.transformationsMatrix = mat4.create();
-        mat4.identity(this.transformationsMatrix);
+        this.matrix = mat4.create();
+        mat4.identity(this.matrix);
     }
-    addTranslation(transformation) {
-        mat4.translate(this.transformationsMatrix, this.transformationsMatrix, transformation);
+
+    addTranslation(translation) {
+        mat4.translate(this.matrix, this.matrix, translation.vec);
     }
-    addRotation(transformation) {
-        mat4.rotate(this.transformationsMatrix, this.transformationsMatrix, transformation.angle, transformation.vec);
+
+    addRotation(rotation) {
+        mat4.rotate(this.matrix, this.matrix, rotation.angle, rotation.vec);
     }
-    addScale(transformation) {
-        mat4.scale(this.transformationsMatrix, this.transformationsMatrix, transformation);
+
+    addScale(scaling) {
+        mat4.scale(this.matrix, this.matrix, scaling.vec);
     }
 }

@@ -21,9 +21,9 @@ class MyRectangle extends MyPrimitive {
 
     initBuffers() {
         this.vertices = [
-            this.x1, 0, 0,
-            this.x2, 0, 0,
             this.x1, this.y1, 0,
+            this.x2, this.y1, 0,
+            this.x1, this.y2, 0,
             this.x2, this.y2, 0
         ];
 

@@ -1,15 +1,13 @@
 /**
  * MyScaling class, representing a scaling.
  */
-class MyScaling  {
+class MyScaling {
 
 	/**
      * @constructor
      * @param {x,y,z}
      */
-    constructor(x,y,z) {
-       this.x = x;
-       this.y = y;
-       this.z = z;
+    constructor(x, y, z) {
+        this.vec = [x, y, z];
     }
 }

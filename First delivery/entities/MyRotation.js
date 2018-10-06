@@ -10,7 +10,6 @@ class MyRotation {
     constructor(axis, angle) {
         this.axis = axis;
         this.angle = angle;
-        this.vec = [];
         this.parseAxis(axis);
     }
 

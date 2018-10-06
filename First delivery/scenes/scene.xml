@@ -44,54 +44,54 @@
 
     <!-- Materials -->
     <materials>
-        <material id="defaultMaterial" shininess="1">
+        <material id="default" shininess="1">
             <emission r="0.0" g="0.0" b="0.0" a="1"/>  
-            <ambient r="0.4" g="0.4" b="0.4" a="1"/>   
-            <diffuse r="0.4" g="0.4" b="0.4" a="1"/> 
-            <specular r="0.0" g="0.0" b="0.0" a="1"/>   
+            <ambient r="0.0" g="0.0" b="0.0" a="1"/>   
+            <diffuse r="0.5" g="0.5" b="0.5" a="1"/> 
+            <specular r="0.5" g="0.5" b="0.5" a="1"/>   
         </material>
     </materials>
 
     <!-- Transformations -->
     <transformations>
         <transformation id="trfFace1">
-            <translate x="0.5" y="0.5" z="0.5"/>
+            <translate x="0" y="0" z="0.5"/>
         </transformation>
 
         <transformation id="trfFace2">
-            <translate x="0.5" y="0.5" z="0.5"/>
-            <rotate axis="y" angle="-90"/>
-        </transformation>
-
-        <transformation id="trfFace3">
-            <translate x="0.5" y="0.5" z="0.5"/>
-            <rotate axis="y" angle="90"/>
-        </transformation>
-
-        <transformation id="trfFace4">
-            <translate x="0.5" y="0.5" z="0.5"/>
+            <translate x="0" y="0" z="-0.5"/>
             <rotate axis="y" angle="180"/>
         </transformation>
 
-        <transformation id="trfFace5">
-            <translate x="0.5" y="0.5" z="0.5"/>
+        <transformation id="trfFace3">
+            <translate x="0" y="-0.5" z="0"/>
+            <rotate axis="x" angle="90"/>
+        </transformation>
+
+        <transformation id="trfFace4">
+            <translate x="0" y="0.5" z="0"/>
             <rotate axis="x" angle="-90"/>
         </transformation>
 
+        <transformation id="trfFace5">
+            <translate x="-0.5" y="0" z="0"/>
+            <rotate axis="y" angle="-90"/>
+        </transformation>
+
         <transformation id="trfFace6">
-            <translate x= "0.5" y="0.5" z="0.5"/>
-            <rotate axis="x" angle="90"/>
+            <translate x= "0.5" y="0" z="0"/>
+            <rotate axis="y" angle="90"/>
         </transformation>
     </transformations>
 
     <!-- Primitive objects -->
     <primitives>
         <primitive id="myRectangle">
-            <rectangle x1="-0.5" y1="0.5" x2="0.5" y2="-0.5"/>
+            <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5"/>
         </primitive>
 
         <primitive id="myCylinder">
-            <cylinder base="2" top="2" height="4" slices="20" stacks="20"/>
+            <cylinder base="2" top="2" height="3" slices="20" stacks="20"/>
         </primitive>
     </primitives>
 
@@ -195,12 +195,12 @@
         </component>
 
         <!-- Cube -->
-        <component id="mycube">
+        <component id="myCube">
             <transformation>
             </transformation>
 
             <materials>
-                <material id="defaultMaterial"/>
+                <material id="default"/>
             </materials>
 
             <texture id="none" length_s="0" length_t="0"/>
@@ -221,14 +221,14 @@
             </transformation>
 
             <materials>
-                <material id="defaultMaterial"/>
+                <material id="default"/>
             </materials>
 
             <texture id="none" length_s="0" length_t="0"/>
 
             <children>
-                <componentref id="myCube">
-                <primitiveref id="myCylinder">
+                <componentref id="myCube"/>
+                <!--<primitiveref id="myCylinder"/>-->
             </children>
         </component>
 

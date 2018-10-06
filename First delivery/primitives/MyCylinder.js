@@ -68,14 +68,14 @@ class MyCylinder extends MyPrimitive {
 
     display() {
         this.scene.pushMatrix();
-        CGFobject.prototype.display.call(this);
-        this.scene.pushMatrix();
-        this.scene.translate(0, 0, this.height);
-        this.circle.display();
-        this.scene.translate(0, 0, -this.height);
-        this.scene.rotate(-180 * DEGREE_TO_RAD, 1, 0, 0);
-        this.circle.display();
-        this.scene.popMatrix();
+            CGFobject.prototype.display.call(this);
+            this.scene.pushMatrix();
+                this.scene.translate(0, 0, this.height);
+                this.circle.display();
+                this.scene.translate(0, 0, -this.height);
+                this.scene.rotate(-180 * DEGREE_TO_RAD, 1, 0, 0);
+                this.circle.display();
+            this.scene.popMatrix();
         this.scene.popMatrix();
     }
 }

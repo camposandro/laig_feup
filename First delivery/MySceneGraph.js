@@ -861,7 +861,7 @@ class MySceneGraph {
                 }
             }
 
-            this.materials[id] = new MyMaterial(id, shininess, emission, ambient, diffuse, specular);
+            this.materials[id] = new MyMaterial(this.scene, id, shininess, emission, ambient, diffuse, specular);
         }
 
         this.log("Parsed materials");
@@ -959,9 +959,8 @@ class MySceneGraph {
                     if (angle == null || isNaN(angle))
                         return "no angle defined for rotate";
 
-                    trans.addRotation(new MyRotation(angle, axis));
+                    trans.addRotation(new MyRotation(axis, angle * DEGREE_TO_RAD));
                 }
-
             }
 
             this.transformations[id] = trans;
@@ -1000,6 +999,7 @@ class MySceneGraph {
             var x, y, z, x2, y2, z2, x3, y3, z3, radius, slices, stacks, inner, outer, loops;
 
             for (var k = 0; k < grandChildren.length; k++) {
+
                 //if its a rectangle
                 if (grandChildren[k].nodeName == 'rectangle') {
                     // x
@@ -1024,26 +1024,6 @@ class MySceneGraph {
                         return "no y2 defined for translate";
 
                     this.primitives[id] = new MyRectangle(this.scene, id, x, y, x2, y2);
-                }
-
-                //if its a sphere
-                if (grandChildren[k].nodeName == 'sphere') {
-                    // radius
-                    radius = this.reader.getFloat(grandChildren[k], 'radius');
-                    if (radius == null || isNaN(radius))
-                        return "no radius defined for sphere";
-
-                    // slices
-                    slices = this.reader.getFloat(grandChildren[k], 'slices');
-                    if (slices == null || isNaN(slices))
-                        return "no slices defined for sphere";
-
-                    // stacks
-                    stacks = this.reader.getFloat(grandChildren[k], 'stacks');
-                    if (stacks == null || isNaN(stacks))
-                        return "no stacks defined for sphere";
-
-                    this.primitives[id] = new MySphere(this.scene, id, x, y, x2, y2);
                 }
 
                 //if its a triangle
@@ -1095,6 +1075,57 @@ class MySceneGraph {
 
                     this.primitives[id] = new MyTriangle(this.scene, id, x, y, z, x2, y2, z2, x3, y3, z3);
                 }
+
+                // if its a cylinder
+                if (grandChildren[k].nodeName == 'cylinder') {
+                    // base
+                    var base = this.reader.getFloat(grandChildren[k], 'base');
+                    if (base == null || isNaN(base))
+                        return "no base defined for cylinder";
+
+                    // top
+                    var top = this.reader.getFloat(grandChildren[k], 'top');
+                    if (top == null || isNaN(top))
+                        return "no top defined for cylinder";
+
+                    // height
+                    var height = this.reader.getFloat(grandChildren[k], 'height');
+                    if (height == null || isNaN(height))
+                        return "no height defined for cylinder";
+
+                    // slices
+                    slices = this.reader.getFloat(grandChildren[k], 'slices');
+                    if (slices == null || isNaN(slices))
+                        return "no slices defined for cylinder";
+
+                    // stacks
+                    stacks = this.reader.getFloat(grandChildren[k], 'stacks');
+                    if (stacks == null || isNaN(stacks))
+                        return "no stacks defined for cylinder";
+
+                    this.primitives[id] = new MyCylinder(this.scene, id, base, top, height, slices, stacks);
+                }
+
+                //if its a sphere
+                if (grandChildren[k].nodeName == 'sphere') {
+                    // radius
+                    radius = this.reader.getFloat(grandChildren[k], 'radius');
+                    if (radius == null || isNaN(radius))
+                        return "no radius defined for sphere";
+
+                    // slices
+                    slices = this.reader.getFloat(grandChildren[k], 'slices');
+                    if (slices == null || isNaN(slices))
+                        return "no slices defined for sphere";
+
+                    // stacks
+                    stacks = this.reader.getFloat(grandChildren[k], 'stacks');
+                    if (stacks == null || isNaN(stacks))
+                        return "no stacks defined for sphere";
+
+                    this.primitives[id] = new MySphere(this.scene, id, x, y, x2, y2);
+                }
+
                 //if its a torus
                 if (grandChildren[k].nodeName == 'torus') {
                     // inner
@@ -1136,7 +1167,6 @@ class MySceneGraph {
         this.components = [];
 
         var children = componentsNode.children;
-        var grandChildren = [];
 
         for (var i = 0; i < children.length; i++) {
 
@@ -1152,7 +1182,7 @@ class MySceneGraph {
 
             var comp = new MyComponent(id);
 
-            grandChildren = children[i].children;
+            var grandChildren = children[i].children;
 
             var id2;
 
@@ -1165,13 +1195,13 @@ class MySceneGraph {
 
                     for (var l = 0; l < grandGrandChildren.length; l++) {
 
-                        if (grandChildren[l].nodeName == 'transformationref') {
+                        if (grandGrandChildren[l].nodeName == 'transformationref') {
                             // transformation id
-                            id2 = this.reader.getString(grandChildren[l], 'id');
-                            if (id2 == null || isNaN(id2))
+                            id2 = this.reader.getString(grandGrandChildren[l], 'id');
+                            if (id2 == null)
                                 return "no id defined for transformationref";
 
-                            comp.addTransformations(this.transformations[id2]);
+                            comp.addTransformation(this.transformations[id2]);
                         }
 
                         var x, y, z;
@@ -1192,7 +1222,7 @@ class MySceneGraph {
                             if (z == null || isNaN(z))
                                 return "no z defined for translate";
 
-                            comp.addTranslation([x, y, z]);
+                            comp.addTranslation(new MyTranslation(x, y, z));
                         }
 
                         if (grandChildren[l].nodeName == 'scale') {
@@ -1211,7 +1241,7 @@ class MySceneGraph {
                             if (z == null || isNaN(z))
                                 return "no z defined for scale";
 
-                            comp.addScale([x, y, z]);
+                            comp.addScale(new MyScaling(x, y, z));
                         }
 
                         if (grandChildren[l].nodeName == 'rotate') {
@@ -1225,12 +1255,9 @@ class MySceneGraph {
                             if (angle == null || isNaN(angle))
                                 return "no angle defined for rotate";
 
-                            trans.addRotation(new MyRotation(angle, axis));
-
-                            comp.addRotation([angle, axis]);
+                            comp.addRotation(new MyRotation(axis, angle * DEGREE_TO_RAD));
                         }
                     }
-
                 }
 
                 //if its the materials
@@ -1279,7 +1306,6 @@ class MySceneGraph {
                         }
 
                         if (grandGrandChildren[l].nodeName == 'primitiveref') {
-
                             // primitive id
                             id2 = this.reader.getString(grandGrandChildren[l], 'id');
                             if (id2 == null)
@@ -1352,29 +1378,35 @@ class MySceneGraph {
         if (node instanceof MyPrimitive) {
 
             this.scene.pushMatrix();
-            this.scene.multMatrix(node.transformationsMatrix);
-            this.materials[mat].apply();
-            this.textures[tex].apply();
+
+            this.scene.multMatrix(trf);
+
+            /* apply material
+            if (this.materials[mat] != null)
+                this.materials[mat].appearance.apply();*/
+
+            /* apply texture
+            if (this.materials[tex] != null)
+                this.textures[tex].appearance.apply();*/
             // TODO: scale textures
+
             node.display();
             this.scene.popMatrix();
 
         } else if (node instanceof MyComponent) {
 
-            // update material
-            node.sortMaterials();
+            /* update material
             if (node.currentMaterial == "inherit")
-                node.currentMaterial = mat;
+                node.currentMaterial = mat;*/
 
-            // update texture
+            /* update texture
             if (node.texture[0] == "inherit")
                 node.texture[0] = tex;
             else if (node.texture[0] == "none")
-                node.texture = [];
+                node.texture = [];*/
 
             // update 
             mat4.multiply(node.transformationsMatrix, node.transformationsMatrix, trf);
-            //node.transformationsMatrix.multMatrix(trf);
 
             var children = node.children;
             for (var i = 0; i < children.length; i++) {

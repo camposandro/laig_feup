@@ -9,8 +9,5 @@ class MyPrimitive extends CGFobject {
      */
     constructor(scene) {
         super(scene);
-
-        this.material = null;
-        this.texture = null;
     }
 }

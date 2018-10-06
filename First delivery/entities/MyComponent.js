@@ -20,33 +20,25 @@ class MyComponent {
         this.currentMaterial = null;
     }
 
-    addTransformations(transformations) {
-        this.transformationsMatrix = transformationsMatrix * transformations;
+    addTransformation(transformation) {
+        mat4.multiply(this.transformationsMatrix, this.transformationsMatrix, transformation.matrix);
     }
 
-    addTranslation(transformation) {
-        mat4.translate(transformationsMatrix, transformationsMatrix, transformation);
+    addTranslation(translation) {
+        mat4.translate(this.transformationsMatrix, this.transformationsMatrix, translation.vec);
     }
 
-    addRotation(transformation) {
-        var vec = [];
-
-        if (axis == 'x')
-            vec = [1, 0, 0];
-        if (axis == 'y')
-            vec = [0, 1, 0];
-        if (axis == 'z')
-            vec = [0, 0, 1];
-
-        mat4.rotate(transformationsMatrix, transformationsMatrix, transformation[0], vec);
+    addRotation(rotation) {
+        mat4.rotate(this.transformationsMatrix, this.transformationsMatrix, rotation.angle, rotation.vec);
     }
 
-    addScale(transformation) {
-        mat4.scale(transformationsMatrix, transformationsMatrix, transformation);
+    addScale(scaling) {
+        mat4.scale(this.transformationsMatrix, this.transformationsMatrix, scaling.vec);
     }
 
     addMaterial(id) {
         this.materials.push(id);
+        this.currentMaterial = id;
         //this.sortMaterials();
     }
 
@@ -60,7 +52,7 @@ class MyComponent {
     }
 
     sortMaterials() {
-        if (this.materials.length == 1 && this.materials[0] == "inherit") {
+        /*if (this.materials.length == 1 && this.materials[0] == "inherit") {
             this.currentMaterial = this.materials[0];
         } else {
             var i = 0;
@@ -70,6 +62,6 @@ class MyComponent {
                     break;
                 i++;
             }
-        }
+        }*/
     }
 }

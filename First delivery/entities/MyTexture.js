@@ -8,7 +8,6 @@ class MyTexture {
      * @param {id}
      */
     constructor(scene, id, file) {
-        
         this.id = id;
         this.loadTex(scene, file);
     }
@@ -16,6 +15,6 @@ class MyTexture {
     loadTex(scene, file) {
         this.appearence = new CGFappearance(scene);
         this.appearence.loadTexture(file);
-        this.appearence.setTextureWrap('REPEAT','REPEAT');
+        //this.appearence.setTextureWrap('REPEAT','REPEAT');
     }
 }
