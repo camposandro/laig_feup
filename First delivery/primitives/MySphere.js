@@ -51,7 +51,6 @@ class MySphere extends MyPrimitive {
                 this.indices.push(first);
                 this.indices.push(second);
                 this.indices.push(first + 1);
-
                 this.indices.push(second);
                 this.indices.push(second + 1);
                 this.indices.push(first + 1);

@@ -97,6 +97,10 @@
         <primitive id="mySphere">
             <sphere radius="3" slices="50" stacks="30"/>
         </primitive>
+
+        <primitive id="myTorus">
+            <torus inner="0.5" outer="1" slices="30" loops="30"/>
+        </primitive>
     </primitives>
 
     <!-- Composed objects -->
@@ -232,8 +236,9 @@
 
             <children>
                 <!--<componentref id="myCube"/>
-                <primitiveref id="myCylinder"/>-->
-                <primitiveref id="mySphere"/>
+                <primitiveref id="myCylinder"/>
+                <primitiveref id="mySphere"/>-->
+                <primitiveref id="myTorus"/>
             </children>
         </component>
 
