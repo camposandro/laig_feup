@@ -391,54 +391,60 @@ class MySceneGraph {
 
             var r, g, b, a;
 
-            // Retrieves the ambient values.
-            if (children[i].nodeName == "ambient") {
+            
+            switch(children[i].nodeName){
+                // Retrieves the ambient values.
+                case 'ambient': 
+                    // R
+                    r = this.reader.getFloat(children[i], 'r');
+                    if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
+                        return "no r defined for ambient";
 
-                // R
-                r = this.reader.getFloat(children[i], 'r');
-                if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
-                    return "no r defined for ambient";
+                    // G
+                    g = this.reader.getFloat(children[i], 'g');
+                    if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
+                        return "no g defined for ambient";
 
-                // G
-                g = this.reader.getFloat(children[i], 'g');
-                if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
-                    return "no g defined for ambient";
+                    // B
+                    b = this.reader.getFloat(children[i], 'b');
+                    if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
+                        return "no b defined for ambient";
 
-                // B
-                b = this.reader.getFloat(children[i], 'b');
-                if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
-                    return "no b defined for ambient";
+                    // A
+                    a = this.reader.getFloat(children[i], 'a');
+                    if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
+                        return "no a defined for ambient";
 
-                // A
-                a = this.reader.getFloat(children[i], 'a');
-                if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
-                    return "no a defined for ambient";
-                else
                     this.ambient = new MyAmbient(r, g, b, a);
+                break;
+                    
+                    case 'background':
+                    // R
+                    r = this.reader.getFloat(children[i], 'r');
+                    if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
+                        return "no r defined for ambient";
 
-            } else if (children[i].nodeName == "background") {
+                    // G
+                    g = this.reader.getFloat(children[i], 'g');
+                    if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
+                        return "no g defined for ambient";
 
-                // R
-                r = this.reader.getFloat(children[i], 'r');
-                if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
-                    return "no r defined for ambient";
+                    // B
+                    b = this.reader.getFloat(children[i], 'b');
+                    if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
+                        return "no b defined for ambient";
 
-                // G
-                g = this.reader.getFloat(children[i], 'g');
-                if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
-                    return "no g defined for ambient";
+                    // A
+                    a = this.reader.getFloat(children[i], 'a');
+                    if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
+                        return "no a defined for ambient";
+                    else
+                        this.background = new MyAmbient(r, g, b, a);
+                    break;
+                default:
+                    return "Tag invalid: " + children[i].nodeName;
 
-                // B
-                b = this.reader.getFloat(children[i], 'b');
-                if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
-                    return "no b defined for ambient";
 
-                // A
-                a = this.reader.getFloat(children[i], 'a');
-                if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
-                    return "no a defined for ambient";
-                else
-                    this.background = new MyAmbient(r, g, b, a);
             }
         }
 
@@ -751,6 +757,12 @@ class MySceneGraph {
             var id = this.reader.getString(children[i], 'id');
             if (!(id != null))
                 return "no ID defined for transformation";
+
+            // Checks for repeated IDs.
+            if (this.materials[id] != null)
+                return "ID must be unique for each material (conflict: ID = " + id + ")";
+
+
             // get current shininess
             var shininess = this.reader.getString(children[i], 'shininess');
             if (!(shininess != null) && !isNaN(shininess))
@@ -761,104 +773,109 @@ class MySceneGraph {
             var specular = [], emission = [], ambient = [], diffuse = [];
 
             for (var k = 0; k < grandChildren.length; k++) {
+                switch(grandChildren[k].nodeName) {
+                    //emission
+                    case 'emission' :
+                        // r
+                        r = this.reader.getFloat(grandChildren[k], 'r');
+                        if (r == null || isNaN(r))
+                            return "no r defined for emission";
 
-                //emission
-                if (grandChildren[k].nodeName == 'emission') {
-                    // r
-                    r = this.reader.getFloat(grandChildren[k], 'r');
-                    if (r == null || isNaN(r))
-                        return "no r defined for emission";
+                        // g
+                        g = this.reader.getFloat(grandChildren[k], 'g');
+                        if (g == null || isNaN(g))
+                            return "no g defined for emission";
 
-                    // g
-                    g = this.reader.getFloat(grandChildren[k], 'g');
-                    if (g == null || isNaN(g))
-                        return "no g defined for emission";
+                        // b
+                        b = this.reader.getFloat(grandChildren[k], 'b');
+                        if (b == null || isNaN(b))
+                            return "no b defined for emission";
 
-                    // b
-                    b = this.reader.getFloat(grandChildren[k], 'b');
-                    if (b == null || isNaN(b))
-                        return "no b defined for emission";
+                        // a
+                        a = this.reader.getFloat(grandChildren[k], 'a');
+                        if (a == null || isNaN(a))
+                            return "no b defined for emission";
+                        emission = [r, g, b];
+                    break;
+                    //ambient
+                    case 'ambient' :
+                        // r
+                        r = this.reader.getFloat(grandChildren[k], 'r');
+                        if (r == null || isNaN(r))
+                            return "no r defined for ambient";
 
-                    // a
-                    a = this.reader.getFloat(grandChildren[k], 'a');
-                    if (a == null || isNaN(a))
-                        return "no b defined for emission";
-                    emission = [r, g, b];
+                        // g
+                        g = this.reader.getFloat(grandChildren[k], 'g');
+                        if (g == null || isNaN(g))
+                            return "no g defined for ambient";
+
+                        // b
+                        b = this.reader.getFloat(grandChildren[k], 'b');
+                        if (b == null || isNaN(b))
+                            return "no b defined for ambient";
+
+                        // a
+                        a = this.reader.getFloat(grandChildren[k], 'a');
+                        if (a == null || isNaN(a))
+                            return "no b defined for ambient";
+
+                        ambient = [r, g, b];
+                    break;
+
+                    //diffuse
+                    case 'diffuse' :
+                        // r
+                        r = this.reader.getFloat(grandChildren[k], 'r');
+                        if (r == null || isNaN(r))
+                            return "no r defined for diffuse";
+
+                        // g
+                        g = this.reader.getFloat(grandChildren[k], 'g');
+                        if (g == null || isNaN(g))
+                            return "no g defined for diffuse";
+
+                        // b
+                        b = this.reader.getFloat(grandChildren[k], 'b');
+                        if (b == null || isNaN(b))
+                            return "no b defined for diffuse";
+
+                        // a
+                        a = this.reader.getFloat(grandChildren[k], 'a');
+                        if (a == null || isNaN(a))
+                            return "no b defined for diffuse";
+
+                        diffuse = [r, g, b];
+                    break;
+
+                    //specular
+                    case 'specular' :
+                        // r
+                        r = this.reader.getFloat(grandChildren[k], 'r');
+                        if (r == null || isNaN(r))
+                            return "no r defined for specular";
+
+                        // g
+                        g = this.reader.getFloat(grandChildren[k], 'g');
+                        if (g == null || isNaN(g))
+                            return "no g defined for specular";
+
+                        // b
+                        b = this.reader.getFloat(grandChildren[k], 'b');
+                        if (b == null || isNaN(b))
+                            return "no b defined for specular";
+
+                        // a
+                        a = this.reader.getFloat(grandChildren[k], 'a');
+                        if (a == null || isNaN(a))
+                            return "no b defined for specular";
+
+                        specular = [r, g, b];
+                    break;
+                    default:
+                        return "Invalid: " + grandChildren[k].nodeName;
                 }
-
-                //ambient
-                if (grandChildren[k].nodeName == 'ambient') {
-                    // r
-                    r = this.reader.getFloat(grandChildren[k], 'r');
-                    if (r == null || isNaN(r))
-                        return "no r defined for ambient";
-
-                    // g
-                    g = this.reader.getFloat(grandChildren[k], 'g');
-                    if (g == null || isNaN(g))
-                        return "no g defined for ambient";
-
-                    // b
-                    b = this.reader.getFloat(grandChildren[k], 'b');
-                    if (b == null || isNaN(b))
-                        return "no b defined for ambient";
-
-                    // a
-                    a = this.reader.getFloat(grandChildren[k], 'a');
-                    if (a == null || isNaN(a))
-                        return "no b defined for ambient";
-
-                    ambient = [r, g, b];
-                }
-                //diffuse
-                if (grandChildren[k].nodeName == 'diffuse') {
-                    // r
-                    r = this.reader.getFloat(grandChildren[k], 'r');
-                    if (r == null || isNaN(r))
-                        return "no r defined for diffuse";
-
-                    // g
-                    g = this.reader.getFloat(grandChildren[k], 'g');
-                    if (g == null || isNaN(g))
-                        return "no g defined for diffuse";
-
-                    // b
-                    b = this.reader.getFloat(grandChildren[k], 'b');
-                    if (b == null || isNaN(b))
-                        return "no b defined for diffuse";
-
-                    // a
-                    a = this.reader.getFloat(grandChildren[k], 'a');
-                    if (a == null || isNaN(a))
-                        return "no b defined for diffuse";
-
-                    diffuse = [r, g, b];
-                }
-
-                //specular
-                if (grandChildren[k].nodeName == 'specular') {
-                    // r
-                    r = this.reader.getFloat(grandChildren[k], 'r');
-                    if (r == null || isNaN(r))
-                        return "no r defined for specular";
-
-                    // g
-                    g = this.reader.getFloat(grandChildren[k], 'g');
-                    if (g == null || isNaN(g))
-                        return "no g defined for specular";
-
-                    // b
-                    b = this.reader.getFloat(grandChildren[k], 'b');
-                    if (b == null || isNaN(b))
-                        return "no b defined for specular";
-
-                    // a
-                    a = this.reader.getFloat(grandChildren[k], 'a');
-                    if (a == null || isNaN(a))
-                        return "no b defined for specular";
-
-                    specular = [r, g, b];
-                }
+                
+                
             }
 
             this.materials[id] = new MyMaterial(this.scene, id, shininess, emission, ambient, diffuse, specular);
@@ -875,11 +892,6 @@ class MySceneGraph {
     */
     parseTransformations(transformationsNode) {
 
-        //Initial transforms.
-        this.initialTranslate = [];
-        this.initialScaling = [];
-        this.initialRotations = [];
-
         this.transformations = [];
         var children = transformationsNode.children;
         var grandChildren = [];
@@ -893,10 +905,10 @@ class MySceneGraph {
 
             // get current id
             var id = this.reader.getString(children[i], 'id');
-
             if (id == null)
                 return "no ID defined for transformation";
 
+            
             var trans = new MyTransformation(id);
 
             var x, y, z, angle, axis;
@@ -904,63 +916,64 @@ class MySceneGraph {
             grandChildren = children[i].children;
 
             for (var k = 0; k < grandChildren.length; k++) {
+                switch(grandChildren[k].nodeName){
+                    //if its a translation
+                    case 'translate':
+                        // x
+                        x = this.reader.getFloat(grandChildren[k], 'x');
+                        if (x == null || isNaN(x))
+                            return "no x defined for translate";
 
-                //if its a translation
-                if (grandChildren[k].nodeName == 'translate') {
-                    // x
-                    x = this.reader.getFloat(grandChildren[k], 'x');
-                    if (x == null || isNaN(x))
-                        return "no x defined for translate";
+                        // y
+                        y = this.reader.getFloat(grandChildren[k], 'y');
+                        if (y == null || isNaN(y))
+                            return "no y defined for translate";
 
-                    // y
-                    y = this.reader.getFloat(grandChildren[k], 'y');
-                    if (y == null || isNaN(y))
-                        return "no y defined for translate";
+                        // z
+                        z = this.reader.getFloat(grandChildren[k], 'z');
+                        if (z == null || isNaN(z))
+                            return "no z defined for translate";
+                        trans.addTranslation(new MyTranslation(x, y, z));
+                    break;
 
-                    // z
-                    z = this.reader.getFloat(grandChildren[k], 'z');
-                    if (z == null || isNaN(z))
-                        return "no z defined for translate";
+                    //if its a scale
+                    case 'scale':
+                        // x
+                        x = this.reader.getFloat(grandChildren[k], 'x');
+                        if (x == null || isNaN(x))
+                            return "no x defined for scale";
 
-                    trans.addTranslation(new MyTranslation(x, y, z));
+                        // y
+                        y = this.reader.getFloat(grandChildren[k], 'y');
+                        if (y == null || isNaN(y))
+                            return "no y defined for scale";
+
+                        // z
+                        z = this.reader.getFloat(grandChildren[k], 'z');
+                        if (z == null || isNaN(z))
+                            return "no z defined for scale";
+
+                        trans.addScale(new MyScaling(x, y, z));
+                    break;
+
+                    //if its a rotation
+                    case 'rotate':
+                        // axis
+                        axis = this.reader.getString(grandChildren[k], 'axis');
+                        if (axis == null)
+                            return "no axis defined for rotate";
+
+                        // angle
+                        angle = this.reader.getFloat(grandChildren[k], 'angle');
+                        if (angle == null || isNaN(angle))
+                            return "no angle defined for rotate";
+
+                        trans.addRotation(new MyRotation(axis, angle * DEGREE_TO_RAD));
+                    break;
+                    default:
+                        return "invalid: "+ grandChildren[k].nodeName;
                 }
-
-
-                //if its a scale
-                if (grandChildren[k].nodeName == 'scale') {
-                    // x
-                    x = this.reader.getFloat(grandChildren[k], 'x');
-                    if (x == null || isNaN(x))
-                        return "no x defined for scale";
-
-                    // y
-                    y = this.reader.getFloat(grandChildren[k], 'y');
-                    if (y == null || isNaN(y))
-                        return "no y defined for scale";
-
-                    // z
-                    z = this.reader.getFloat(grandChildren[k], 'z');
-                    if (z == null || isNaN(z))
-                        return "no z defined for scale";
-
-                    trans.addScale(new MyScaling(x, y, z));
-                }
-
-
-                //if its a rotation
-                if (grandChildren[k].nodeName == 'rotate') {
-                    // axis
-                    axis = this.reader.getString(grandChildren[k], 'axis');
-                    if (axis == null)
-                        return "no axis defined for rotate";
-
-                    // angle
-                    angle = this.reader.getFloat(grandChildren[k], 'angle');
-                    if (angle == null || isNaN(angle))
-                        return "no angle defined for rotate";
-
-                    trans.addRotation(new MyRotation(axis, angle * DEGREE_TO_RAD));
-                }
+                
             }
 
             this.transformations[id] = trans;
@@ -994,161 +1007,169 @@ class MySceneGraph {
             if (id == null)
                 return "no ID defined for primitive";
 
+            // Checks for repeated IDs.
+            if (this.primitives[id] != null)
+                return "ID must be unique for each primitive (conflict: ID = " + id + ")";
+
+
             grandChildren = children[i].children;
 
             var x, y, z, x2, y2, z2, x3, y3, z3, radius, slices, stacks, inner, outer, loops;
 
             for (var k = 0; k < grandChildren.length; k++) {
+                switch(grandChildren[k].nodeName){
+                    //if its a rectangle
+                    case 'rectangle':
+                        // x
+                        x = this.reader.getFloat(grandChildren[k], 'x1');
+                        if (x == null || isNaN(x))
+                            return "no x defined for rectangle";
 
-                //if its a rectangle
-                if (grandChildren[k].nodeName == 'rectangle') {
-                    // x
-                    x = this.reader.getFloat(grandChildren[k], 'x1');
-                    if (x == null || isNaN(x))
-                        return "no x defined for rectangle";
+                        // y
+                        y = this.reader.getFloat(grandChildren[k], 'y1');
+                        if (y == null || isNaN(y))
+                            return "no y defined for rectangle";
 
-                    // y
-                    y = this.reader.getFloat(grandChildren[k], 'y1');
-                    if (y == null || isNaN(y))
-                        return "no y defined for rectangle";
+                        // x2
+                        x2 = this.reader.getFloat(grandChildren[k], 'x2');
+                        if (x2 == null || isNaN(x2))
+                            return "no x2 defined for rectangle";
 
-                    // x2
-                    x2 = this.reader.getFloat(grandChildren[k], 'x2');
-                    if (x2 == null || isNaN(x2))
-                        return "no x2 defined for rectangle";
+                        // y2
+                        y2 = this.reader.getFloat(grandChildren[k], 'y2');
+                        if (y2 == null || isNaN(y2))
+                            return "no y2 defined for translate";
 
+                        this.primitives[id] = new MyRectangle(this.scene, id, x, y, x2, y2);
+                    break;
 
-                    // y2
-                    y2 = this.reader.getFloat(grandChildren[k], 'y2');
-                    if (y2 == null || isNaN(y2))
-                        return "no y2 defined for translate";
+                    //if its a triangle
+                    case 'triangle':
+                        // x
+                        x = this.reader.getFloat(grandChildren[k], 'x1');
+                        if (x == null || isNaN(x))
+                            return "no x defined for triangle";
 
-                    this.primitives[id] = new MyRectangle(this.scene, id, x, y, x2, y2);
-                }
+                        // y
+                        y = this.reader.getFloat(grandChildren[k], 'y1');
+                        if (y == null || isNaN(y))
+                            return "no y defined for triangle";
 
-                //if its a triangle
-                if (grandChildren[k].nodeName == 'triangle') {
-                    // x
-                    x = this.reader.getFloat(grandChildren[k], 'x1');
-                    if (x == null || isNaN(x))
-                        return "no x defined for triangle";
+                        // z
+                        z = this.reader.getFloat(grandChildren[k], 'z1');
+                        if (z == null || isNaN(z))
+                            return "no z defined for triangle";
 
-                    // y
-                    y = this.reader.getFloat(grandChildren[k], 'y1');
-                    if (y == null || isNaN(y))
-                        return "no y defined for triangle";
+                        // x2
+                        x2 = this.reader.getFloat(grandChildren[k], 'x2');
+                        if (x2 == null || isNaN(x2))
+                            return "no x2 defined for triangle";
 
-                    // z
-                    z = this.reader.getFloat(grandChildren[k], 'z1');
-                    if (z == null || isNaN(z))
-                        return "no z defined for triangle";
+                        // y2
+                        y2 = this.reader.getFloat(grandChildren[k], 'y2');
+                        if (y2 == null || isNaN(y2))
+                            return "no y2 defined for triangle";
 
-                    // x2
-                    x2 = this.reader.getFloat(grandChildren[k], 'x2');
-                    if (x2 == null || isNaN(x2))
-                        return "no x2 defined for triangle";
+                        // z2
+                        z2 = this.reader.getFloat(grandChildren[k], 'z2');
+                        if (z2 == null || isNaN(z2))
+                            return "no z2 defined for triangle";
 
-                    // y2
-                    y2 = this.reader.getFloat(grandChildren[k], 'y2');
-                    if (y2 == null || isNaN(y2))
-                        return "no y2 defined for triangle";
+                        // x3
+                        x3 = this.reader.getFloat(grandChildren[k], 'x3');
+                        if (x3 == null || isNaN(x3))
+                            return "no x2 defined for triangle";
 
-                    // z2
-                    z2 = this.reader.getFloat(grandChildren[k], 'z2');
-                    if (z2 == null || isNaN(z2))
-                        return "no z2 defined for triangle";
+                        // y3
+                        y3 = this.reader.getFloat(grandChildren[k], 'y3');
+                        if (y3 == null || isNaN(y3))
+                            return "no y3 defined for triangle";
 
-                    // x3
-                    x3 = this.reader.getFloat(grandChildren[k], 'x3');
-                    if (x3 == null || isNaN(x3))
-                        return "no x2 defined for triangle";
+                        // z3
+                        z3 = this.reader.getFloat(grandChildren[k], 'z3');
+                        if (z3 == null || isNaN(z3))
+                            return "no z3 defined for triangle";
+                            
+                        this.primitives[id] = new MyTriangle(this.scene, id, x, y, z, x2, y2, z2, x3, y3, z3);
+                    break;
 
-                    // y3
-                    y3 = this.reader.getFloat(grandChildren[k], 'y3');
-                    if (y3 == null || isNaN(y3))
-                        return "no y3 defined for triangle";
+                    //if its a cylinder
+                    case 'cylinder':
+                        // base
+                        var base = this.reader.getFloat(grandChildren[k], 'base');
+                        if (base == null || isNaN(base))
+                            return "no base defined for cylinder";
 
-                    // z3
-                    z3 = this.reader.getFloat(grandChildren[k], 'z3');
-                    if (z3 == null || isNaN(z3))
-                        return "no z3 defined for triangle";
+                        // top
+                        var top = this.reader.getFloat(grandChildren[k], 'top');
+                        if (top == null || isNaN(top))
+                            return "no top defined for cylinder";
 
-                    this.primitives[id] = new MyTriangle(this.scene, id, x, y, z, x2, y2, z2, x3, y3, z3);
-                }
+                        // height
+                        var height = this.reader.getFloat(grandChildren[k], 'height');
+                        if (height == null || isNaN(height))
+                            return "no height defined for cylinder";
 
-                // if its a cylinder
-                if (grandChildren[k].nodeName == 'cylinder') {
-                    // base
-                    var base = this.reader.getFloat(grandChildren[k], 'base');
-                    if (base == null || isNaN(base))
-                        return "no base defined for cylinder";
+                        // slices
+                        slices = this.reader.getFloat(grandChildren[k], 'slices');
+                        if (slices == null || isNaN(slices))
+                            return "no slices defined for cylinder";
 
-                    // top
-                    var top = this.reader.getFloat(grandChildren[k], 'top');
-                    if (top == null || isNaN(top))
-                        return "no top defined for cylinder";
+                        // stacks
+                        stacks = this.reader.getFloat(grandChildren[k], 'stacks');
+                        if (stacks == null || isNaN(stacks))
+                            return "no stacks defined for cylinder";
 
-                    // height
-                    var height = this.reader.getFloat(grandChildren[k], 'height');
-                    if (height == null || isNaN(height))
-                        return "no height defined for cylinder";
+                        this.primitives[id] = new MyCylinder(this.scene, id, base, top, height, slices, stacks);
+                    break;
 
-                    // slices
-                    slices = this.reader.getFloat(grandChildren[k], 'slices');
-                    if (slices == null || isNaN(slices))
-                        return "no slices defined for cylinder";
+                    //if its a sphere
+                    case 'sphere':
+                        // radius
+                        radius = this.reader.getFloat(grandChildren[k], 'radius');
+                        if (radius == null || isNaN(radius))
+                            return "no radius defined for sphere";
 
-                    // stacks
-                    stacks = this.reader.getFloat(grandChildren[k], 'stacks');
-                    if (stacks == null || isNaN(stacks))
-                        return "no stacks defined for cylinder";
+                        // slices
+                        slices = this.reader.getFloat(grandChildren[k], 'slices');
+                        if (slices == null || isNaN(slices))
+                            return "no slices defined for sphere";
 
-                    this.primitives[id] = new MyCylinder(this.scene, id, base, top, height, slices, stacks);
-                }
+                        // stacks
+                        stacks = this.reader.getFloat(grandChildren[k], 'stacks');
+                        if (stacks == null || isNaN(stacks))
+                            return "no stacks defined for sphere";
 
-                //if its a sphere
-                if (grandChildren[k].nodeName == 'sphere') {
-                    // radius
-                    radius = this.reader.getFloat(grandChildren[k], 'radius');
-                    if (radius == null || isNaN(radius))
-                        return "no radius defined for sphere";
+                        this.primitives[id] = new MySphere(this.scene, id, radius, slices, stacks);
+                    break;
 
-                    // slices
-                    slices = this.reader.getFloat(grandChildren[k], 'slices');
-                    if (slices == null || isNaN(slices))
-                        return "no slices defined for sphere";
+                    //if its a torus
+                    case 'torus':
+                        // inner
+                        inner = this.reader.getFloat(grandChildren[k], 'inner');
+                        if (inner == null || isNaN(inner))
+                            return "no inner defined for torus";
 
-                    // stacks
-                    stacks = this.reader.getFloat(grandChildren[k], 'stacks');
-                    if (stacks == null || isNaN(stacks))
-                        return "no stacks defined for sphere";
+                        // outer
+                        outer = this.reader.getFloat(grandChildren[k], 'outer');
+                        if (outer == null || isNaN(outer))
+                            return "no outer defined for torus";
 
-                    this.primitives[id] = new MySphere(this.scene, id, radius, slices, stacks);
-                }
+                        // slices
+                        slices = this.reader.getFloat(grandChildren[k], 'slices');
+                        if (slices == null || isNaN(slices))
+                            return "no slices defined for torus";
 
-                //if its a torus
-                if (grandChildren[k].nodeName == 'torus') {
-                    // inner
-                    inner = this.reader.getFloat(grandChildren[k], 'inner');
-                    if (inner == null || isNaN(inner))
-                        return "no inner defined for torus";
+                        // loops
+                        loops = this.reader.getFloat(grandChildren[k], 'loops');
+                        if (loops == null || isNaN(loops))
+                            return "no loops defined for torus";
 
-                    // outer
-                    outer = this.reader.getFloat(grandChildren[k], 'outer');
-                    if (outer == null || isNaN(outer))
-                        return "no outer defined for torus";
+                        this.primitives[id] = new MyTorus(this.scene, id, inner, outer, slices, loops);
+                    break;
 
-                    // slices
-                    slices = this.reader.getFloat(grandChildren[k], 'slices');
-                    if (slices == null || isNaN(slices))
-                        return "no slices defined for torus";
-
-                    // loops
-                    loops = this.reader.getFloat(grandChildren[k], 'loops');
-                    if (loops == null || isNaN(loops))
-                        return "no loops defined for torus";
-
-                    this.primitives[id] = new MyTorus(this.scene, id, inner, outer, slices, loops);
+                    default:
+                        return "invalid: "+ grandChildren[k].nodeName;
                 }
             }
         }
@@ -1171,8 +1192,8 @@ class MySceneGraph {
         for (var i = 0; i < children.length; i++) {
 
             if (children[i].nodeName != "component") {
-                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
-                continue;
+                    this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                    continue;
             }
 
             // get current id
@@ -1180,7 +1201,11 @@ class MySceneGraph {
             if (id == null)
                 return "no ID defined for component";
 
-            var comp = new MyComponent(id);
+            // Checks for repeated IDs.
+            if (this.components[id] != null)
+                return "ID must be unique for each component (conflict: ID = " + id + ")";
+
+            var comp = new MyComponent(this.scene,id);
 
             var grandChildren = children[i].children;
 
@@ -1190,139 +1215,145 @@ class MySceneGraph {
 
                 var grandGrandChildren = grandChildren[k].children
 
-                //if its a transformation
-                if (grandChildren[k].nodeName == 'transformation') {
+                    
+                switch(grandChildren[k].nodeName){
 
-                    for (var l = 0; l < grandGrandChildren.length; l++) {
+                        //if its a transformation
+                        case 'transformation':
+                        for (var l = 0; l < grandGrandChildren.length; l++) {
+                            var x, y, z;
 
-                        if (grandGrandChildren[l].nodeName == 'transformationref') {
-                            // transformation id
+                            switch(grandGrandChildren[l].nodeName){
+                                //if transformation is already defined
+                                case 'transformationref':
+                                    // transformation id
+                                    id2 = this.reader.getString(grandGrandChildren[l], 'id');
+                                    if (id2 == null)
+                                        return "no id defined for transformationref";
+
+                                    comp.addTransformation(this.transformations[id2]);
+                                break;
+
+                                //if its a translation
+                                case 'translate':
+                                    // x
+                                    x = this.reader.getFloat(grandGrandChildren[l], 'x');
+                                    if (x == null || isNaN(x))
+                                        return "no x defined for translate";
+                                    // y
+                                    y = this.reader.getFloat(grandGrandChildren[l], 'y');
+                                    if (y == null || isNaN(y))
+                                        return "no y defined for translate";
+                                    // z
+                                    z = this.reader.getFloat(grandGrandChildren[l], 'z');
+                                    if (z == null || isNaN(z))
+                                        return "no z defined for translate";
+                                    comp.addTranslation(new MyTranslation(x, y, z));
+                                break;
+                                
+                                //if its a scale
+                                case 'scale':
+                                    // x
+                                    x = this.reader.getFloat(grandGrandChildren[l], 'x');
+                                    if (x == null || isNaN(x))
+                                        return "no x defined for scale";
+
+                                    // y
+                                    y = this.reader.getFloat(grandGrandChildren[l], 'y');
+                                    if (y == null || isNaN(y))
+                                        return "no y defined for scale";
+
+                                    // z
+                                    z = this.reader.getFloat(grandGrandChildren[l], 'z');
+                                    if (z == null || isNaN(z))
+                                        return "no z defined for scale";
+
+                                    comp.addScale(new MyScaling(x, y, z));
+                                break;
+
+                                //if its a rotate
+                                case 'rotate':
+                                        // axis
+                                    var axis = this.reader.getString(grandGrandChildren[l], 'axis');
+                                    if (axis == null)
+                                        return "no axis defined for rotate";
+
+                                    // angle
+                                    var angle = this.reader.getFloat(grandGrandChildren[l], 'angle');
+                                    if (angle == null || isNaN(angle))
+                                        return "no angle defined for rotate";
+
+                                    comp.addRotation(new MyRotation(axis, angle * DEGREE_TO_RAD));
+                                break;
+                            }
+                        }
+                    break;
+                    
+                    
+                    //if its a material
+                    case 'materials':
+                        for (var l = 0; l < grandGrandChildren.length; l++) {
+                            // material id
                             id2 = this.reader.getString(grandGrandChildren[l], 'id');
                             if (id2 == null)
-                                return "no id defined for transformationref";
-
-                            comp.addTransformation(this.transformations[id2]);
+                                return "no id defined for materials";
+                            comp.addMaterial(id2);
                         }
-
-                        var x, y, z;
-
-                        if (grandGrandChildren[l].nodeName == 'translate') {
-                            // x
-                            x = this.reader.getFloat(grandGrandChildren[l], 'x');
-                            if (x == null || isNaN(x))
-                                return "no x defined for translate";
-
-                            // y
-                            y = this.reader.getFloat(grandGrandChildren[l], 'y');
-                            if (y == null || isNaN(y))
-                                return "no y defined for translate";
-
-                            // z
-                            z = this.reader.getFloat(grandGrandChildren[l], 'z');
-                            if (z == null || isNaN(z))
-                                return "no z defined for translate";
-
-                            comp.addTranslation(new MyTranslation(x, y, z));
-                        }
-
-                        if (grandGrandChildren[l].nodeName == 'scale') {
-                            // x
-                            x = this.reader.getFloat(grandGrandChildren[l], 'x');
-                            if (x == null || isNaN(x))
-                                return "no x defined for scale";
-
-                            // y
-                            y = this.reader.getFloat(grandGrandChildren[l], 'y');
-                            if (y == null || isNaN(y))
-                                return "no y defined for scale";
-
-                            // z
-                            z = this.reader.getFloat(grandGrandChildren[l], 'z');
-                            if (z == null || isNaN(z))
-                                return "no z defined for scale";
-
-                            comp.addScale(new MyScaling(x, y, z));
-                        }
-
-                        if (grandGrandChildren[l].nodeName == 'rotate') {
-                            // axis
-                            var axis = this.reader.getString(grandGrandChildren[l], 'axis');
-                            if (axis == null)
-                                return "no axis defined for rotate";
-
-                            // angle
-                            var angle = this.reader.getFloat(grandGrandChildren[l], 'angle');
-                            if (angle == null || isNaN(angle))
-                                return "no angle defined for rotate";
-
-                            comp.addRotation(new MyRotation(axis, angle * DEGREE_TO_RAD));
-                        }
-                    }
-                }
-
-                //if its the materials
-                if (grandChildren[k].nodeName == 'materials') {
-
-                    for (var l = 0; l < grandGrandChildren.length; l++) {
-                        // material id
-                        id2 = this.reader.getString(grandGrandChildren[l], 'id');
+                    break;
+                    
+                    //if its the textures
+                    case 'texture':
+                        // texture id
+                        id2 = this.reader.getString(grandChildren[k], 'id');
                         if (id2 == null)
-                            return "no id defined for materials";
+                            return "no id defined for texture";
 
-                        comp.addMaterial(id2);
-                    }
-                }
+                        var length_s = this.reader.getFloat(grandChildren[k], 'length_s');
+                        if (!(length_s != null && !isNaN(length_s)))
+                            return "no length_s defined for texture";
 
-                //if its the textures
-                if (grandChildren[k].nodeName == 'texture') {
-                    // texture id
-                    id2 = this.reader.getString(grandChildren[k], 'id');
-                    if (id2 == null)
-                        return "no id defined for texture";
+                        var length_t = this.reader.getFloat(grandChildren[k], 'length_t');
+                        if (!(length_t != null && !isNaN(length_t)))
+                            return "no length_t defined for texture";
 
-                    var length_s = this.reader.getFloat(grandChildren[k], 'length_s');
-                    if (!(length_s != null && !isNaN(length_s)))
-                        return "no length_s defined for texture";
+                        comp.addTexture(id2, length_s, length_t);
+                    break;
+                
+                    
 
-                    var length_t = this.reader.getFloat(grandChildren[k], 'length_t');
-                    if (!(length_t != null && !isNaN(length_t)))
-                        return "no length_t defined for texture";
+                    //if its the children
+                    case 'children':
+                        for (var l = 0; l < grandGrandChildren.length; l++) {
 
-                    comp.addTexture(id2, length_s, length_t);
-                }
+                            if (grandGrandChildren[l].nodeName == 'componentref') {
+                                // component id
+                                id2 = this.reader.getString(grandGrandChildren[l], 'id');
+                                if (id2 == null)
+                                    return "no id defined for component";
 
-                // if its the children
-                if (grandChildren[k].nodeName == 'children') {
+                                comp.addChild(this.components[id2]);
+                            }
 
-                    for (var l = 0; l < grandGrandChildren.length; l++) {
+                            if (grandGrandChildren[l].nodeName == 'primitiveref') {
+                                // primitive id
+                                id2 = this.reader.getString(grandGrandChildren[l], 'id');
+                                if (id2 == null)
+                                    return "no id defined for primitive";
 
-                        if (grandGrandChildren[l].nodeName == 'componentref') {
-                            // component id
-                            id2 = this.reader.getString(grandGrandChildren[l], 'id');
-                            if (id2 == null)
-                                return "no id defined for component";
-
-                            comp.addChild(this.components[id2]);
+                                comp.addChild(this.primitives[id2]);
+                            }
                         }
+                    break;
 
-                        if (grandGrandChildren[l].nodeName == 'primitiveref') {
-                            // primitive id
-                            id2 = this.reader.getString(grandGrandChildren[l], 'id');
-                            if (id2 == null)
-                                return "no id defined for primitive";
-
-                            comp.addChild(this.primitives[id2]);
-                        }
-                    }
+                    
                 }
             }
-
             this.components[id] = comp;
         }
 
         this.log("Parsed components");
 
-        return null;
+        return null;    
     }
 
     /*
