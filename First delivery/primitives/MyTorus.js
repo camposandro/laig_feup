@@ -1,7 +1,7 @@
 /**
  * MyTorus class, representing a torus.
  */
-class MyTorus extends MyPrimitive {
+class MyTorus extends CGFobject {
 
 	/**
      * @constructor

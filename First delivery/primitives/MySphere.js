@@ -1,12 +1,12 @@
 /**
  * MySphere class, representing a sphere.
  */
-class MySphere extends MyPrimitive {
+class MySphere extends CGFobject {
 
     /**
-     * @constructor
-     * @param {id,radius,slices,stacks}
-     */
+    * @constructor
+    * @param {id,radius,slices,stacks}
+    */
     constructor(scene, id, radius, slices, stacks) {
         super(scene);
 
@@ -22,8 +22,7 @@ class MySphere extends MyPrimitive {
         this.vertices = new Array();
         this.indices = new Array();
         this.normals = new Array();
-
-        var indice = 0, z = 0, step = 1 / this.stacks;
+        this.texCoords = new Array();
 
         // bandas de latitude
         for (var j = 0; j <= this.stacks; j++) {
@@ -35,12 +34,16 @@ class MySphere extends MyPrimitive {
 
                 var theta = (2 * i * Math.PI) / this.slices;
 
-                var x = Math.cos(theta) * Math.sin(phi);
-                var y = Math.cos(phi);
-                var z = Math.sin(theta) * Math.sin(phi);
+                var x = this.radius * Math.sin(theta) * Math.sin(phi);
+                var y = this.radius * Math.cos(theta) * Math.sin(phi);
+                var z = this.radius * Math.cos(phi);
+
+                var u = 1 - (i / this.slices);
+                var v = 1 - (j / this.stacks);
 
                 this.vertices.push(x, y, z);
                 this.normals.push(x, y, z);
+                this.texCoords.push(u, v);
             }
         }
 
@@ -48,12 +51,8 @@ class MySphere extends MyPrimitive {
             for (var i = 0; i < this.slices; i++) {
                 var first = (j * (this.slices + 1)) + i;
                 var second = first + this.slices + 1;
-                this.indices.push(first);
-                this.indices.push(second);
-                this.indices.push(first + 1);
-                this.indices.push(second);
-                this.indices.push(second + 1);
-                this.indices.push(first + 1);
+                this.indices.push(second + 1, second, first);
+                this.indices.push(first, first + 1, second + 1);
             }
         }
 

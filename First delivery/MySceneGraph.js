@@ -1,16 +1,15 @@
 var DEGREE_TO_RAD = Math.PI / 180;
 
 // Order of the groups in the XML document.
-var YAS_INDEX = 0;
-var SCENE_INDEX = 1;
-var VIEWS_INDEX = 2;
-var AMBIENT_INDEX = 3;
-var LIGHTS_INDEX = 4;
-var TEXTURES_INDEX = 5;
-var MATERIALS_INDEX = 6;
-var TRANSFORMATIONS_INDEX = 7;
-var PRIMITIVES_INDEX = 8;
-var COMPONENTS_INDEX = 9;
+var SCENE_INDEX = 0;
+var VIEWS_INDEX = 1;
+var AMBIENT_INDEX = 2;
+var LIGHTS_INDEX = 3;
+var TEXTURES_INDEX = 4;
+var MATERIALS_INDEX = 5;
+var TRANSFORMATIONS_INDEX = 6;
+var PRIMITIVES_INDEX = 7;
+var COMPONENTS_INDEX = 8;
 
 /**
  * MySceneGraph class, representing the scene graph.
@@ -25,9 +24,6 @@ class MySceneGraph {
         // Establish bidirectional references between scene and graph.
         this.scene = scene;
         scene.graph = this;
-
-        // The id of the xml root element.
-        this.idRoot = YAS_INDEX;
 
         // Axis
         this.axisCoords = [];
@@ -209,9 +205,9 @@ class MySceneGraph {
         if (this.root == null)
             return "unable to parse root object";
 
-        this.referenceLength = this.reader.getFloat(sceneNode, 'referenceLength');
-        if (!(this.referenceLength != null && !isNaN(this.referenceLength)))
-            return "unable to parse axis referenceLength";
+        this.axis_length = this.reader.getFloat(sceneNode, 'axis_length');
+        if (!(this.axis_length != null && !isNaN(this.axis_length)))
+            return "unable to parse axis axis_length";
 
         this.log("Parsed scene");
 
@@ -264,9 +260,9 @@ class MySceneGraph {
             }
 
             grandChildren = children[i].children;
-            
+
             // specific perspective parameters
-            switch(children[i].nodeName){
+            switch (children[i].nodeName) {
                 case 'perspective':
                     // get angle
                     var angle = this.reader.getFloat(children[i], 'angle');
@@ -342,8 +338,8 @@ class MySceneGraph {
 
                     this.views[id] = new CGFcamera(angle, near, far, position, target);
 
-                break;
-                case 'ortho' :
+                    break;
+                case 'ortho':
                     var left = this.reader.getFloat(children[i], 'left');
                     if (!(left != null && !isNaN(left)))
                         return "left value missing for ortho ID = " + id;
@@ -362,12 +358,12 @@ class MySceneGraph {
 
                     // TODO: save CGF ortho camera
                     this.views[id] = new MyViewOrtho(id, near, far, left, right, top, bottom);
-                break;
+                    break;
 
                 default:
                     return "Tag invalid: " + children[i].nodeName;
             }
-            
+
         }
 
         // save default camera
@@ -414,23 +410,23 @@ class MySceneGraph {
             if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
                 return "no a defined for ambient";
 
-            switch(children[i].nodeName){
-                case 'ambient': 
-                    if(this.ambient == null)
-                        this.ambient = new MyAmbient(r, g, b, a); 
+            switch (children[i].nodeName) {
+                case 'ambient':
+                    if (this.ambient == null)
+                        this.ambient = new MyColor(r, g, b, a);
                     else
                         return "Error: Multiple tags for ambient";
                     break;
-                case 'background': 
-                    if(this.background == null)
-                        this.background = new MyAmbient(r, g, b, a); 
+                case 'background':
+                    if (this.background == null)
+                        this.background = new MyColor(r, g, b, a);
                     else
                         return "Error: Multiple tags for background";
                     break;
                 default:
                     return "Tag invalid: " + children[i].nodeName;
             }
-            
+
         }
 
         this.log("Parsed ambient");
@@ -455,7 +451,7 @@ class MySceneGraph {
         for (var i = 0; i < children.length; i++) {
 
             if (children[i].nodeName != 'omni' && children[i].nodeName != 'spot') {
-                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">"); 
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
                 continue;
             }
 
@@ -758,9 +754,9 @@ class MySceneGraph {
             var specular = [], emission = [], ambient = [], diffuse = [];
 
             for (var k = 0; k < grandChildren.length; k++) {
-                switch(grandChildren[k].nodeName) {
+                switch (grandChildren[k].nodeName) {
                     //emission
-                    case 'emission' :
+                    case 'emission':
                         // r
                         r = this.reader.getFloat(grandChildren[k], 'r');
                         if (r == null || isNaN(r))
@@ -781,9 +777,9 @@ class MySceneGraph {
                         if (a == null || isNaN(a))
                             return "no b defined for emission";
                         emission = [r, g, b];
-                    break;
+                        break;
                     //ambient
-                    case 'ambient' :
+                    case 'ambient':
                         // r
                         r = this.reader.getFloat(grandChildren[k], 'r');
                         if (r == null || isNaN(r))
@@ -805,10 +801,10 @@ class MySceneGraph {
                             return "no b defined for ambient";
 
                         ambient = [r, g, b];
-                    break;
+                        break;
 
                     //diffuse
-                    case 'diffuse' :
+                    case 'diffuse':
                         // r
                         r = this.reader.getFloat(grandChildren[k], 'r');
                         if (r == null || isNaN(r))
@@ -830,10 +826,10 @@ class MySceneGraph {
                             return "no b defined for diffuse";
 
                         diffuse = [r, g, b];
-                    break;
+                        break;
 
                     //specular
-                    case 'specular' :
+                    case 'specular':
                         // r
                         r = this.reader.getFloat(grandChildren[k], 'r');
                         if (r == null || isNaN(r))
@@ -855,12 +851,12 @@ class MySceneGraph {
                             return "no b defined for specular";
 
                         specular = [r, g, b];
-                    break;
+                        break;
                     default:
                         return "Invalid: " + grandChildren[k].nodeName;
                 }
-                
-                
+
+
             }
 
             this.materials[id] = new MyMaterial(this.scene, id, shininess, emission, ambient, diffuse, specular);
@@ -897,7 +893,7 @@ class MySceneGraph {
             if (this.transformations[id] != null)
                 return "ID must be unique for each transformation (conflict: ID = " + id + ")";
 
-            
+
             var trans = new MyTransformation(id);
 
             var x, y, z, angle, axis;
@@ -905,7 +901,7 @@ class MySceneGraph {
             grandChildren = children[i].children;
 
             for (var k = 0; k < grandChildren.length; k++) {
-                switch(grandChildren[k].nodeName){
+                switch (grandChildren[k].nodeName) {
                     //if its a translation
                     case 'translate':
                         // x
@@ -923,7 +919,7 @@ class MySceneGraph {
                         if (z == null || isNaN(z))
                             return "no z defined for translate";
                         trans.addTranslation(new MyTranslation(x, y, z));
-                    break;
+                        break;
 
                     //if its a scale
                     case 'scale':
@@ -943,7 +939,7 @@ class MySceneGraph {
                             return "no z defined for scale";
 
                         trans.addScale(new MyScaling(x, y, z));
-                    break;
+                        break;
 
                     //if its a rotation
                     case 'rotate':
@@ -958,11 +954,11 @@ class MySceneGraph {
                             return "no angle defined for rotate";
 
                         trans.addRotation(new MyRotation(axis, angle * DEGREE_TO_RAD));
-                    break;
+                        break;
                     default:
-                        return "invalid: "+ grandChildren[k].nodeName;
+                        return "invalid: " + grandChildren[k].nodeName;
                 }
-                
+
             }
 
             this.transformations[id] = trans;
@@ -1006,7 +1002,7 @@ class MySceneGraph {
             var x, y, z, x2, y2, z2, x3, y3, z3, radius, slices, stacks, inner, outer, loops;
 
             for (var k = 0; k < grandChildren.length; k++) {
-                switch(grandChildren[k].nodeName){
+                switch (grandChildren[k].nodeName) {
                     //if its a rectangle
                     case 'rectangle':
                         // x
@@ -1030,7 +1026,7 @@ class MySceneGraph {
                             return "no y2 defined for translate";
 
                         this.primitives[id] = new MyRectangle(this.scene, id, x, y, x2, y2);
-                    break;
+                        break;
 
                     //if its a triangle
                     case 'triangle':
@@ -1078,9 +1074,9 @@ class MySceneGraph {
                         z3 = this.reader.getFloat(grandChildren[k], 'z3');
                         if (z3 == null || isNaN(z3))
                             return "no z3 defined for triangle";
-                            
+
                         this.primitives[id] = new MyTriangle(this.scene, id, x, y, z, x2, y2, z2, x3, y3, z3);
-                    break;
+                        break;
 
                     //if its a cylinder
                     case 'cylinder':
@@ -1110,7 +1106,7 @@ class MySceneGraph {
                             return "no stacks defined for cylinder";
 
                         this.primitives[id] = new MyCylinder(this.scene, id, base, top, height, slices, stacks);
-                    break;
+                        break;
 
                     //if its a sphere
                     case 'sphere':
@@ -1130,7 +1126,7 @@ class MySceneGraph {
                             return "no stacks defined for sphere";
 
                         this.primitives[id] = new MySphere(this.scene, id, radius, slices, stacks);
-                    break;
+                        break;
 
                     //if its a torus
                     case 'torus':
@@ -1155,10 +1151,10 @@ class MySceneGraph {
                             return "no loops defined for torus";
 
                         this.primitives[id] = new MyTorus(this.scene, id, inner, outer, slices, loops);
-                    break;
+                        break;
 
                     default:
-                        return "invalid: "+ grandChildren[k].nodeName;
+                        return "invalid: " + grandChildren[k].nodeName;
                 }
             }
         }
@@ -1181,8 +1177,8 @@ class MySceneGraph {
         for (var i = 0; i < children.length; i++) {
 
             if (children[i].nodeName != "component") {
-                    this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
-                    continue;
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                continue;
             }
 
             // get current id
@@ -1194,7 +1190,7 @@ class MySceneGraph {
             if (this.components[id] != null)
                 return "ID must be unique for each component (conflict: ID = " + id + ")";
 
-            var comp = new MyComponent(this.scene,id);
+            var comp = new MyComponent(this.scene, id);
 
             var grandChildren = children[i].children;
 
@@ -1204,26 +1200,26 @@ class MySceneGraph {
 
                 var grandGrandChildren = grandChildren[k].children
 
-                    
-                switch(grandChildren[k].nodeName){
 
-                        //if its a transformation
-                        case 'transformation':
+                switch (grandChildren[k].nodeName) {
+
+                    //if its a transformation
+                    case 'transformation':
                         for (var l = 0; l < grandGrandChildren.length; l++) {
                             var x, y, z;
 
-                            switch(grandGrandChildren[l].nodeName){
+                            switch (grandGrandChildren[l].nodeName) {
                                 //if transformation is already defined
                                 case 'transformationref':
                                     // transformation id
                                     id2 = this.reader.getString(grandGrandChildren[l], 'id');
                                     if (id2 == null)
                                         return "no id defined for transformationref";
-                                    if(this.transformations[id2] != null)
+                                    if (this.transformations[id2] != null)
                                         comp.addTransformation(this.transformations[id2]);
                                     else
                                         return "Error: Id for transformationref invalid: " + id2;
-                                break;
+                                    break;
 
                                 //if its a translation
                                 case 'translate':
@@ -1240,8 +1236,8 @@ class MySceneGraph {
                                     if (z == null || isNaN(z))
                                         return "no z defined for translate";
                                     comp.addTranslation(new MyTranslation(x, y, z));
-                                break;
-                                
+                                    break;
+
                                 //if its a scale
                                 case 'scale':
                                     // x
@@ -1260,11 +1256,11 @@ class MySceneGraph {
                                         return "no z defined for scale";
 
                                     comp.addScale(new MyScaling(x, y, z));
-                                break;
+                                    break;
 
                                 //if its a rotate
                                 case 'rotate':
-                                        // axis
+                                    // axis
                                     var axis = this.reader.getString(grandGrandChildren[l], 'axis');
                                     if (axis == null)
                                         return "no axis defined for rotate";
@@ -1275,12 +1271,12 @@ class MySceneGraph {
                                         return "no angle defined for rotate";
 
                                     comp.addRotation(new MyRotation(axis, angle * DEGREE_TO_RAD));
-                                break;
+                                    break;
                             }
                         }
-                    break;
-                    
-                    
+                        break;
+
+
                     //if its a material
                     case 'materials':
                         for (var l = 0; l < grandGrandChildren.length; l++) {
@@ -1288,20 +1284,19 @@ class MySceneGraph {
                             id2 = this.reader.getString(grandGrandChildren[l], 'id');
                             if (id2 == null)
                                 return "no id defined for materials";
-                            if(this.materials[id2] != null || id2 == "inherit")
+                            if (this.materials[id2] != null || id2 == "none" || id2 == "inherit")
                                 comp.addMaterial(id2);
-                            else 
+                            else
                                 return "Error: Id in material reference invalid: " + id2;
                         }
-                    break;
-                    
+                        break;
+
                     //if its the textures
                     case 'texture':
                         // texture id
                         id2 = this.reader.getString(grandChildren[k], 'id');
                         if (id2 == null)
                             return "no id defined for texture";
-                       
 
                         var length_s = this.reader.getFloat(grandChildren[k], 'length_s');
                         if (!(length_s != null && !isNaN(length_s)))
@@ -1311,15 +1306,15 @@ class MySceneGraph {
                         if (!(length_t != null && !isNaN(length_t)))
                             return "no length_t defined for texture";
 
-                        if(this.textures[id2] != null || id2 == "none" || id2 == "inherit"){
+                        if (this.textures[id2] != null || id2 == "none" || id2 == "inherit") {
                             comp.addTexture(id2, length_s, length_t);
                         }
                         else
                             return "Error: Id in texture reference invalid: " + id2;
-                        
-                    break;
-                
-                    
+
+                        break;
+
+
 
                     //if its the children
                     case 'children':
@@ -1340,17 +1335,17 @@ class MySceneGraph {
                                 if (id2 == null)
                                     return "no id defined for primitive";
 
-                                if(this.primitives[id2] != null){
+                                if (this.primitives[id2] != null) {
                                     comp.addChild(this.primitives[id2]);
                                 }
                                 else
                                     return "Error: Id in primitiveref invalid: " + id2;
-                                
+
                             }
                         }
-                    break;
+                        break;
 
-                    
+
                 }
             }
             this.components[id] = comp;
@@ -1358,7 +1353,7 @@ class MySceneGraph {
 
         this.log("Parsed components");
 
-        return null;    
+        return null;
     }
 
     /*
@@ -1390,15 +1385,11 @@ class MySceneGraph {
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
-        // entry point for graph rendering
         var root = this.components[this.root];
         if (root == null)
             return "root node does not exist!";
- 
+
+        // display graph node from root
         root.display();
     }
-    
-
- 
-  
 }

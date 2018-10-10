@@ -2,7 +2,7 @@
  * MyCircle
  * @constructor
  */
-class MyCircle extends MyPrimitive {
+class MyCircle extends CGFobject {
 
     /**
      * @constructor

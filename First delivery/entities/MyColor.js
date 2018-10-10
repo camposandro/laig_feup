@@ -1,7 +1,7 @@
 /**
- * MyAmbient class, representing an ambient.
+ * MyColor class, representing an ambient.
  */
-class MyAmbient {
+class MyColor {
 
 	/**
      * @constructor

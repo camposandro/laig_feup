@@ -3,7 +3,7 @@ var DEGREE_TO_RAD = Math.PI / 180;
 /**
  * MyCylinder class, representing a cylinder.
  */
-class MyCylinder extends MyPrimitive {
+class MyCylinder extends CGFobject {
 
 	/**
      * @constructor

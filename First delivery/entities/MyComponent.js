@@ -7,7 +7,8 @@ class MyComponent {
      * @constructor
      * @param {id}
      */
-    constructor(id) {
+    constructor(scene, id) {
+        this.scene = scene;
         this.id = id;
 
         this.transformationsMatrix = mat4.create();
@@ -63,5 +64,17 @@ class MyComponent {
                 i++;
             }
         }*/
+    }
+
+    /**
+     * Display component
+     * @param {scene}
+    */
+    display() {
+        this.scene.pushMatrix();
+            this.scene.multMatrix(this.transformationsMatrix);
+            for (var i = 0; i < this.children.length; i++)
+                this.children[i].display();
+        this.scene.popMatrix();
     }
 }

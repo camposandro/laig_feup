@@ -88,7 +88,7 @@ class XMLscene extends CGFscene {
         this.interface.setActiveCamera(this.camera);
 
         // Change axis reference length according to parsed graph
-        this.axis = new CGFaxis(this, this.graph.referenceLength);
+        this.axis = new CGFaxis(this, this.graph.axis_length);
 
         // Change ambient and background details according to parsed graph
         this.setGlobalAmbientLight(this.graph.ambient['r'],
@@ -136,7 +136,7 @@ class XMLscene extends CGFscene {
             var i = 0;
             for (var key in this.lightValues) {
                 if (this.lightValues.hasOwnProperty(key)) {
-                    if (this.lightValues[key].enabled) {
+                    if (this.lights[i].enabled) {
                         this.lights[i].setVisible(true);
                         this.lights[i].enable();
                     }
