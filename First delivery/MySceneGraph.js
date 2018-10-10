@@ -222,6 +222,7 @@ class MySceneGraph {
      * Parses the <views> block.
      * @param {views block element} viewsNode
      */
+    //up = 0,0,1
     parseViews(viewsNode) {
 
         this.views = [];
