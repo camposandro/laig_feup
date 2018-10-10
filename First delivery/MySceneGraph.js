@@ -234,16 +234,19 @@ class MySceneGraph {
         var grandChildren = [];
 
         for (var i = 0; i < children.length; i++) {
-
             if (children[i].nodeName != "perspective" && children[i].nodeName != "ortho") {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
-                continue;
             }
 
             // get current id
             var id = this.reader.getString(children[i], 'id');
             if (id == null)
                 return "no ID defined for perspective";
+
+            // Checks for repeated IDs.
+            if (this.views[id] != null)
+                return "ID must be unique for each view (conflict: ID = " + id + ")";
+
 
             // get current near value
             var near = this.reader.getFloat(children[i], 'near');
@@ -260,110 +263,110 @@ class MySceneGraph {
             }
 
             grandChildren = children[i].children;
-
+            
             // specific perspective parameters
-            if (children[i].nodeName == "perspective") {
+            switch(children[i].nodeName){
+                case 'perspective':
+                    // get angle
+                    var angle = this.reader.getFloat(children[i], 'angle');
+                    if (!(angle != null && !isNaN(angle)))
+                        return "angle value missing for perspective ID = " + id;
+                    else
+                        angle *= DEGREE_TO_RAD;
 
-                // get angle
-                var angle = this.reader.getFloat(children[i], 'angle');
-                if (!(angle != null && !isNaN(angle)))
-                    return "angle value missing for perspective ID = " + id;
-                else
-                    angle *= DEGREE_TO_RAD;
+                    // check the existence of only 1 'from' and 'to' tags
+                    if (children[i].getElementsByTagName('from').length != 1)
+                        return "no more than one <from> tag may be defined in a perspective";
 
-                // check the existence of only 1 'from' and 'to' tags
-                if (children[i].getElementsByTagName('from').length != 1)
-                    return "no more than one <from> tag may be defined in a perspective";
+                    if (children[i].getElementsByTagName('to').length != 1)
+                        return "no more than one <to> tag may be defined in a perspective";
 
-                if (children[i].getElementsByTagName('to').length != 1)
-                    return "no more than one <to> tag may be defined in a perspective";
+                    // get perspective
+                    var fromPos = [], toPos = [];
 
-                // get perspective
-                var fromPos = [], toPos = [];
+                    for (var i = 0; i < grandChildren.length; i++) {
+                        var x, y, z;
 
-                for (var i = 0; i < grandChildren.length; i++) {
+                        if (grandChildren[i].nodeName == "from") {
+                            // x
+                            x = this.reader.getFloat(grandChildren[i], 'x');
+                            if (!(x != null && !isNaN(x)))
+                                return "unable to parse x-coordinate of the perspective of ID = " + id;
+                            else
+                                fromPos.push(x);
 
-                    var x, y, z;
+                            // y
+                            y = this.reader.getFloat(grandChildren[i], 'y');
+                            if (!(y != null && !isNaN(y)))
+                                return "unable to parse y-coordinate of the perspective of ID = " + id;
+                            else
+                                fromPos.push(y);
 
-                    if (grandChildren[i].nodeName == "from") {
+                            // z
+                            z = this.reader.getFloat(grandChildren[i], 'z');
+                            if (!(z != null && !isNaN(z)))
+                                return "unable to parse z-coordinate of the perspective of ID = " + id;
+                            else
+                                fromPos.push(z);
 
-                        // x
-                        x = this.reader.getFloat(grandChildren[i], 'x');
-                        if (!(x != null && !isNaN(x)))
-                            return "unable to parse x-coordinate of the perspective of ID = " + id;
-                        else
-                            fromPos.push(x);
+                        } else if (grandChildren[i].nodeName == "to") {
+                            // x
+                            x = this.reader.getFloat(grandChildren[i], 'x');
+                            if (!(x != null && !isNaN(x)))
+                                return "unable to parse x-coordinate of the perspective of ID = " + id;
+                            else
+                                toPos.push(x);
 
-                        // y
-                        y = this.reader.getFloat(grandChildren[i], 'y');
-                        if (!(y != null && !isNaN(y)))
-                            return "unable to parse y-coordinate of the perspective of ID = " + id;
-                        else
-                            fromPos.push(y);
+                            // y
+                            y = this.reader.getFloat(grandChildren[i], 'y');
+                            if (!(y != null && !isNaN(y)))
+                                return "unable to parse y-coordinate of the perspective of ID = " + id;
+                            else
+                                toPos.push(y);
 
-                        // z
-                        z = this.reader.getFloat(grandChildren[i], 'z');
-                        if (!(z != null && !isNaN(z)))
-                            return "unable to parse z-coordinate of the perspective of ID = " + id;
-                        else
-                            fromPos.push(z);
+                            // z
+                            z = this.reader.getFloat(grandChildren[i], 'z');
+                            if (!(z != null && !isNaN(z)))
+                                return "unable to parse z-coordinate of the perspective of ID = " + id;
+                            else
+                                toPos.push(z);
 
-                    } else if (grandChildren[i].nodeName == "to") {
-
-                        // x
-                        x = this.reader.getFloat(grandChildren[i], 'x');
-                        if (!(x != null && !isNaN(x)))
-                            return "unable to parse x-coordinate of the perspective of ID = " + id;
-                        else
-                            toPos.push(x);
-
-                        // y
-                        y = this.reader.getFloat(grandChildren[i], 'y');
-                        if (!(y != null && !isNaN(y)))
-                            return "unable to parse y-coordinate of the perspective of ID = " + id;
-                        else
-                            toPos.push(y);
-
-                        // z
-                        z = this.reader.getFloat(grandChildren[i], 'z');
-                        if (!(z != null && !isNaN(z)))
-                            return "unable to parse z-coordinate of the perspective of ID = " + id;
-                        else
-                            toPos.push(z);
-
-                    } else {
-                        this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
-                        continue;
+                        } else {
+                            this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
+                            continue;
+                        }
                     }
-                }
+                    var position = vec3.fromValues(fromPos[0], fromPos[1], fromPos[2]);
+                    var target = vec3.fromValues(toPos[0], toPos[1], toPos[2]);
 
-                var position = vec3.fromValues(fromPos[0], fromPos[1], fromPos[2]);
-                var target = vec3.fromValues(toPos[0], toPos[1], toPos[2]);
+                    this.views[id] = new CGFcamera(angle, near, far, position, target);
 
-                this.views[id] = new CGFcamera(angle, near, far, position, target);
+                break;
+                case 'ortho' :
+                    var left = this.reader.getFloat(children[i], 'left');
+                    if (!(left != null && !isNaN(left)))
+                        return "left value missing for ortho ID = " + id;
 
-                // specific ortho parameters
-            } else if (children[i].nodeName == "ortho") {
+                    var right = this.reader.getFloat(children[i], 'right');
+                    if (!(right != null && !isNaN(right)))
+                        return "right value missing for ortho ID = " + id;
 
-                var left = this.reader.getFloat(children[i], 'left');
-                if (!(left != null && !isNaN(left)))
-                    return "left value missing for ortho ID = " + id;
+                    var top = this.reader.getFloat(children[i], 'right');
+                    if (!(top != null && !isNaN(top)))
+                        return "top value missing for ortho ID = " + id;
 
-                var right = this.reader.getFloat(children[i], 'right');
-                if (!(right != null && !isNaN(right)))
-                    return "right value missing for ortho ID = " + id;
+                    var bottom = this.reader.getFloat(children[i], 'right');
+                    if (!(bottom != null && !isNaN(bottom)))
+                        return "bottom value missing for ortho ID = " + id;
 
-                var top = this.reader.getFloat(children[i], 'right');
-                if (!(top != null && !isNaN(top)))
-                    return "top value missing for ortho ID = " + id;
+                    // TODO: save CGF ortho camera
+                    this.views[id] = new MyViewOrtho(id, near, far, left, right, top, bottom);
+                break;
 
-                var bottom = this.reader.getFloat(children[i], 'right');
-                if (!(bottom != null && !isNaN(bottom)))
-                    return "bottom value missing for ortho ID = " + id;
-
-                // TODO: save CGF ortho camera
-                //this.views[id] = new MyViewOrtho(id, near, far, left, right, top, bottom);
+                default:
+                    return "Tag invalid: " + children[i].nodeName;
             }
+            
         }
 
         // save default camera
@@ -390,62 +393,43 @@ class MySceneGraph {
             }
 
             var r, g, b, a;
+            // R
+            r = this.reader.getFloat(children[i], 'r');
+            if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
+                return "no r defined for ambient";
 
-            
+            // G
+            g = this.reader.getFloat(children[i], 'g');
+            if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
+                return "no g defined for ambient";
+
+            // B
+            b = this.reader.getFloat(children[i], 'b');
+            if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
+                return "no b defined for ambient";
+
+            // A
+            a = this.reader.getFloat(children[i], 'a');
+            if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
+                return "no a defined for ambient";
+
             switch(children[i].nodeName){
-                // Retrieves the ambient values.
                 case 'ambient': 
-                    // R
-                    r = this.reader.getFloat(children[i], 'r');
-                    if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
-                        return "no r defined for ambient";
-
-                    // G
-                    g = this.reader.getFloat(children[i], 'g');
-                    if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
-                        return "no g defined for ambient";
-
-                    // B
-                    b = this.reader.getFloat(children[i], 'b');
-                    if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
-                        return "no b defined for ambient";
-
-                    // A
-                    a = this.reader.getFloat(children[i], 'a');
-                    if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
-                        return "no a defined for ambient";
-
-                    this.ambient = new MyAmbient(r, g, b, a);
-                break;
-                    
-                    case 'background':
-                    // R
-                    r = this.reader.getFloat(children[i], 'r');
-                    if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
-                        return "no r defined for ambient";
-
-                    // G
-                    g = this.reader.getFloat(children[i], 'g');
-                    if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
-                        return "no g defined for ambient";
-
-                    // B
-                    b = this.reader.getFloat(children[i], 'b');
-                    if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
-                        return "no b defined for ambient";
-
-                    // A
-                    a = this.reader.getFloat(children[i], 'a');
-                    if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
-                        return "no a defined for ambient";
+                    if(this.ambient == null)
+                        this.ambient = new MyAmbient(r, g, b, a); 
                     else
-                        this.background = new MyAmbient(r, g, b, a);
+                        return "Error: Multiple tags for ambient";
+                    break;
+                case 'background': 
+                    if(this.background == null)
+                        this.background = new MyAmbient(r, g, b, a); 
+                    else
+                        return "Error: Multiple tags for background";
                     break;
                 default:
                     return "Tag invalid: " + children[i].nodeName;
-
-
             }
+            
         }
 
         this.log("Parsed ambient");
@@ -469,8 +453,8 @@ class MySceneGraph {
         // Any number of lights.
         for (var i = 0; i < children.length; i++) {
 
-            if (children[i].nodeName != "omni" && children[i].nodeName != "spot") {
-                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+            if (children[i].nodeName != 'omni' && children[i].nodeName != 'spot') {
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">"); 
                 continue;
             }
 
@@ -615,7 +599,7 @@ class MySceneGraph {
             else
                 return "diffuse component undefined for ID = " + id;
 
-            // TODO: Retrieve the specular component
+            // Retrieve the specular component
             var specular = [];
             if (specularIndex != -1) {
                 // R
@@ -907,6 +891,10 @@ class MySceneGraph {
             var id = this.reader.getString(children[i], 'id');
             if (id == null)
                 return "no ID defined for transformation";
+
+            // Checks for repeated IDs.
+            if (this.transformations[id] != null)
+                return "ID must be unique for each transformation (conflict: ID = " + id + ")";
 
             
             var trans = new MyTransformation(id);
@@ -1230,8 +1218,10 @@ class MySceneGraph {
                                     id2 = this.reader.getString(grandGrandChildren[l], 'id');
                                     if (id2 == null)
                                         return "no id defined for transformationref";
-
-                                    comp.addTransformation(this.transformations[id2]);
+                                    if(this.transformations[id2] != null)
+                                        comp.addTransformation(this.transformations[id2]);
+                                    else
+                                        return "Error: Id for transformationref invalid: " + id2;
                                 break;
 
                                 //if its a translation
@@ -1297,7 +1287,10 @@ class MySceneGraph {
                             id2 = this.reader.getString(grandGrandChildren[l], 'id');
                             if (id2 == null)
                                 return "no id defined for materials";
-                            comp.addMaterial(id2);
+                            if(this.materials[id2] != null || id2 == "inherit")
+                                comp.addMaterial(id2);
+                            else 
+                                return "Error: Id in material reference invalid: " + id2;
                         }
                     break;
                     
@@ -1307,6 +1300,7 @@ class MySceneGraph {
                         id2 = this.reader.getString(grandChildren[k], 'id');
                         if (id2 == null)
                             return "no id defined for texture";
+                       
 
                         var length_s = this.reader.getFloat(grandChildren[k], 'length_s');
                         if (!(length_s != null && !isNaN(length_s)))
@@ -1316,7 +1310,12 @@ class MySceneGraph {
                         if (!(length_t != null && !isNaN(length_t)))
                             return "no length_t defined for texture";
 
-                        comp.addTexture(id2, length_s, length_t);
+                        if(this.textures[id2] != null || id2 == "none" || id2 == "inherit"){
+                            comp.addTexture(id2, length_s, length_t);
+                        }
+                        else
+                            return "Error: Id in texture reference invalid: " + id2;
+                        
                     break;
                 
                     
@@ -1340,7 +1339,12 @@ class MySceneGraph {
                                 if (id2 == null)
                                     return "no id defined for primitive";
 
-                                comp.addChild(this.primitives[id2]);
+                                if(this.primitives[id2] != null){
+                                    comp.addChild(this.primitives[id2]);
+                                }
+                                else
+                                    return "Error: Id in primitiveref invalid: " + id2;
+                                
                             }
                         }
                     break;
@@ -1389,67 +1393,11 @@ class MySceneGraph {
         var root = this.components[this.root];
         if (root == null)
             return "root node does not exist!";
-
-        // initial parameters
-        var trf = this.initialMatrix;
-        var mat = root.currentMaterial;
-        var tex = root.texture[0];
-        var ls = root.texture[1];
-        var lt = root.texture[2];
-
-        this.processNode(root, trf, mat, tex, ls, lt);
+ 
+        root.display();
     }
+    
 
-    /**
-     * Processes graph node
-     * @param {node,trf,mat,tex,ls,lt}
-     */
-    processNode(node, trf, mat, tex, ls, lt) {
-
-        if (node instanceof MyPrimitive) {
-
-            this.scene.pushMatrix();
-
-            this.scene.multMatrix(trf);
-
-            /* apply material
-            if (this.materials[mat] != null)
-                this.materials[mat].appearance.apply();*/
-
-            /* apply texture
-            if (this.materials[tex] != null)
-                this.textures[tex].appearance.apply();*/
-            // TODO: scale textures
-
-            node.display();
-            this.scene.popMatrix();
-
-        } else if (node instanceof MyComponent) {
-
-            /* update material
-            if (node.currentMaterial == "inherit")
-                node.currentMaterial = mat;*/
-
-            /* update texture
-            if (node.texture[0] == "inherit")
-                node.texture[0] = tex;
-            else if (node.texture[0] == "none")
-                node.texture = [];*/
-
-            // update
-            mat4.multiply(node.transformationsMatrix, node.transformationsMatrix, trf);
-
-            var children = node.children;
-            for (var i = 0; i < children.length; i++) {
-                this.scene.pushMatrix();
-                this.processNode(children[i],
-                    trf,
-                    node.mat,
-                    node.tex,
-                    node.ls,
-                    node.lt);
-                this.scene.popMatrix();
-            }
-        }
-    }
+ 
+  
 }
