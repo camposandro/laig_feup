@@ -1284,8 +1284,14 @@ class MySceneGraph {
                             id2 = this.reader.getString(grandGrandChildren[l], 'id');
                             if (id2 == null)
                                 return "no id defined for materials";
-                            if (this.materials[id2] != null || id2 == "none" || id2 == "inherit")
-                                comp.addMaterial(id2);
+                                
+                            else if(id2 == 'none'){
+                                comp.addMaterial(id2,this.materials[id2]);
+                                console.log(id2);
+                            }
+                            else if (this.materials[id2] != null || id2 == "inherit") {
+                                 comp.addMaterial(id2,this.materials[id2]);
+                            }                               
                             else
                                 return "Error: Id in material reference invalid: " + id2;
                         }
@@ -1306,9 +1312,13 @@ class MySceneGraph {
                         if (!(length_t != null && !isNaN(length_t)))
                             return "no length_t defined for texture";
 
-                        if (this.textures[id2] != null || id2 == "none" || id2 == "inherit") {
-                            comp.addTexture(id2, length_s, length_t);
+                        if(id2 == 'none' || id2 == 'inherit'){
+
                         }
+                        else if (this.textures[id2] != null) {
+                            comp.addTexture(this.textures[id2], length_s, length_t);
+                        }
+                        
                         else
                             return "Error: Id in texture reference invalid: " + id2;
 
