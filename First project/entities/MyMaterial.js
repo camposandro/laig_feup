@@ -1,13 +1,14 @@
 /**
  * MyMaterial class, representing a scaling.
  */
-class MyMaterial {
+class MyMaterial extends CGFappearance{
 
 	/**
      * @constructor
      * @param {id,shininess,emission,ambient,diffuse,specular}
      */
     constructor(scene, id, shininess, emission, ambient, diffuse, specular) {
+        super(scene);
         this.id = id;
         
         this.shininess = shininess;
@@ -15,16 +16,6 @@ class MyMaterial {
         this.ambient = ambient;
         this.diffuse = diffuse;
         this.specular = specular;
-
-        this.loadMaterial(scene);
     }
 
-    loadMaterial(scene) {
-        this.appearance = new CGFappearance(scene);
-        this.appearance.setShininess(this.shininess);
-        this.appearance.setEmission(this.emission);
-        this.appearance.setAmbient(this.ambient);
-        this.appearance.setDiffuse(this.diffuse);
-        this.appearance.setSpecular(this.specular);
-    }
 }
