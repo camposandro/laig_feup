@@ -44,16 +44,22 @@
 
     <!-- Materials -->
     <materials>
+        <material id="default" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.2" g="0.2" b="0.2" a="1.0"/>
+            <specular r="0.1" g="0.1" b="0.1" a="1.0"/>   
+        </material>
         <material id="lampBodyMaterial" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
             <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
-            <diffuse r="0.66" g="0.66" b="0.66" a="1.0"/>
+            <diffuse r="0.0" g="0.0" b="0.0" a="1.0"/>
             <specular r="0.6" g="0.6" b="0.6" a="1.0"/>   
         </material>
          <material id="tableLegsMaterial" shininess="120">
             <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
             <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
-            <diffuse r="0.2" g="0.3" b="0.5" a="1.0"/>
+            <diffuse r="1" g="1" b="1" a="1.0"/>
             <specular r="0.2" g="0.2" b="0.2" a="1.0"/>   
         </material> 
     </materials>
@@ -330,8 +336,8 @@
         <!-- Table -->
         <component id="tableTop">
             <transformation>
-                <!--<scale x="5.0" y="0.3" z="3.0"/>
-                <translate x="0.0" y="12.17" z="0.0"/>-->
+                <scale x="5.0" y="0.3" z="3.0"/>
+                <translate x="-7.15" y="7.9" z="-5.5"/>
             </transformation>
 
             <materials>
@@ -348,7 +354,7 @@
         <component id="tableLeg1">
             <transformation>
                 <scale x="0.3" y="3.5" z="0.3"/>
-                <translate x="-7.75" y="0.5" z="-4.5"/>
+                <translate x="6" y="-3.8" z="13"/>
             </transformation>
 
             <materials>
@@ -365,7 +371,7 @@
          <component id="tableLeg2">
             <transformation>
                 <scale x="0.3" y="3.5" z="0.3"/>
-                <translate x="7.75" y="0.5" z="-4.5"/>
+                <translate x="21.5" y="-3.8" z="21"/>
             </transformation>
 
             <materials>
@@ -382,7 +388,7 @@
         <component id="tableLeg3">
             <transformation>
                 <scale x="0.3" y="3.5" z="0.3"/>
-                <translate x="-7.75" y="0.5" z="4.5"/>
+                <translate x="21.5" y="-3.8" z="13"/>
             </transformation>
 
             <materials>
@@ -399,7 +405,7 @@
          <component id="tableLeg4">
             <transformation>
                 <scale x="0.3" y="3.5" z="0.3"/>
-                <translate x="7.75" y="0.5" z="4.5"/>
+                <translate x="6" y="-3.8" z="21"/>
             </transformation>
 
             <materials>
@@ -490,7 +496,7 @@
             </transformation>
 
             <materials>
-                <material id="none"/>
+                <material id="default"/>
             </materials>
 
             <texture id="none" length_s="0" length_t="0"/>
