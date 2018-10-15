@@ -14,7 +14,7 @@ class MyComponent {
         this.transformationsMatrix = mat4.create();
         mat4.identity(this.transformationsMatrix);
 
-        this.materials = [];
+        this.materials = new Map();
         this.texture = [];
         this.children = [];
 
@@ -37,15 +37,15 @@ class MyComponent {
         mat4.scale(this.transformationsMatrix, this.transformationsMatrix, scaling.vec);
     }
 
-    addMaterial(id) {
-        this.materials.push(id);
+    addMaterial(id, material) {
+        this.materials.set(id,material);
         this.currentMaterial = id;
         //this.sortMaterials();
     }
 
-    addTexture(id, length_s, length_t) {
+    addTexture(texture, length_s, length_t) {
         if (this.texture.length == 0)
-            this.texture = [id, length_s, length_t];
+            this.texture = [texture, length_s, length_t];
     }
 
     addChild(child) {
@@ -72,6 +72,17 @@ class MyComponent {
     */
     display() {
         this.scene.pushMatrix();
+        if(this.currentMaterial != 'inherit'){
+            var material = this.materials.get(this.currentMaterial);
+            material.apply();
+        }
+/*
+        if(this.texture[0] != 'none' && this.texture[0] != 'inherit' ) {
+            
+            console.log(this.texture[0]);
+            this.texture[0].bind();
+        }
+           */
             this.scene.multMatrix(this.transformationsMatrix);
             for (var i = 0; i < this.children.length; i++)
                 this.children[i].display();
