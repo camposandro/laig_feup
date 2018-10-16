@@ -40,10 +40,20 @@ class XMLscene extends CGFscene {
     }
 
     /**
-     * Initializes the scene cameras.
+     * Initializes the first scene camera.
      */
     initCameras() {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+    }
+
+    /**
+    * Initializes the scene views with the values read from the XML file.
+    */
+    initViews() {
+        // Reads the views from the scene graph.
+        for (var key in this.graph.views) {
+            this.viewsValues.push(key);
+        }
     }
 
     /**
@@ -78,14 +88,11 @@ class XMLscene extends CGFscene {
     }
 
     /**
-     * Initializes the scene views with the values read from the XML file.
-     */
-    initViews() {
-
-        // Reads the views from the scene graph.
-        for (var key in this.graph.views) {
-            this.viewsValues.push(key);
-        }
+    * Updates view camera at each display.
+    */
+    updateView() {
+        this.camera = this.graph.views[this.currentViewIndex];
+        this.interface.setActiveCamera(this.camera);
     }
 
     /**
@@ -122,8 +129,7 @@ class XMLscene extends CGFscene {
     onGraphLoaded() {
 
         // set parsed default camera
-        this.camera = this.graph.views[this.currentViewIndex];
-        this.interface.setActiveCamera(this.camera);
+        this.updateView();
 
         // Change axis reference length according to parsed graph
         this.axis = new CGFaxis(this, this.graph.axis_length);
@@ -152,8 +158,6 @@ class XMLscene extends CGFscene {
         this.sceneInited = true;
     }
 
-
-
     /**
      * Displays the scene.
      */
@@ -174,13 +178,13 @@ class XMLscene extends CGFscene {
         this.pushMatrix();
 
         if (this.sceneInited) {
-            // update view
-            this.camera = this.graph.views[this.currentViewIndex];
+            // Update view
+            this.updateView();
 
             // Draw axis
             this.axis.display();
 
-            // update lights
+            // Update lights
             this.updateLights();
 
             // Displays the scene
@@ -193,5 +197,16 @@ class XMLscene extends CGFscene {
 
         this.popMatrix();
         // ---- END Background, camera and axis setup
+    }
+
+    /**
+    * Handles material changes after M is pressed.
+    */
+    changeMaterials() {
+        for (var key in this.graph.components) {
+            if (this.graph.components.hasOwnProperty(key)) {
+                this.graph.components[key].updateMaterial();
+            }
+        }
     }
 }

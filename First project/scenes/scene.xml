@@ -144,7 +144,9 @@
             </transformation>
 
             <materials>
-                <material id="inherit"/>
+                <material id="default"/>
+                <material id="lampBodyMaterial"/>
+                <material id="tableLegsMaterial"/>
             </materials>
 
             <texture id="sphereAppearance" length_s="1" length_t="1"/>

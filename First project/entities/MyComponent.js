@@ -15,8 +15,8 @@ class MyComponent {
         this.transformationsMatrix = mat4.create();
         mat4.identity(this.transformationsMatrix);
 
-        this.materials = new Map();
-        this.currentMaterial = null;
+        this.materials = [];
+        this.currentMaterialIndex = null;
         this.texture = [];
     }
 
@@ -37,8 +37,15 @@ class MyComponent {
     }
 
     addMaterial(id, material) {
-        this.materials.set(id, material);
-        this.currentMaterial = id;
+        if (id == 'default') {
+            this.currentMaterialIndex = this.materials.length;
+        }
+        this.materials.push(material);
+    }
+
+    updateMaterial() {
+        this.currentMaterialIndex++;
+        this.currentMaterialIndex %= this.materials.length;  
     }
 
     addTexture(texture, length_s, length_t) {
@@ -54,35 +61,28 @@ class MyComponent {
     /**
      * Display component
     */
-    display(mat, tex) {
+    display() {
         this.scene.pushMatrix();
 
-        /* apply material
-        if (this.currentMaterial != 'inherit') {
-            var material = this.materials.get(this.currentMaterial);
-            material.apply();
-        }*/
- 
-        /*if (this.currentMaterial != 'inherit') {
-            var material = this.materials.get(this.currentMaterial);
-            material.apply();
-        } else {
-            mat.apply();
-        }*/
+        // apply material
+        if (this.materials[this.currentMaterialIndex] != null) {
+            this.materials[this.currentMaterialIndex].apply();
+        }
 
         // apply texture
         if (this.texture.length != 0) {
             this.texture[0].bind();
-        } else if (tex.length != 0) {
+        } /*else if (tex.length != 0) {
             tex[0].bind();
-        }
+        }*/
 
         // apply transformations
         this.scene.multMatrix(this.transformationsMatrix);
 
         // process children nodes
-        for (var i = 0; i < this.children.length; i++)
-            this.children[i].display(this.currentMaterial, this.texture);
+        for (let child of this.children) {
+            child.display();
+        }
 
         this.scene.popMatrix();
     }

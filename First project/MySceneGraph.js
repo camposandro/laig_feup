@@ -1297,15 +1297,9 @@ class MySceneGraph {
                             if (id2 == null)
                                 return "no id defined for materials";
 
-                            else if (id2 == 'none') {
-                                comp.addMaterial(id2, this.materials[id2]);
-                                console.log(id2);
-                            }
-                            else if (this.materials[id2] != null || id2 == "inherit") {
+                            if (this.materials[id2] != null) {
                                 comp.addMaterial(id2, this.materials[id2]);
                             }
-                            else
-                                return "Error: Id in material reference invalid: " + id2;
                         }
                         break;
 
@@ -1324,7 +1318,7 @@ class MySceneGraph {
                         if (!(length_t != null && !isNaN(length_t)))
                             return "no length_t defined for texture";
 
-                        if (id2 == 'none' || id2 == 'inherit') {
+                        /*if (id2 != 'none' || id2 == 'inherit') {
 
                         }
                         else if (this.textures[id2] != null) {
@@ -1332,11 +1326,12 @@ class MySceneGraph {
                         }
 
                         else
-                            return "Error: Id in texture reference invalid: " + id2;
+                            return "Error: Id in texture reference invalid: " + id2;*/
 
+                        if (this.textures[id2] != null) {
+                            comp.addTexture(this.textures[id2], length_s, length_t);
+                        }
                         break;
-
-
 
                     //if its the children
                     case 'children':
@@ -1412,6 +1407,6 @@ class MySceneGraph {
             return "root node does not exist!";
 
         // display graph node from root
-        root.display(root.currentMaterial, root.texture);
+        root.display();
     }
 }

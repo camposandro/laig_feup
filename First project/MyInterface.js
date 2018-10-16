@@ -21,6 +21,7 @@ class MyInterface extends CGFinterface {
         this.gui = new dat.GUI();
 
         // add a group of controls (and open/expand by defult)
+        //this.initKeys();
 
         return true;
     }
@@ -49,5 +50,20 @@ class MyInterface extends CGFinterface {
         group.open();
 
         this.gui.add(this.scene, 'currentViewIndex', viewsValues).name("Selected view:");
+    }
+
+    /**
+     * Processes keyboard events.
+     * @param {event}
+     */
+    processKeyboard(event) {
+        CGFinterface.prototype.processKeyboard.call(this, event);
+        switch (event.code) {
+            case 'KeyM':
+                this.scene.changeMaterials();
+                break;
+            default:
+                break;
+        }
     }
 }
