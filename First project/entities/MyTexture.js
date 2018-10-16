@@ -1,7 +1,7 @@
 /**
  * MyTexture class, representing a texture.
  */
-class MyTexture extends CGFtexture{
+class MyTexture extends CGFtexture {
 
 	/**
      * @constructor
@@ -10,7 +10,6 @@ class MyTexture extends CGFtexture{
     constructor(scene, id, file) {
         super(scene, file);
         this.id = id;
-        //this.appearence.setTextureWrap('REPEAT','REPEAT');
+        //this.setTextureWrap('REPEAT','REPEAT');
     }
-
 }

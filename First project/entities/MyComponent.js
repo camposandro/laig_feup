@@ -10,15 +10,14 @@ class MyComponent {
     constructor(scene, id) {
         this.scene = scene;
         this.id = id;
+        this.children = [];
 
         this.transformationsMatrix = mat4.create();
         mat4.identity(this.transformationsMatrix);
 
         this.materials = new Map();
-        this.texture = [];
-        this.children = [];
-
         this.currentMaterial = null;
+        this.texture = [];
     }
 
     addTransformation(transformation) {
@@ -38,54 +37,53 @@ class MyComponent {
     }
 
     addMaterial(id, material) {
-        this.materials.set(id,material);
+        this.materials.set(id, material);
         this.currentMaterial = id;
-        //this.sortMaterials();
     }
 
     addTexture(texture, length_s, length_t) {
-        if (this.texture.length == 0)
+        if (this.texture.length == 0) {
             this.texture = [texture, length_s, length_t];
+        }
     }
 
     addChild(child) {
         this.children.push(child);
     }
 
-    sortMaterials() {
-        /*if (this.materials.length == 1 && this.materials[0] == "inherit") {
-            this.currentMaterial = this.materials[0];
-        } else {
-            var i = 0;
-            while (i < this.materials.length) {
-                this.currentMaterial = this.materials[i];
-                if (this.currentMaterial == "default")
-                    break;
-                i++;
-            }
-        }*/
-    }
-
     /**
      * Display component
-     * @param {scene}
     */
-    display() {
+    display(mat, tex) {
         this.scene.pushMatrix();
-        if(this.currentMaterial != 'inherit'){
+
+        /* apply material
+        if (this.currentMaterial != 'inherit') {
             var material = this.materials.get(this.currentMaterial);
             material.apply();
-        }
-/*
-        if(this.texture[0] != 'none' && this.texture[0] != 'inherit' ) {
-            
-            console.log(this.texture[0]);
+        }*/
+ 
+        /*if (this.currentMaterial != 'inherit') {
+            var material = this.materials.get(this.currentMaterial);
+            material.apply();
+        } else {
+            mat.apply();
+        }*/
+
+        // apply texture
+        if (this.texture.length != 0) {
             this.texture[0].bind();
+        } else if (tex.length != 0) {
+            tex[0].bind();
         }
-           */
-            this.scene.multMatrix(this.transformationsMatrix);
-            for (var i = 0; i < this.children.length; i++)
-                this.children[i].display();
+
+        // apply transformations
+        this.scene.multMatrix(this.transformationsMatrix);
+
+        // process children nodes
+        for (var i = 0; i < this.children.length; i++)
+            this.children[i].display(this.currentMaterial, this.texture);
+
         this.scene.popMatrix();
     }
 }

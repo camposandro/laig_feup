@@ -6,9 +6,19 @@
     <!-- Views specification -->
     <views default="1">
         <perspective id="1" near="0.1" far="500" angle="20">
-            <from x="15.0" y="15.0" z="15.0"/>
+            <from x="15.0" y="10.0" z="15.0"/>
             <to x="0.0" y="0.0" z="0.0"/>
         </perspective>
+
+        <ortho id="3" near="0.1" far="70" left="-10" right="10" top="10" bottom="-10">
+            <from x="15.0" y="8.0" z="15.0" />
+            <to x="0.0" y="5.0" z="0.0"/>
+        </ortho>
+
+        <ortho id="4" near="0.1" far="70" left="-5" right="5" top="5" bottom="-5">
+            <from x="7.5" y="5" z="15.0"/>
+            <to x="7.5" y="0" z="0"/>
+        </ortho>
     </views>
 
     <!-- Ilumination parameters -->
@@ -26,7 +36,13 @@
             <specular r="1.0" g="1.0" b="0.0" a="1.0"/>
         </omni>
         <omni id="2" enabled="1">
-            <location x="-0.5" y="4" z="7.5" w="1.0"/>
+            <location x="-0.5" y="4.0" z="7.5" w="1.0"/>
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+            <diffuse r="1.0" g="0.7" b="0.1" a="1.0"/>
+            <specular r="0.0" g="0.0" b="0.0" a="0.0"/>
+        </omni>
+         <omni id="3" enabled="1">
+            <location x="7.5" y="6.0" z="-0.5" w="1.0"/>
             <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
             <diffuse r="1.0" g="0.7" b="0.1" a="1.0"/>
             <specular r="0.0" g="0.0" b="0.0" a="0.0"/>

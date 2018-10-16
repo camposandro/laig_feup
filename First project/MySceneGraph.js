@@ -224,8 +224,9 @@ class MySceneGraph {
         this.views = [];
 
         var def = this.reader.getString(viewsNode, 'default');
-        if (def == null)
+        if (def == null) {
             return "unable to parse default view";
+        }
 
         var children = viewsNode.children;
         var grandChildren = [];
@@ -233,17 +234,17 @@ class MySceneGraph {
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName != "perspective" && children[i].nodeName != "ortho") {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                continue;
             }
 
             // get current id
             var id = this.reader.getString(children[i], 'id');
-            if (id == null)
-                return "no ID defined for perspective";
+            if (id == null) return "no ID defined for perspective";
 
             // Checks for repeated IDs.
-            if (this.views[id] != null)
+            if (this.views[id] != null) {
                 return "ID must be unique for each view (conflict: ID = " + id + ")";
-
+            }
 
             // get current near value
             var near = this.reader.getFloat(children[i], 'near');
@@ -261,109 +262,120 @@ class MySceneGraph {
 
             grandChildren = children[i].children;
 
-            // specific perspective parameters
-            switch (children[i].nodeName) {
-                case 'perspective':
-                    // get angle
-                    var angle = this.reader.getFloat(children[i], 'angle');
-                    if (!(angle != null && !isNaN(angle)))
-                        return "angle value missing for perspective ID = " + id;
+            var fromPos = [], toPos = [];
+
+            for (var j = 0; j < grandChildren.length; j++) {
+                var x, y, z;
+
+                // check the existence of only 1 'from' and 'to' tags
+                if (grandChildren[j].getElementsByTagName('from').length > 1)
+                    return "no more than one <from> tag may be defined in a perspective";
+
+                if (grandChildren[j].getElementsByTagName('to').length > 1)
+                    return "no more than one <to> tag may be defined in a perspective";
+
+                if (grandChildren[j].nodeName == "from") {
+                    // x
+                    x = this.reader.getFloat(grandChildren[j], 'x');
+                    if (!(x != null && !isNaN(x)))
+                        return "unable to parse x-coordinate of the perspective of ID = " + id;
                     else
-                        angle *= DEGREE_TO_RAD;
+                        fromPos.push(x);
 
-                    // check the existence of only 1 'from' and 'to' tags
-                    if (children[i].getElementsByTagName('from').length != 1)
-                        return "no more than one <from> tag may be defined in a perspective";
+                    // y
+                    y = this.reader.getFloat(grandChildren[j], 'y');
+                    if (!(y != null && !isNaN(y)))
+                        return "unable to parse y-coordinate of the perspective of ID = " + id;
+                    else
+                        fromPos.push(y);
 
-                    if (children[i].getElementsByTagName('to').length != 1)
-                        return "no more than one <to> tag may be defined in a perspective";
+                    // z
+                    z = this.reader.getFloat(grandChildren[j], 'z');
+                    if (!(z != null && !isNaN(z)))
+                        return "unable to parse z-coordinate of the perspective of ID = " + id;
+                    else
+                        fromPos.push(z);
 
-                    // get perspective
-                    var fromPos = [], toPos = [];
+                } else if (grandChildren[j].nodeName == "to") {
+                    // x
+                    x = this.reader.getFloat(grandChildren[j], 'x');
+                    if (!(x != null && !isNaN(x)))
+                        return "unable to parse x-coordinate of the perspective of ID = " + id;
+                    else
+                        toPos.push(x);
 
-                    for (var i = 0; i < grandChildren.length; i++) {
-                        var x, y, z;
+                    // y
+                    y = this.reader.getFloat(grandChildren[j], 'y');
+                    if (!(y != null && !isNaN(y)))
+                        return "unable to parse y-coordinate of the perspective of ID = " + id;
+                    else
+                        toPos.push(y);
 
-                        if (grandChildren[i].nodeName == "from") {
-                            // x
-                            x = this.reader.getFloat(grandChildren[i], 'x');
-                            if (!(x != null && !isNaN(x)))
-                                return "unable to parse x-coordinate of the perspective of ID = " + id;
+                    // z
+                    z = this.reader.getFloat(grandChildren[j], 'z');
+                    if (!(z != null && !isNaN(z)))
+                        return "unable to parse z-coordinate of the perspective of ID = " + id;
+                    else
+                        toPos.push(z);
+
+                } else {
+                    this.onXMLMinorError("unknown tag <" + grandChildren[j].nodeName + ">");
+                    continue;
+                }
+
+                var position = vec3.fromValues(fromPos[0], fromPos[1], fromPos[2]);
+                var target = vec3.fromValues(toPos[0], toPos[1], toPos[2]);
+
+                // specific perspective parameters
+                switch (children[i].nodeName) {
+                    case 'perspective':
+                        {
+                            // get angle
+                            var angle = this.reader.getFloat(children[i], 'angle');
+                            if (!(angle != null && !isNaN(angle)))
+                                return "angle value missing for perspective ID = " + id;
                             else
-                                fromPos.push(x);
+                                angle *= DEGREE_TO_RAD;
 
-                            // y
-                            y = this.reader.getFloat(grandChildren[i], 'y');
-                            if (!(y != null && !isNaN(y)))
-                                return "unable to parse y-coordinate of the perspective of ID = " + id;
-                            else
-                                fromPos.push(y);
-
-                            // z
-                            z = this.reader.getFloat(grandChildren[i], 'z');
-                            if (!(z != null && !isNaN(z)))
-                                return "unable to parse z-coordinate of the perspective of ID = " + id;
-                            else
-                                fromPos.push(z);
-
-                        } else if (grandChildren[i].nodeName == "to") {
-                            // x
-                            x = this.reader.getFloat(grandChildren[i], 'x');
-                            if (!(x != null && !isNaN(x)))
-                                return "unable to parse x-coordinate of the perspective of ID = " + id;
-                            else
-                                toPos.push(x);
-
-                            // y
-                            y = this.reader.getFloat(grandChildren[i], 'y');
-                            if (!(y != null && !isNaN(y)))
-                                return "unable to parse y-coordinate of the perspective of ID = " + id;
-                            else
-                                toPos.push(y);
-
-                            // z
-                            z = this.reader.getFloat(grandChildren[i], 'z');
-                            if (!(z != null && !isNaN(z)))
-                                return "unable to parse z-coordinate of the perspective of ID = " + id;
-                            else
-                                toPos.push(z);
-
-                        } else {
-                            this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
-                            continue;
+                            this.views[id] = new CGFcamera(angle, near, far, position, target);
+                            break;
                         }
-                    }
-                    var position = vec3.fromValues(fromPos[0], fromPos[1], fromPos[2]);
-                    var target = vec3.fromValues(toPos[0], toPos[1], toPos[2]);
+                    case 'ortho':
+                        {
+                            var left = this.reader.getFloat(children[i], 'left');
+                            if (!(left != null && !isNaN(left)))
+                                return "left value missing for ortho ID = " + id;
 
-                    this.views[id] = new CGFcamera(angle, near, far, position, target);
+                            var right = this.reader.getFloat(children[i], 'right');
+                            if (!(right != null && !isNaN(right)))
+                                return "right value missing for ortho ID = " + id;
 
-                    break;
-                case 'ortho':
-                    var left = this.reader.getFloat(children[i], 'left');
-                    if (!(left != null && !isNaN(left)))
-                        return "left value missing for ortho ID = " + id;
+                            var top = this.reader.getFloat(children[i], 'top');
+                            if (!(top != null && !isNaN(top)))
+                                return "top value missing for ortho ID = " + id;
 
-                    var right = this.reader.getFloat(children[i], 'right');
-                    if (!(right != null && !isNaN(right)))
-                        return "right value missing for ortho ID = " + id;
+                            var bottom = this.reader.getFloat(children[i], 'bottom');
+                            if (!(bottom != null && !isNaN(bottom)))
+                                return "bottom value missing for ortho ID = " + id;
 
-                    var top = this.reader.getFloat(children[i], 'right');
-                    if (!(top != null && !isNaN(top)))
-                        return "top value missing for ortho ID = " + id;
+                            var dx = target[0] - position[0];
+                            var dz = target[2] - position[2];
 
-                    var bottom = this.reader.getFloat(children[i], 'right');
-                    if (!(bottom != null && !isNaN(bottom)))
-                        return "bottom value missing for ortho ID = " + id;
+                            var up;
+                            if (!dx && !dz) {
+                                up = [1, 0, 0];
+                            }
+                            else {
+                                up = [0, 1, 0];
+                            }
 
-                    // TODO: save CGF ortho camera
-                    this.views[id] = new MyViewOrtho(id, near, far, left, right, top, bottom);
-                    break;
-
-                default:
-                    return "Tag invalid: " + children[i].nodeName;
+                            this.views[id] = new CGFcameraOrtho(left, right, bottom, top, near, far, position, target, up);
+                            break;
+                        }
+                    default:
+                        return "Tag invalid: " + children[i].nodeName;
+                }
             }
-
         }
 
         // save default camera
@@ -1284,14 +1296,14 @@ class MySceneGraph {
                             id2 = this.reader.getString(grandGrandChildren[l], 'id');
                             if (id2 == null)
                                 return "no id defined for materials";
-                                
-                            else if(id2 == 'none'){
-                                comp.addMaterial(id2,this.materials[id2]);
+
+                            else if (id2 == 'none') {
+                                comp.addMaterial(id2, this.materials[id2]);
                                 console.log(id2);
                             }
                             else if (this.materials[id2] != null || id2 == "inherit") {
-                                 comp.addMaterial(id2,this.materials[id2]);
-                            }                               
+                                comp.addMaterial(id2, this.materials[id2]);
+                            }
                             else
                                 return "Error: Id in material reference invalid: " + id2;
                         }
@@ -1312,13 +1324,13 @@ class MySceneGraph {
                         if (!(length_t != null && !isNaN(length_t)))
                             return "no length_t defined for texture";
 
-                        if(id2 == 'none' || id2 == 'inherit'){
+                        if (id2 == 'none' || id2 == 'inherit') {
 
                         }
                         else if (this.textures[id2] != null) {
                             comp.addTexture(this.textures[id2], length_s, length_t);
                         }
-                        
+
                         else
                             return "Error: Id in texture reference invalid: " + id2;
 
@@ -1400,6 +1412,6 @@ class MySceneGraph {
             return "root node does not exist!";
 
         // display graph node from root
-        root.display();
+        root.display(root.currentMaterial, root.texture);
     }
 }
