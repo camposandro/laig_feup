@@ -4,6 +4,7 @@ var DEGREE_TO_RAD = Math.PI / 180;
  * XMLscene class, representing the scene that is to be rendered.
  */
 class XMLscene extends CGFscene {
+
     /**
      * @constructor
      * @param {MyInterface} myinterface 
@@ -13,6 +14,8 @@ class XMLscene extends CGFscene {
 
         this.interface = myinterface;
         this.lightValues = [];
+        this.viewsValues = [];
+        this.currentViewIndex = null;
     }
 
     /**
@@ -66,11 +69,44 @@ class XMLscene extends CGFscene {
                 this.lights[i].setVisible(true);
 
                 this.lightValues[key] = light.enabled == 1 ? true : false;
-                
-                if (this.lightValues[key])
+
+                this.updateLights();
+
+                i++;
+            }
+        }
+    }
+
+    /**
+     * Initializes the scene views with the values read from the XML file.
+     */
+    initViews() {
+
+        // Reads the views from the scene graph.
+        for (var key in this.graph.views) {
+            this.viewsValues.push(key);
+        }
+    }
+
+    /**
+    * Updates lights at each display.
+    */
+    updateLights() {
+
+        // Lights index.
+        var i = 0;
+
+        // Reads lights enabled values
+        for (var key in this.lightValues) {
+            if (this.lightValues.hasOwnProperty(key)) {
+                if (this.lightValues[key]) {
+                    this.lights[i].setVisible(true);
                     this.lights[i].enable();
-                else
+                }
+                else {
+                    this.lights[i].setVisible(false);
                     this.lights[i].disable();
+                }
 
                 this.lights[i].update();
 
@@ -79,14 +115,14 @@ class XMLscene extends CGFscene {
         }
     }
 
-
-    /* Handler called when the graph is finally loaded. 
+    /**
+     * Handler called when the graph is finally loaded. 
      * As loading is asynchronous, this may be called already after the application has started the run loop
      */
     onGraphLoaded() {
 
         // set parsed default camera
-        this.camera = this.graph.defCamera;
+        this.camera = this.graph.views[this.currentViewIndex];
         this.interface.setActiveCamera(this.camera);
 
         // Change axis reference length according to parsed graph
@@ -105,11 +141,17 @@ class XMLscene extends CGFscene {
 
         this.initLights();
 
+        this.initViews();
+
         // Adds lights group.
-        this.interface.addLightsGroup(this.graph.lights);
+        this.interface.addLightsGroup(this.lightValues);
+
+        // Adds views group.
+        this.interface.addViewsGroup(this.viewsValues);
 
         this.sceneInited = true;
     }
+
 
 
     /**
@@ -132,26 +174,14 @@ class XMLscene extends CGFscene {
         this.pushMatrix();
 
         if (this.sceneInited) {
+            // update view
+            this.camera = this.graph.views[this.currentViewIndex];
+
             // Draw axis
             this.axis.display();
 
-            var i = 0;
-            for (var key in this.lightValues) {
-                if (this.lightValues.hasOwnProperty(key)) {
-                    if (this.lightValues[key]) {
-                        this.lights[i].setVisible(true);
-                        this.lights[i].enable();
-                    }
-                    else {
-                        this.lights[i].setVisible(false);
-                        this.lights[i].disable();
-                    }
-
-                    this.lights[i].update();
-
-                    i++;
-                }
-            }
+            // update lights
+            this.updateLights();
 
             // Displays the scene
             this.graph.displayScene();

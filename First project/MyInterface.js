@@ -27,18 +27,27 @@ class MyInterface extends CGFinterface {
 
     /**
      * Adds a folder containing the IDs of the lights passed as parameter.
-     * @param {array} lights
+     * @param {array} lightValues
      */
-    addLightsGroup(lights) {
+    addLightsGroup(lightValues) {
 
         var group = this.gui.addFolder("Lights");
         group.open();
 
-        // add two check boxes to the group. The identifiers must be members variables of the scene initialized in scene.init as boolean
-        // e.g. this.option1=true; this.option2=false;
-        
-        for (var key in this.scene.lightValues) {
-            group.add(this.scene.lightValues, key);
+        for (var key in lightValues) {
+            group.add(lightValues, key);
         }
+    }
+
+    /**
+     * Adds a folder containing the IDs of the views passed as parameter.
+     * @param {array} viewsValues
+     */
+    addViewsGroup(viewsValues) {
+
+        var group = this.gui.addFolder("Views");
+        group.open();
+
+        this.gui.add(this.scene, 'currentViewIndex', viewsValues).name("Selected view:");
     }
 }

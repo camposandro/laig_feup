@@ -378,8 +378,8 @@ class MySceneGraph {
             }
         }
 
-        // save default camera
-        this.defCamera = this.views[def];
+        // save default camera index
+        this.scene.currentViewIndex = def;
 
         this.log("Parsed views");
 
