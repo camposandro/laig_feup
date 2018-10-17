@@ -8,9 +8,10 @@ class MyCircle extends CGFobject {
      * @constructor
      * @param {scene, slices}
      */
-    constructor(scene, slices) {
+    constructor(scene, slices, radius) {
         super(scene);
         this.slices = slices;
+        this.radius = radius;
         this.initBuffers();
     };
 
@@ -29,7 +30,7 @@ class MyCircle extends CGFobject {
 
         // other vertices, its normals and texCoords
         for (var i = 0; i < this.slices; i++) {
-            this.vertices.push(Math.cos(i * angle), Math.sin(i * angle), 0);
+            this.vertices.push(Math.cos(i * angle) * this.radius, Math.sin(i * angle)* this.radius, 0);
             this.normals.push(0, 0, 1);
             this.texCoords.push(Math.cos(i * angle) / 2 + 0.5, -Math.sin(i * angle) / 2 + 0.5);
         }

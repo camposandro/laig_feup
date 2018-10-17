@@ -986,7 +986,7 @@ class MySceneGraph {
      * @param {primitives block element} primitivesNode
      */
     parsePrimitives(primitivesNode) {
-
+        this.rectangles = [];
         this.primitives = [];
 
         var children = primitivesNode.children;
@@ -1036,6 +1036,8 @@ class MySceneGraph {
                         y2 = this.reader.getFloat(grandChildren[k], 'y2');
                         if (y2 == null || isNaN(y2))
                             return "no y2 defined for translate";
+
+                        this.rectangles.push(id, x, y, x2, y);
 
                         this.primitives[id] = new MyRectangle(this.scene, id, x, y, x2, y2);
                         break;
@@ -1181,9 +1183,9 @@ class MySceneGraph {
      * @param {components block element} componentsNode
      */
     parseComponents(componentsNode) {
-
+        var unparsedComponents = [];
         this.components = [];
-
+        
         var children = componentsNode.children;
 
         for (var i = 0; i < children.length; i++) {
@@ -1207,6 +1209,8 @@ class MySceneGraph {
             var grandChildren = children[i].children;
 
             var id2;
+
+            var length_s, length_t;
 
             for (var k = 0; k < grandChildren.length; k++) {
 
@@ -1297,8 +1301,10 @@ class MySceneGraph {
                             if (id2 == null)
                                 return "no id defined for materials";
 
-                            if (this.materials[id2] != null) {
+                            if (id2 != 'inherit' && this.materials[id2] != null) {
                                 comp.addMaterial(id2, this.materials[id2]);
+                            } else {
+                                comp.addMaterial(id2, null);
                             }
                         }
                         break;
@@ -1318,18 +1324,10 @@ class MySceneGraph {
                         if (!(length_t != null && !isNaN(length_t)))
                             return "no length_t defined for texture";
 
-                        /*if (id2 != 'none' || id2 == 'inherit') {
-
-                        }
-                        else if (this.textures[id2] != null) {
-                            comp.addTexture(this.textures[id2], length_s, length_t);
-                        }
-
-                        else
-                            return "Error: Id in texture reference invalid: " + id2;*/
-
-                        if (this.textures[id2] != null) {
-                            comp.addTexture(this.textures[id2], length_s, length_t);
+                        if (id2 != 'none' && id2 != 'inherit' && this.textures[id2] != null) {
+                            comp.addTexture(id2, this.textures[id2], length_s, length_t);
+                        } else {
+                            comp.addTexture(id2, null, length_s, length_t);
                         }
                         break;
 
@@ -1342,6 +1340,10 @@ class MySceneGraph {
                                 id2 = this.reader.getString(grandGrandChildren[l], 'id');
                                 if (id2 == null)
                                     return "no id defined for component";
+                                else if (this.components[id2] != null)
+                                    comp.addChild(this.components[id2]);
+                                else
+                                    unparsedComponents.push([id, id2]);
 
                                 comp.addChild(this.components[id2]);
                             }
@@ -1352,20 +1354,47 @@ class MySceneGraph {
                                 if (id2 == null)
                                     return "no id defined for primitive";
 
-                                if (this.primitives[id2] != null) {
+                                if (this.primitives[id2] instanceof MyRectangle) {
+                                    comp.addChild(new MyRectangle(
+                                        this.primitives[id2].scene,
+                                        this.primitives[id2].id,
+                                        this.primitives[id2].x1,
+                                        this.primitives[id2].y1,
+                                        this.primitives[id2].x2,
+                                        this.primitives[id2].y2,
+                                        length_s,
+                                        length_t));
+                                } else if (this.primitives[id2] instanceof MyTriangle) {
+                                    comp.addChild(new MyTriangle(
+                                        this.primitives[id2].scene,
+                                        this.primitives[id2].id,
+                                        this.primitives[id2].x1,
+                                        this.primitives[id2].y1,
+                                        this.primitives[id2].z1,
+                                        this.primitives[id2].x2,
+                                        this.primitives[id2].y2,
+                                        this.primitives[id2].z2,
+                                        this.primitives[id2].x3,
+                                        this.primitives[id2].y3,
+                                        this.primitives[id2].z3,
+                                        length_s,
+                                        length_t));
+                                } else {
                                     comp.addChild(this.primitives[id2]);
                                 }
-                                else
-                                    return "Error: Id in primitiveref invalid: " + id2;
-
                             }
+
                         }
                         break;
-
-
                 }
             }
+
             this.components[id] = comp;
+        }
+
+        for(let comp of unparsedComponents){
+            var compId = comp[0];
+            this.components[compId].addChild(this.components[comp[1]]);
         }
 
         this.log("Parsed components");
@@ -1403,10 +1432,13 @@ class MySceneGraph {
      */
     displayScene() {
         var root = this.components[this.root];
-        if (root == null)
+        if (root == null) {
             return "root node does not exist!";
+        }
 
         // display graph node from root
-        root.display();
+        var rootMaterial = root.materials[root.currentMaterialIndex][1];
+        var rootTexture = root.texture;
+        root.display(rootMaterial, rootTexture);
     }
 }

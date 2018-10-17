@@ -16,8 +16,8 @@ class MyComponent {
         mat4.identity(this.transformationsMatrix);
 
         this.materials = [];
-        this.currentMaterialIndex = null;
-        this.texture = [];
+        this.currentMaterialIndex = 0;
+        this.texture = null;
     }
 
     addTransformation(transformation) {
@@ -36,22 +36,31 @@ class MyComponent {
         mat4.scale(this.transformationsMatrix, this.transformationsMatrix, scaling.vec);
     }
 
+    existsMaterial(id) {
+        for (var i = 0; i < this.materials.length; i++) {
+            if (this.materials[i][0] == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     addMaterial(id, material) {
-        if (id == 'default') {
+        if (id == 'inherit' || (id == 'default' && !this.existsMaterial('inherit'))) {
             this.currentMaterialIndex = this.materials.length;
         }
-        this.materials.push(material);
+        this.materials.push([id, material]);
     }
 
     updateMaterial() {
-        this.currentMaterialIndex++;
-        this.currentMaterialIndex %= this.materials.length;  
+        if (this.materials.length != 0) {
+            this.currentMaterialIndex++;
+            this.currentMaterialIndex %= this.materials.length;
+        }
     }
 
-    addTexture(texture, length_s, length_t) {
-        if (this.texture.length == 0) {
-            this.texture = [texture, length_s, length_t];
-        }
+    addTexture(id, texture, length_s, length_t) {
+        this.texture = new Array(id, texture, length_s, length_t);
     }
 
     addChild(child) {
@@ -61,27 +70,36 @@ class MyComponent {
     /**
      * Display component
     */
-    display() {
+    display(mat, tex) {
         this.scene.pushMatrix();
 
         // apply material
-        if (this.materials[this.currentMaterialIndex] != null) {
-            this.materials[this.currentMaterialIndex].apply();
+        if (!this.existsMaterial('inherit')) {
+            mat = this.materials[this.currentMaterialIndex][1];
         }
+        mat.apply();
 
-        // apply texture
-        if (this.texture.length != 0) {
-            this.texture[0].bind();
-        } /*else if (tex.length != 0) {
-            tex[0].bind();
-        }*/
+        // apply texture - falta dar scale
+        if (this.texture[0] == 'inherit') {
+            if (tex[1] != null) {
+                tex[1].bind();
+            }
+        } else if (this.texture[0] == 'none') {
+            if (tex[1] != null) {
+                tex[1].unbind();
+                tex[1] = null;
+            }
+        } else {
+            this.texture[1].bind();
+            tex = this.texture;
+        }
 
         // apply transformations
         this.scene.multMatrix(this.transformationsMatrix);
 
         // process children nodes
         for (let child of this.children) {
-            child.display();
+            child.display(mat, tex);
         }
 
         this.scene.popMatrix();
