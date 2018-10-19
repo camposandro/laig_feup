@@ -262,6 +262,12 @@ class MySceneGraph {
                 far = 500;
             }
 
+            if (child.getElementsByTagName('from').length != 1)
+                return "[parseViews]: one <from> tag may be defined in a perspective";
+
+            if (child.getElementsByTagName('to').length != 1)
+                return "[parseViews]: one <to> tag may be defined in a perspective";
+
             var position, target;
 
             // get subtags
@@ -270,12 +276,6 @@ class MySceneGraph {
 
                 var x, y, z;
                 var fromPos = new Array(), toPos = new Array();
-
-                if (grandChild.getElementsByTagName('from').length > 1)
-                    return "[parseViews]: no more than one <from> tag may be defined in a perspective";
-
-                if (grandChild.getElementsByTagName('to').length > 1)
-                    return "[parseViews]: no more than one <to> tag may be defined in a perspective";
 
                 if (grandChild.nodeName == "from") {
 
