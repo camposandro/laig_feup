@@ -74,12 +74,12 @@ class MyComponent {
         this.scene.pushMatrix();
 
         // apply material
-        if (!this.existsMaterial('inherit')) {
+        if (!this.existsMaterial('inherit'))
             mat = this.materials[this.currentMaterialIndex][1];
-        }
-        mat.apply();
+        if (mat != null) 
+            mat.apply();
 
-        // apply texture - falta dar scale
+        // apply texture
         if (this.texture[0] == 'inherit') {
             if (tex[1] != null) {
                 tex[1].bind();
@@ -89,7 +89,7 @@ class MyComponent {
                 tex[1].unbind();
                 tex[1] = null;
             }
-        } else {
+        } else if (this.texture[1] != null) {
             this.texture[1].bind();
             tex = this.texture;
         }

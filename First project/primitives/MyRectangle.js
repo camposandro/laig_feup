@@ -46,9 +46,9 @@ class MyRectangle extends CGFobject {
 
         this.texCoords = [
             0, maxT,
-            0, 0,
+            maxS, maxT,
             maxS, 0,
-            maxS, maxT
+            0, 0
         ];
 
         this.primitiveType = this.scene.gl.TRIANGLES;

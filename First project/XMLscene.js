@@ -78,6 +78,12 @@ class XMLscene extends CGFscene {
                 this.lights[i].setSpecular(light.specular[0], light.specular[1], light.specular[2], light.specular[3]);
                 this.lights[i].setVisible(true);
 
+                if (light instanceof MySpotlight) {
+                    this.lights[i].setSpotCutOff(light.angle);
+                    this.lights[i].setSpotExponent(light.exponent);
+                    this.lights[i].setSpotDirection(light.target[0], light.target[1], light.target[2]);
+                }
+
                 this.lightValues[key] = light.enabled == 1 ? true : false;
 
                 this.updateLights();
@@ -124,7 +130,7 @@ class XMLscene extends CGFscene {
 
     /**
      * Handler called when the graph is finally loaded. 
-     * As loading is asynchronous, this may be called already after the application has started the run loop
+     * As loading is asynchronous, this may be called already after the application has started the run loop.
      */
     onGraphLoaded() {
 

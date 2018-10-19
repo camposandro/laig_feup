@@ -23,8 +23,10 @@ class MyTorus extends CGFobject {
         this.vertices = new Array();
         this.indices = new Array();
         this.normals = new Array();
+        this.texCoords = new Array();
 
-        // TODO: add texCoords
+        var s = 1 / this.loops;
+        var t = 1 / this.slices;
 
         // bandas de latitude
         for (var j = 0; j <= this.loops; j++) {
@@ -42,6 +44,7 @@ class MyTorus extends CGFobject {
 
                 this.vertices.push(x, y, z);
                 this.normals.push(x, y, z);
+                this.texCoords.push(j * s, i * t);
             }
         }
 

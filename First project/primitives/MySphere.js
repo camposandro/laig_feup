@@ -38,12 +38,9 @@ class MySphere extends CGFobject {
                 var y = this.radius * Math.cos(theta) * Math.sin(phi);
                 var z = this.radius * Math.cos(phi);
 
-                var u = 1 - (i / this.slices);
-                var v = 1 - (j / this.stacks);
-
                 this.vertices.push(x, y, z);
                 this.normals.push(x, y, z);
-                this.texCoords.push(u, v);
+                this.texCoords.push(i / this.slices, 1 - j / this.stacks);
             }
         }
 
@@ -60,3 +57,4 @@ class MySphere extends CGFobject {
         this.initGLBuffers();
     };
 };
+
