@@ -10,14 +10,14 @@
             <to x="0.0" y="0.0" z="0.0"/>
         </perspective>
 
-        <ortho id="ortho_1" near="0.1" far="70" left="-10" right="10" top="10" bottom="-10">
-            <from x="15.0" y="8.0" z="15.0" />
-            <to x="0.0" y="5.0" z="0.0"/>
+        <ortho id="ortho_1" near="0.1" far="70" left="-10" right="10" top="7" bottom="-4">
+            <from x="7.5" y="5.0" z="15.0"/>
+            <to x="7.5" y="0.0" z="0.0"/>
         </ortho>
 
-        <ortho id="ortho_2" near="0.1" far="70" left="-5" right="5" top="5" bottom="-5">
-            <from x="7.5" y="5" z="15.0"/>
-            <to x="7.5" y="0" z="0"/>
+        <ortho id="ortho_2" near="0.1" far="70" left="-10" right="10" top="4" bottom="-5">
+            <from x="15.0" y="5.0" z="8.0"/>
+            <to x="0.0" y="4.0" z="8.0"/>
         </ortho>
     </views>
 
@@ -30,39 +30,48 @@
     <!-- Light sources -->
     <lights>
         <omni id="1" enabled="1">
-            <location x="7.5" y="6.0" z="12.0" w="1.0"/>
+            <location x="7.5" y="6.0" z="14.0" w="1.0"/>
             <ambient r="0.0" g="0.0" b="0.0" a="0.0"/>
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
             <specular r="1.0" g="1.0" b="0.0" a="1.0"/>
         </omni>
         <omni id="2" enabled="1">
-            <location x="0.5" y="4.0" z="7.5" w="1.0"/>
+            <location x="1.0" y="4.0" z="7.5" w="1.0"/>
             <ambient r="0.0" g="0.0" b="0.0" a="0.0"/>
             <diffuse r="1.0" g="0.7" b="0.1" a="1.0"/>
             <specular r="1.0" g="1.0" b="0.0" a="1.0"/>
         </omni>
          <omni id="3" enabled="1">
-            <location x="7.5" y="6.0" z="0.5" w="1.0"/>
+            <location x="7.5" y="6.0" z="1.0" w="1.0"/>
             <ambient r="0.0" g="0.0" b="0.0" a="0.0"/>
             <diffuse r="1.0" g="0.7" b="0.1" a="1.0"/>
             <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
         </omni>
-        <spot id="4" enabled="1" angle="1" exponent="10">
-            <location x="7.3" y="7" z="7.3" w="1" />
-            <target x="7.3" y="0" z="7.3" />
-            <ambient r="0.1" g="0.1" b="0.1" a="1" />
-            <diffuse r="0.9" g="0.3" b="0.2" a="1" />
-            <specular r="0.9" g="0.9" b="0.4" a="1" />
+        <omni id="4" enabled="1">
+            <location x="14.0" y="4.0" z="7.5" w="1.0"/>
+            <ambient r="0.0" g="0.0" b="0.0" a="0.0"/>
+            <diffuse r="1.0" g="0.7" b="0.1" a="1.0"/>
+            <specular r="1.0" g="1.0" b="0.0" a="1.0"/>
+        </omni>
+        <spot id="5" enabled="1" angle="1.0" exponent="1.0">
+            <location x="7.5" y="7.0" z="7.5" w="1.0"/>
+            <target x="7.5" y="4.0" z="7.5"/>
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0"/>
+            <diffuse r="0.9" g="0.3" b="0.2" a="1.0"/>
+            <specular r="0.9" g="0.9" b="0.4" a="1.0"/>
         </spot>
     </lights>
 
     <!-- Textures -->
     <textures>
-        <texture id="boxAppearance" file="textures/vaporwave.png"/>
-        <texture id="tableAppearance" file="textures/marble.png"/>
         <texture id="floorAppearance" file="textures/floor.png"/>
+        <texture id="windowAppearance" file="textures/window.png"/>
+        <texture id="paintingAppearance" file="textures/painting.png"/>
+        <texture id="carpetAppearance" file="textures/carpet.png"/>
+        <texture id="tableAppearance" file="textures/marble.png"/>
         <texture id="lampAppearance" file="textures/lamp.png"/>
         <texture id="sphereAppearance" file="textures/sphere.png"/>
+        <texture id="boxAppearance" file="textures/vaporwave.png"/>
     </textures>
 
     <!-- Materials -->
@@ -73,18 +82,48 @@
             <diffuse r="0.2" g="0.2" b="0.2" a="1.0"/>
             <specular r="0.1" g="0.1" b="0.1" a="1.0"/>   
         </material>
+        <material id="wallMaterial1" shininess="1">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.2" g="0.2" b="0.2" a="1.0"/>
+            <specular r="0.1" g="0.1" b="0.1" a="1.0"/>   
+        </material>
+        <material id="wallMaterial2" shininess="1">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.2" g="1.0" b="0.3" a="1.0"/>
+            <specular r="0.1" g="0.1" b="0.1" a="1.0"/>   
+        </material>
+        <material id="tableLegsMaterial1" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.40" g="0.26" b="0.13" a="1.0"/>
+            <specular r="0.0" g="0.0" b="0.0" a="1.0"/>   
+        </material>
+        <material id="tableLegsMaterial2" shininess="1">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.0" g="0.0" b="0.4" a="1.0"/>
+            <specular r="0.0" g="0.0" b="0.0" a="1.0"/>   
+        </material>
         <material id="lampBodyMaterial" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
             <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
             <diffuse r="0.3" g="0.3" b="0.3" a="1.0"/>
             <specular r="0.6" g="0.6" b="0.6" a="1.0"/>   
         </material>
-         <material id="tableLegsMaterial" shininess="120">
+        <material id="lit" shininess="120">
             <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
             <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
-            <specular r="0.2" g="0.2" b="0.2" a="1.0"/>   
-        </material> 
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
+            <specular r="0.3" g="0.3" b="0.3" a="1.0"/>   
+        </material>
+        <material id="vaporwave" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.72" g="0.4" b="1.0" a="1.0"/>
+            <specular r="0.0" g="0.0" b="0.0" a="1.0"/>   
+        </material>
     </materials>
 
     <!-- Transformations -->
@@ -95,15 +134,32 @@
             <scale x="15.0" y="8.0" z="0.2"/>
         </transformation>
 
+        <transformation id="trfWindowFrame">
+            <translate x="0.1" y="4.5" z="7.5"/>
+            <rotate axis="y" angle="90"/>
+            <scale x="4.0" y="4.0" z="0.2"/>
+        </transformation>
+
         <transformation id="trfRightWall">
             <translate x="7.5" y="4.0" z="0.0"/>
             <scale x="15.0" y="8.0" z="0.2"/>
+        </transformation>
+
+        <transformation id="trfPaintingFrame">
+            <translate x="7.5" y="4.0" z="0.1"/>
+            <scale x="10.0" y="5.0" z="0.2"/>
         </transformation>
 
         <transformation id="trfFloor">
             <translate x="7.5" y="0.0" z="7.5"/>
             <rotate axis="x" angle="-90"/>
             <scale x="15.0" y="15.0" z="0.2"/>
+        </transformation>
+
+        <transformation id="trfCarpet">
+            <translate x="7.5" y="0.1" z="7.5"/>
+            <rotate axis="x" angle="-90"/>
+            <scale x="8.0" y="6.0" z="1.0"/>
         </transformation>
 
         <transformation id="trfBox">
@@ -156,8 +212,7 @@
 
             <materials>
                 <material id="default"/>
-                <material id="lampBodyMaterial"/>
-                <material id="tableLegsMaterial"/>
+                <material id="lit"/>
             </materials>
 
             <texture id="sphereAppearance" length_s="1" length_t="1"/>
@@ -254,7 +309,7 @@
 
         <component id="face6">
             <transformation>
-                <translate x= "0.5" y="0" z="0"/>
+                <translate x="0.5" y="0" z="0"/>
                 <rotate axis="y" angle="90"/>
             </transformation>
 
@@ -296,7 +351,8 @@
             </transformation>
 
             <materials>
-                <material id="inherit"/>
+                <material id="default"/>
+                <material id="vaporwave"/>
             </materials>
 
             <texture id="boxAppearance" length_s="1" length_t="1"/>
@@ -314,7 +370,8 @@
             </transformation>
 
             <materials>
-                <material id="inherit"/>
+                <material id="unlit"/>
+                <material id="lit"/>
             </materials>
 
             <texture id="lampAppearance" length_s="1" length_t="1"/>
@@ -335,7 +392,7 @@
                 <material id="lampBodyMaterial"/>
             </materials>
 
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="none"/>
 
             <children>
                 <primitiveref id="cylinder"/>
@@ -352,7 +409,7 @@
                 <material id="inherit"/>
             </materials>
 
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="none"/>
 
             <children>
                 <primitiveref id="torus"/>
@@ -369,7 +426,7 @@
                 <material id="inherit"/>
             </materials>
 
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="none"/>
 
             <children>
                 <componentref id="lampSphere"/>
@@ -403,10 +460,11 @@
             </transformation>
 
             <materials>
-                <material id="tableLegsMaterial"/>
+                <material id="tableLegsMaterial1"/>
+                <material id="tableLegsMaterial2"/>
             </materials>
            
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="none"/>
 
             <children>
                 <componentref id="myCube"/>
@@ -420,10 +478,11 @@
             </transformation>
 
             <materials>
-                <material id="tableLegsMaterial"/>
+                <material id="tableLegsMaterial1"/>
+                <material id="tableLegsMaterial2"/>
             </materials>
            
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="none"/>
 
             <children>
                 <componentref id="myCube"/>
@@ -437,10 +496,11 @@
             </transformation>
 
             <materials>
-                <material id="tableLegsMaterial"/>
+                <material id="tableLegsMaterial1"/>
+                <material id="tableLegsMaterial2"/>
             </materials>
            
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="none"/>
 
             <children>
                 <componentref id="myCube"/>
@@ -454,10 +514,11 @@
             </transformation>
 
             <materials>
-                <material id="tableLegsMaterial"/>
+                <material id="tableLegsMaterial1"/>
+                <material id="tableLegsMaterial2"/>
             </materials>
            
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="none"/>
 
             <children>
                 <componentref id="myCube"/>
@@ -473,7 +534,7 @@
                 <material id="inherit"/>
             </materials>
 
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="none"/>
 
             <children>
                 <componentref id="tableTop"/>
@@ -481,6 +542,23 @@
                 <componentref id="tableLeg2"/>
                 <componentref id="tableLeg3"/>
                 <componentref id="tableLeg4"/>
+            </children>
+        </component>
+
+        <!-- Carpet -->
+        <component id="myCarpet">
+            <transformation>
+                <transformationref id="trfCarpet"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="carpetAppearance" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
             </children>
         </component>
 
@@ -502,36 +580,102 @@
         </component>
 
         <!-- Right wall -->
-        <component id="myRightWall">
+        <component id="paintingFrame">
             <transformation>
-                <transformationref id="trfRightWall"/>
+                <transformationref id="trfPaintingFrame"/>
             </transformation>
 
             <materials>
                 <material id="inherit"/>
             </materials>
 
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="paintingAppearance" length_s="1" length_t="1"/>
 
             <children>
                 <primitiveref id="rectangle"/>
             </children>
         </component>
 
-         <!-- Left wall -->
-        <component id="myLeftWall">
+        <component id="rightWall">
             <transformation>
-                <transformationref id="trfLeftWall"/>
+                <transformationref id="trfRightWall"/>
+            </transformation>
+
+            <materials>
+                <material id="wallMaterial1"/>
+                <material id="wallMaterial2"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+
+        <component id="myRightWall">
+            <transformation>
             </transformation>
 
             <materials>
                 <material id="inherit"/>
             </materials>
 
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="none"/>
+
+            <children>
+                <componentref id="rightWall"/>
+                <componentref id="paintingFrame"/>
+            </children>
+        </component>
+
+         <!-- Left wall -->
+         <component id="windowFrame">
+            <transformation>
+                <transformationref id="trfWindowFrame"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="windowAppearance" length_s="1" length_t="1"/>
 
             <children>
                 <primitiveref id="rectangle"/>
+            </children>
+        </component>
+
+        <component id="leftWall">
+            <transformation>
+                <transformationref id="trfLeftWall"/>
+            </transformation>
+
+            <materials>
+                <material id="wallMaterial1"/>
+                <material id="wallMaterial2"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+
+        <component id="myLeftWall">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="leftWall"/>
+                <componentref id="windowFrame"/>
             </children>
         </component>
 
@@ -544,12 +688,13 @@
                 <material id="default"/>
             </materials>
 
-            <texture id="none" length_s="0" length_t="0"/>
+            <texture id="none"/>
 
             <children>
                 <componentref id="myLeftWall"/>
                 <componentref id="myRightWall"/>
                 <componentref id="myFloor"/>
+                <componentref id="myCarpet"/>
                 <componentref id="myTable"/>
                 <componentref id="myLamp"/>
                 <componentref id="myBox"/>

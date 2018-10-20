@@ -601,7 +601,7 @@ class MySceneGraph {
                 } else {
                     return "[parseLights]: tag <target> missing of the light ID = " + id;
                 }
-
+            
                 this.lights[id] = new MySpotlight(this.scene, id, enabled, location, ambient, diffuse, specular, angle, exponent, target);
             }
             else if (child.nodeName == 'omni') {

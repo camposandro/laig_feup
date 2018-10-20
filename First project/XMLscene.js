@@ -81,7 +81,11 @@ class XMLscene extends CGFscene {
                 if (light instanceof MySpotlight) {
                     this.lights[i].setSpotCutOff(light.angle);
                     this.lights[i].setSpotExponent(light.exponent);
-                    this.lights[i].setSpotDirection(light.target[0], light.target[1], light.target[2]);
+                    
+                    let directionX = light.target[0] - light.location[0];
+                    let directionY = light.target[1] - light.location[1];
+                    let directionZ = light.target[2] - light.location[2];
+                    this.lights[i].setSpotDirection(directionX, directionY, directionZ);
                 }
 
                 this.lightValues[key] = light.enabled == 1 ? true : false;
