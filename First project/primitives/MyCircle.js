@@ -6,15 +6,21 @@ class MyCircle extends CGFobject {
 
     /**
      * @constructor
-     * @param {scene, slices}
+     * @param {XMLScene} scene Scene
+     * @param {slices} slices Number of circle slices
+     * @param {radius} radius Circle radius
      */
     constructor(scene, slices, radius) {
         super(scene);
         this.slices = slices;
         this.radius = radius;
+
         this.initBuffers();
     };
 
+    /**
+     * Initializes vertices, normals and texCoords buffers.
+     */
     initBuffers() {
         this.vertices = new Array();
         this.normals = new Array();

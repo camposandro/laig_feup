@@ -1,11 +1,14 @@
 /**
- * MyColor class, representing an ambient.
+ * MyColor class, representing a rgba color.
  */
 class MyColor {
 
 	/**
      * @constructor
-     * @param {r,g,b,a} 
+     * @param {r} r red value
+     * @param {g} g green value
+     * @param {b} r blue value
+     * @param {a} a alpha value
      */
     constructor(r, g, b, a) {
         this.r = r;

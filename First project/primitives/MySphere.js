@@ -4,9 +4,13 @@
 class MySphere extends CGFobject {
 
     /**
-    * @constructor
-    * @param {id,radius,slices,stacks}
-    */
+     * @constructor
+     * @param {XMLScene} scene Scene
+     * @param {id} id Sphere id
+     * @param {radius} radius Sphere radius
+     * @param {slices} slices Sphere number of slices
+     * @param {stacks} stacks Sphere number of stacks
+     */
     constructor(scene, id, radius, slices, stacks) {
         super(scene);
 
@@ -18,18 +22,21 @@ class MySphere extends CGFobject {
         this.initBuffers();
     }
 
+     /**
+     * Initializes vertices, normals and texCoords buffers.
+     */
     initBuffers() {
         this.vertices = new Array();
         this.indices = new Array();
         this.normals = new Array();
         this.texCoords = new Array();
 
-        // bandas de latitude
+        // latitudinal stripes
         for (var j = 0; j <= this.stacks; j++) {
 
             var phi = (j * Math.PI) / this.stacks;
 
-            // bandas de longitude
+            // longitudinal stripes
             for (var i = 0; i <= this.slices; i++) {
 
                 var theta = (2 * i * Math.PI) / this.slices;

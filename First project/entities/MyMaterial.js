@@ -1,11 +1,17 @@
 /**
- * MyMaterial class, representing a scaling.
+ * MyMaterial class, representing a material.
  */
 class MyMaterial extends CGFappearance{
 
 	/**
      * @constructor
-     * @param {id,shininess,emission,ambient,diffuse,specular}
+     * @param {XMLScene} scene Scene
+     * @param {id} id Material id 
+     * @param {shininess} shininess Material shininess
+     * @param {array} emission Emission rgba array
+     * @param {array} ambient Ambient rgba array
+     * @param {array} diffuse Diffuse rgba array
+     * @param {array} specular Specular rgba array
      */
     constructor(scene, id, shininess, emission, ambient, diffuse, specular) {
         super(scene);

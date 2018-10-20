@@ -5,7 +5,19 @@ class MyTriangle extends CGFobject {
 
     /**
      * @constructor
-     * @param {scene,id,x1,y1,z1,x2,y2,z2,x3,y3,z3}
+     * @param {XMLScene} scene Scene
+     * @param {id} id Triangle id
+     * @param {x1} x1 Middle-vertice x-value
+     * @param {y1} y1 Middle-vertice y-value
+     * @param {z1} z1 Middle-vertice z-value
+     * @param {x2} x2 Left-vertice x-value
+     * @param {y2} y2 Left-vertice y-value
+     * @param {z2} z2 Left-vertice z-value
+     * @param {x3} x3 Right-vertice x-value
+     * @param {y3} y3 Right-vertice y-value
+     * @param {z3} z3 Right-vertice z-value
+     * @param {*} ls Texture horizontal factor
+     * @param {*} lt Texture vertical factor
      */
     constructor(scene, id, x1, y1, z1, x2, y2, z2, x3, y3, z3, ls, lt) {
         super(scene);
@@ -26,6 +38,9 @@ class MyTriangle extends CGFobject {
         this.initBuffers();
     };
 
+    /**
+     * Initializes vertices and normals buffers.
+     */
     initBuffers() {
         this.vertices = [
             this.x1, this.y1, this.z1,
@@ -49,6 +64,9 @@ class MyTriangle extends CGFobject {
         this.initGLBuffers();
     };
 
+    /**
+     * Initializes texCoords buffer.
+     */
     initTexCoords() {
 
         var c = Math.sqrt(

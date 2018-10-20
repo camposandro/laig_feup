@@ -1,3 +1,6 @@
+/**
+ * Degrees to radians factor conversion.
+ */
 var DEGREE_TO_RAD = Math.PI / 180;
 
 /**
@@ -5,9 +8,15 @@ var DEGREE_TO_RAD = Math.PI / 180;
  */
 class MyCylinder extends CGFobject {
 
-	/**
+	 /**
      * @constructor
-     * @param {scene,id,base,top,height,slices,stacks}
+     * @param {XMLScene} scene Scene
+     * @param {*} id Cylinder id
+     * @param {base} base Base radius
+     * @param {top} top Top radius
+     * @param {height} height Cylinder height
+     * @param {slices} slices Cylinder number of slices
+     * @param {stacks} stacks Cylinder number of stacks
      */
     constructor(scene, id, base, top, height, slices, stacks) {
         super(scene);
@@ -25,20 +34,25 @@ class MyCylinder extends CGFobject {
         this.initBuffers();
     };
 
+    /**
+     * Initializes vertices, normals and texCoords buffers.
+     */
     initBuffers() {
         this.vertices = new Array();
         this.indices = new Array();
         this.normals = new Array();
         this.texCoords = new Array();
+
         var variation = Math.abs(this.base - this.top) / this.stacks;
         var angle = (2 * Math.PI) / this.slices;
 
-        // TODO: change radius of base and top
         for (var j = 0; j <= this.stacks; j++) {
             for (var i = 0; i <= this.slices; i++) {
 
                 this.vertices.push(
-                    Math.cos(i * angle) * (this.base - variation*j), Math.sin(i * angle)* (this.base - variation*j), j * this.height / this.stacks
+                    Math.cos(i * angle) * (this.base - variation * j),
+                    Math.sin(i * angle)* (this.base - variation * j),
+                    j * this.height / this.stacks
                 );
 
                 this.normals.push(
@@ -67,6 +81,9 @@ class MyCylinder extends CGFobject {
         this.initGLBuffers();
     };
 
+    /**
+     * Displays the cylinder, with covers.
+     */
     display() {
         this.scene.pushMatrix();
             CGFobject.prototype.display.call(this);

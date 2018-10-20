@@ -5,7 +5,8 @@ class MyRotation {
 
 	/**
      * @constructor
-     * @param {axis,angle}
+     * @param {axis} axis Axis of rotation (x,y,z)
+     * @param {angle} angle Angle of rotation, in degrees
      */
     constructor(axis, angle) {
         this.axis = axis;
@@ -13,6 +14,10 @@ class MyRotation {
         this.parseAxis(axis);
     }
 
+    /**
+     * Initializes the rotation vector.
+     * @param {axis} axis Axis of rotation (x,y,z)
+     */
     parseAxis(axis) {
         if (axis == 'x')
             this.vec = [1, 0, 0];

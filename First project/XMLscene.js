@@ -1,3 +1,6 @@
+/**
+ * Degrees to radians factor conversion.
+ */
 var DEGREE_TO_RAD = Math.PI / 180;
 
 /**
@@ -50,7 +53,6 @@ class XMLscene extends CGFscene {
     * Initializes the scene views with the values read from the XML file.
     */
     initViews() {
-        // Reads the views from the scene graph.
         for (var key in this.graph.views) {
             this.viewsValues.push(key);
         }
@@ -61,13 +63,13 @@ class XMLscene extends CGFscene {
      */
     initLights() {
 
-        // Lights index.
+        // lights index
         var i = 0;
 
-        // Reads the lights from the scene graph.
+        // reads the lights from the scene graph
         for (var key in this.graph.lights) {
             if (i >= 8)
-                break;              // Only eight lights allowed by WebGL.
+                break;              // only eight lights allowed by WebGL
 
             if (this.graph.lights.hasOwnProperty(key)) {
                 var light = this.graph.lights[key];
@@ -110,10 +112,10 @@ class XMLscene extends CGFscene {
     */
     updateLights() {
 
-        // Lights index.
+        // lights index
         var i = 0;
 
-        // Reads lights enabled values
+        // reads lights 'enabled' status
         for (var key in this.lightValues) {
             if (this.lightValues.hasOwnProperty(key)) {
                 if (this.lightValues[key]) {
@@ -141,10 +143,10 @@ class XMLscene extends CGFscene {
         // set parsed default camera
         this.updateView();
 
-        // Change axis reference length according to parsed graph
+        // change axis reference length according to parsed graph
         this.axis = new CGFaxis(this, this.graph.axis_length);
 
-        // Change ambient and background details according to parsed graph
+        // change ambient and background details according to parsed graph
         this.setGlobalAmbientLight(this.graph.ambient['r'],
             this.graph.ambient['g'],
             this.graph.ambient['b'],
@@ -159,10 +161,10 @@ class XMLscene extends CGFscene {
 
         this.initViews();
 
-        // Adds lights group.
+        // adds lights group
         this.interface.addLightsGroup(this.lightValues);
 
-        // Adds views group.
+        // adds views group
         this.interface.addViewsGroup(this.viewsValues);
 
         this.sceneInited = true;
@@ -172,41 +174,41 @@ class XMLscene extends CGFscene {
      * Displays the scene.
      */
     display() {
-        // ---- BEGIN Background, camera and axis setup
+        // ---- BEGIN background, camera and axis setup
 
-        // Clear image and depth buffer everytime we update the scene
+        // clear image and depth buffer everytime we update the scene
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-        // Initialize Model-View matrix as identity (no transformation
+        // initialize Model-View matrix as identity (no transformation
         this.updateProjectionMatrix();
         this.loadIdentity();
 
-        // Apply transformations corresponding to the camera position relative to the origin
+        // apply transformations corresponding to the camera position relative to the origin
         this.applyViewMatrix();
 
         this.pushMatrix();
 
         if (this.sceneInited) {
-            // Update view
+            // update camera
             this.updateView();
 
-            // Draw axis
+            // draw axis
             this.axis.display();
 
-            // Update lights
+            // update lights
             this.updateLights();
 
-            // Displays the scene
+            // displays the scene
             this.graph.displayScene();
         }
         else {
-            // Draw axis
+            // draw axis
             this.axis.display();
         }
 
         this.popMatrix();
-        // ---- END Background, camera and axis setup
+        // ---- END background, camera and axis setup
     }
 
     /**

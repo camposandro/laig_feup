@@ -24,7 +24,7 @@ class MySceneGraph {
     /**
      * @constructor
      * @param {XML scene file} filename 
-     * @param {Scene} scene
+     * @param {XMLScene} scene
      */
     constructor(filename, scene) {
         this.loadedOk = null;
@@ -210,10 +210,12 @@ class MySceneGraph {
      */
     parseScene(sceneNode) {
 
+        // parse root component 'id'
         this.root = this.reader.getString(sceneNode, 'root');
         if (this.root == null)
             return "[parseScene]: unable to parse root object";
 
+        // parse 'axis length'
         this.axis_length = this.reader.getFloat(sceneNode, 'axis_length');
         if (!(this.axis_length != null && !isNaN(this.axis_length)))
             return "[parseScene]: unable to parse axis axis_length";
@@ -229,6 +231,7 @@ class MySceneGraph {
      */
     parseViews(viewsNode) {
 
+        // parse default view 'id'
         var def = this.reader.getString(viewsNode, 'default');
         if (def == null)
             return "[parseViews]: unable to parse default view";
@@ -240,6 +243,7 @@ class MySceneGraph {
                 continue;
             }
 
+            // parse view 'id'
             var id = this.reader.getString(child, 'id');
             if (id == null)
                 return "[parseViews]: no ID defined for perspective";
@@ -248,6 +252,7 @@ class MySceneGraph {
             if (this.views[id] != null)
                 return "[parseViews]: ID must be unique for each view (conflict: ID = " + id + ")";
 
+            // parse 'near' value
             var near = this.reader.getFloat(child, 'near');
             if (!(near != null && !isNaN(near))) {
                 this.onXMLMinorError("[parseViews]: near value missing for perspective ID = "
@@ -255,6 +260,7 @@ class MySceneGraph {
                 near = 0.1;
             }
 
+            // parse 'far' value
             var far = this.reader.getFloat(child, 'far');
             if (!(far != null && !isNaN(far))) {
                 this.onXMLMinorError("[parseViews]: near value missing for perspective ID = "
@@ -270,11 +276,13 @@ class MySceneGraph {
 
             var position, target;
 
-            // get subtags
+            // get views 'from' and 'to' subtags
             var grandChildren = child.children;
             for (let grandChild of grandChildren) {
 
                 var x, y, z;
+
+                // parse view 'from' and 'to' positions
                 var fromPos = new Array(), toPos = new Array();
 
                 if (grandChild.nodeName == "from") {
@@ -327,7 +335,7 @@ class MySceneGraph {
                 }
             }
 
-            // specific perspective parameters
+            // parse specific view parameters
             switch (child.nodeName) {
                 case 'perspective':
                     {
@@ -377,7 +385,7 @@ class MySceneGraph {
             }
         }
 
-        // save default camera index
+        // save default camera index to the scene
         this.scene.currentViewIndex = def;
 
         this.log("Parsed views!");
@@ -398,6 +406,7 @@ class MySceneGraph {
                 continue;
             }
 
+            // parse 'ambient' and 'background' rgba values
             var r = this.reader.getFloat(child, 'r');
             if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
                 return "[parseAmbient]: no r defined for ambient";
@@ -454,6 +463,7 @@ class MySceneGraph {
                 continue;
             }
 
+            // parse light 'id'
             var id = this.reader.getString(child, 'id');
             if (id == null)
                 return "[parseLights]: no ID defined for light";
@@ -462,6 +472,7 @@ class MySceneGraph {
             if (this.lights[id] != null)
                 return "[parseLights]: ID must be unique for each light (conflict: ID = " + id + ")";
 
+            // parse 'enabled' light state
             var enabled = this.reader.getFloat(child, 'enabled');
             if (!(enabled != null && !isNaN(enabled))) {
                 this.onXMLMinorError("[parseLights]: enabled value missing for ID = " + id + "; assuming 'enabled = true'");
@@ -491,7 +502,7 @@ class MySceneGraph {
             if (specularIndex == -1)
                 return "[parseLights]: light specular undefined for ID = " + id;
 
-            // retrieves the common light characteristics
+            // common light characteristics
             var x, y, z, w, r, g, b, a;
             var location = new Array();
             var ambient = new Array();
@@ -564,19 +575,20 @@ class MySceneGraph {
                 }
             }
 
-            // retrieves spot specific parameters
+            // parse light specific parameters
             if (child.nodeName == 'spot') {
 
-                // retrieves the angle
+                // parse light 'angle'
                 var angle = this.reader.getFloat(child, 'angle');
                 if (!(angle != null && !isNaN(angle)))
                     return "[parseLights]: unable to parse angle of the light for ID = " + id;
 
+                // parse light 'exponent'
                 var exponent = this.reader.getFloat(child, 'exponent');
                 if (!(exponent != null && !isNaN(exponent)))
                     return "[parseLights]: unable to parse exponent of the light for ID = " + id;
 
-                // retrieves the target position
+                // parse light 'target' position
                 var target = new Array();
                 var targetIndex = nodeNames.indexOf("target");
 
@@ -601,7 +613,7 @@ class MySceneGraph {
                 } else {
                     return "[parseLights]: tag <target> missing of the light ID = " + id;
                 }
-            
+
                 this.lights[id] = new MySpotlight(this.scene, id, enabled, location, ambient, diffuse, specular, angle, exponent, target);
             }
             else if (child.nodeName == 'omni') {
@@ -634,6 +646,7 @@ class MySceneGraph {
                 continue;
             }
 
+            // parse texture 'id'
             var id = this.reader.getString(child, 'id');
             if (id == null)
                 return "[parseTextures]: no ID defined for texture";
@@ -642,7 +655,7 @@ class MySceneGraph {
             if (this.textures[id] != null)
                 return "[parseTextures]: ID must be unique for each texture (conflict: ID = " + id + ")";
 
-            // reads texture file
+            // reads texture 'file' path
             var file = this.reader.getString(child, 'file');
             if (file == null)
                 return "[parseTextures]: no file defined for texture";
@@ -668,6 +681,7 @@ class MySceneGraph {
                 continue;
             }
 
+            // parse material 'id'
             var id = this.reader.getString(child, 'id');
             if (id == null)
                 return "[parseMaterials]: no ID defined for transformation";
@@ -676,10 +690,12 @@ class MySceneGraph {
             if (this.materials[id] != null)
                 return "[parseMaterials]: ID must be unique for each material (conflict: ID = " + id + ")";
 
+            // parse material 'shininess'
             var shininess = this.reader.getString(child, 'shininess');
             if (!(shininess != null) && !isNaN(shininess))
                 return "[parseMaterials]: no shininess defined for transformation";
 
+            // parse material characteristics
             var r, g, b, a;
             var emission = new Array();
             var ambient = new Array();
@@ -744,7 +760,7 @@ class MySceneGraph {
                 continue;
             }
 
-            // get current id
+            // parse transformation 'id'
             var id = this.reader.getString(child, 'id');
             if (id == null)
                 return "[parseTransformations]: no ID defined for transformation";
@@ -753,8 +769,10 @@ class MySceneGraph {
             if (this.transformations[id] != null)
                 return "[parseTransformations]: ID must be unique for each transformation (conflict: ID = " + id + ")";
 
-            var x, y, z;
             var trf = new MyTransformation(id);
+
+            // parse transformation factors
+            var x, y, z;
 
             var grandChildren = child.children;
             for (let grandChild of grandChildren) {
@@ -826,6 +844,7 @@ class MySceneGraph {
                 continue;
             }
 
+            // parse primitive 'id'
             var id = this.reader.getString(child, 'id');
             if (id == null)
                 return "[parsePrimitives]: no ID defined for primitive";
@@ -834,6 +853,7 @@ class MySceneGraph {
             if (this.primitives[id] != null)
                 return "[parsePrimitives]: ID must be unique for each primitive (conflict: ID = " + id + ")";
 
+            // parse specific primitive parameters
             var x, y, z, x2, y2, z2, x3, y3, z3;
             var base, top, height, radius, slices, stacks, inner, outer, loops;
 
@@ -987,6 +1007,7 @@ class MySceneGraph {
                 continue;
             }
 
+            // parse component 'id'
             var id = this.reader.getString(child, 'id');
             if (id == null)
                 return "[parseComponents]: no ID defined for component";
@@ -995,9 +1016,10 @@ class MySceneGraph {
             if (this.components[id] != null)
                 return "[parseComponents]: ID must be unique for each component (conflict: ID = " + id + ")";
 
-            var id2, length_s, length_t;
-
             var comp = new MyComponent(this.scene, id);
+            
+            // parse component transformations, materials, textures and children components/primitives
+            var id2, length_s, length_t;
 
             var grandChildren = child.children;
             for (let grandChild of grandChildren) {

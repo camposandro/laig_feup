@@ -5,7 +5,14 @@ class MyRectangle extends CGFobject {
 
     /**
      * @constructor
-     * @param {scene,id,x1,y1,x2,y2}
+     * @param {XMLScene} scene Scene
+     * @param {*} id Rectangle id
+     * @param {*} x1 Left-lower corner x-value
+     * @param {*} y1 Left-lower corner y-value
+     * @param {*} x2 Left-upper corner x-value
+     * @param {*} y2 Left-upper corner y-value
+     * @param {*} ls Texture horizontal factor
+     * @param {*} lt Texture vertical factor
      */
     constructor(scene, id, x1, y1, x2, y2, ls, lt) {
         super(scene);
@@ -21,6 +28,9 @@ class MyRectangle extends CGFobject {
         this.initBuffers();
     };
 
+    /**
+     * Initializes vertices, normals and texCoords buffers.
+     */
     initBuffers() {
         this.vertices = [
             this.x1, this.y1, 0,

@@ -5,7 +5,12 @@ class MyTorus extends CGFobject {
 
 	/**
      * @constructor
-     * @param {scene,id,inner,outer,slices,loops}
+     * @param {XMLScene} scene Scene
+     * @param {id} id Torus id
+     * @param {inner} inner Torus inner-radius
+     * @param {outer} outer Torus outer-radius
+     * @param {slices} slices Torus number of slices
+     * @param {loops} loops Torus number of loops
      */
     constructor(scene, id, inner, outer, slices, loops) {
         super(scene);
@@ -19,6 +24,9 @@ class MyTorus extends CGFobject {
         this.initBuffers();
     };
 
+    /**
+     * Initializes vertices, normals and texCoords buffers.
+     */
     initBuffers() {
         this.vertices = new Array();
         this.indices = new Array();
@@ -28,12 +36,12 @@ class MyTorus extends CGFobject {
         var s = 1 / this.loops;
         var t = 1 / this.slices;
 
-        // bandas de latitude
+        // latitudinal stripes
         for (var j = 0; j <= this.loops; j++) {
 
             var phi = (2 * j * Math.PI) / this.loops;
 
-            // bandas de longitude
+            // longitudinal stripes
             for (var i = 0; i <= this.slices; i++) {
                 
                 var theta = (2 * i * Math.PI) / this.slices;
