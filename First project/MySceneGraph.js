@@ -1017,7 +1017,7 @@ class MySceneGraph {
                 return "[parseComponents]: ID must be unique for each component (conflict: ID = " + id + ")";
 
             var comp = new MyComponent(this.scene, id);
-            
+
             // parse component transformations, materials, textures and children components/primitives
             var id2, length_s, length_t;
 
@@ -1106,22 +1106,31 @@ class MySceneGraph {
                     case 'texture':
                         {
                             id2 = this.reader.getString(grandChild, 'id');
-                            if (id2 == 'none')
-                                comp.addTexture(id2, null, 0, 0);
-                            else if (id2 == 'inherit')
-                                comp.addTexture(id2, this.textures[id2], 0, 0);
-                            else if (id2 == null)
+                            if (id2 == null)
                                 return "[parseComponents]: no id defined for texture";
-                            else {
-                                var length_s = this.reader.getFloat(grandChild, 'length_s');
+                            else if (id2 == 'none')
+                                comp.addTexture(id2, null, 0, 0);
+                            else if (id2 == 'inherit') {
+                                length_s = this.reader.getFloat(grandChild, 'length_s');
+                                if (!(length_s != null && !isNaN(length_s)))
+                                    length_s = 1;
+
+                                length_t = this.reader.getFloat(grandChild, 'length_t');
+                                if (!(length_t != null && !isNaN(length_t)))
+                                    length_t = 1;
+
+                                comp.addTexture(id2, this.textures[id2], length_s, length_t);
+
+                            } else {
+                                length_s = this.reader.getFloat(grandChild, 'length_s');
                                 if (!(length_s != null && !isNaN(length_s)))
                                     return "[parseComponents]: no length_s defined for texture";
 
-                                var length_t = this.reader.getFloat(grandChild, 'length_t');
+                                length_t = this.reader.getFloat(grandChild, 'length_t');
                                 if (!(length_t != null && !isNaN(length_t)))
                                     return "[parseComponents]: no length_t defined for texture";
 
-                                if (id2 != 'none' && id2 != 'inherit' && this.textures[id2] != null)
+                                if (this.textures[id2] != null)
                                     comp.addTexture(id2, this.textures[id2], length_s, length_t);
                                 else
                                     comp.addTexture(id2, null, length_s, length_t);
