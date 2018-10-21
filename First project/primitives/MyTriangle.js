@@ -84,13 +84,13 @@ class MyTriangle extends CGFobject {
             Math.pow(this.y1 - this.y3, 2) +
             Math.pow(this.z1 - this.z3, 2));
 
-        let cosBeta = (Math.pow(a,2) - Math.pow(b,2) + Math.pow(c,2)) / (2 * a * c);
-        let sinBeta = Math.sqrt(1 - Math.pow(cosBeta,2));
+        let cosBeta = (Math.pow(a, 2) - Math.pow(b, 2) + Math.pow(c, 2)) / (2 * a * c);
+        let sinBeta = Math.sqrt(1 - Math.pow(cosBeta, 2));
 
         this.texCoords = [
-            0, (b * sinBeta) / this.lt,
-            c / this.ls, (b * sinBeta) / this.lt,
-            (b * cosBeta) / this.ls, 0
+            0, a * sinBeta / this.lt,
+            c / this.ls, a * sinBeta / this.lt,
+            (c - a * cosBeta) / this.ls, 0
         ];
     };
 };

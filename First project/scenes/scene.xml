@@ -72,6 +72,7 @@
         <texture id="lampAppearance" file="textures/lamp.png"/>
         <texture id="sphereAppearance" file="textures/sphere.png"/>
         <texture id="boxAppearance" file="textures/vaporwave.png"/>
+        <texture id="roofAppearance" file="textures/roof.png"/>
     </textures>
 
     <!-- Materials -->
@@ -162,12 +163,20 @@
             <scale x="8.0" y="6.0" z="1.0"/>
         </transformation>
 
+	<transformation id="trfTable">
+            <translate x="7.5" y="0.0" z="7.5"/>
+        </transformation>
+	
+	<transformation id="trfLamp">
+	    <translate x="5.8" y="3.7" z="7.5"/>
+	</transformation>
+
         <transformation id="trfBox">
             <translate x="9.0" y="4.15" z="7.5"/>
         </transformation>
 
-        <transformation id="trfTable">
-           <translate x="7.5" y="0.0" z="7.5"/>
+	<transformation id="trfPyramid">
+            <translate x="9.0" y="4.65" z="7.5"/>
         </transformation>
 
         <transformation id="trfSphere">
@@ -184,8 +193,20 @@
             <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5"/>
         </primitive>
 
-        <primitive id="triangle">
-            <triangle x1="0.0" y1="0.5" z1="0.0" x2="-0.5" y2="0.0" z2="0.0" x3="0.5" y3="0.0" z3="0.0"/>
+        <primitive id="triangle1">
+            <triangle x1="-0.5" y1="0.0" z1="0.5" x2="0.5" y2="0.0" z2="0.5" x3="0.0" y3="0.5" z3="0.0"/>
+        </primitive>
+
+	<primitive id="triangle2">
+            <triangle x1="0.5" y1="0.0" z1="0.5" x2="0.5" y2="0.0" z2="-0.5" x3="0.0" y3="0.5" z3="0.0"/>
+        </primitive>
+
+	<primitive id="triangle3">
+            <triangle x1="0.5" y1="0.0" z1="-0.5" x2="-0.5" y2="0.0" z2="-0.5" x3="0.0" y3="0.5" z3="0.0"/>
+        </primitive>
+
+	<primitive id="triangle4">
+            <triangle x1="-0.5" y1="0.0" z1="-0.5" x2="-0.5" y2="0.0" z2="0.5" x3="0.0" y3="0.5" z3="0.0"/>
         </primitive>
 
         <primitive id="cylinder">
@@ -344,6 +365,87 @@
             </children>
         </component>
 
+	<!-- Pyramid -->
+	 <component id="pyramidTriangle1">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="triangle1"/>
+            </children>
+        </component>
+
+	<component id="pyramidTriangle2">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="triangle2"/>
+            </children>
+        </component>
+
+	<component id="pyramidTriangle3">
+            <transformation>   
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="triangle3"/>
+            </children>
+        </component>
+
+	<component id="pyramidTriangle4">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="triangle4"/>
+            </children>
+        </component>
+
+	<component id="myPyramid">
+            <transformation>
+                <transformationref id="trfPyramid"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+                <material id="vaporwave"/>
+            </materials>
+
+            <texture id="roofAppearance" length_s="1" length_t="1"/>
+
+            <children>
+                <componentref id="pyramidTriangle1"/>
+		<componentref id="pyramidTriangle2"/>
+		<componentref id="pyramidTriangle3"/>
+		<componentref id="pyramidTriangle4"/>
+            </children>
+        </component>
+
         <!-- Box -->
         <component id="myBox">
             <transformation>
@@ -419,7 +521,7 @@
         <!-- Lamp -->
         <component id="myLamp">
             <transformation>
-                <translate x="5.8" y="3.7" z="7.5"/>
+                <transformationref id="trfLamp"/>
             </transformation>
 
             <materials>
@@ -697,8 +799,9 @@
                 <componentref id="myCarpet"/>
                 <componentref id="myTable"/>
                 <componentref id="myLamp"/>
-                <componentref id="myBox"/>
                 <componentref id="mySphere"/>
+		<componentref id="myBox"/>
+		<componentref id="myPyramid"/>
             </children>
         </component>
 
