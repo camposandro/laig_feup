@@ -952,10 +952,132 @@ class MySceneGraph {
             // parse specific primitive parameters
             var x, y, z, x2, y2, z2, x3, y3, z3;
             var base, top, height, radius, slices, stacks, inner, outer, loops;
-
+            var npartsU, npartsV, npointsU, npointsV;
+            var idTexture, idheightmap, parts, heightscale, idwavemap, texscale;
             var grandChildren = child.children;
             for (let grandChild of grandChildren) {
                 switch (grandChild.nodeName) {
+
+                    case 'plane':
+                        npartsU = this.reader.getFloat(grandChild, 'npartsU');
+                        if (npartsU == null || isNaN(npartsU))
+                            return "[parsePrimitives]: no npartsU defined for plane";
+
+                        npartsV = this.reader.getFloat(grandChild, 'npartsV');
+                        if (npartsV == null || isNaN(npartsV))
+                            return "[parsePrimitives]: no npartsV defined for plane";
+
+                        this.primitives[id] = new MyPlane(this.scene, npartsU, npartsV);
+                        break;
+
+                    case 'patch':
+                        npointsU = this.reader.getFloat(grandChild, 'npointsU');
+                        if (npointsU == null || isNaN(npointsU))
+                            return "[parsePrimitives]: no npointsU defined for patch";
+
+                        npointsV = this.reader.getFloat(grandChild, 'npointsV');
+                        if (npointsV == null || isNaN(npointsV))
+                            return "[parsePrimitives]: no npointsV defined for npointsV";
+                            
+                        npartsU = this.reader.getFloat(grandChild, 'npartsU');
+                        if (npartsU == null || isNaN(npartsU))
+                            return "[parsePrimitives]: no npartsU defined for plane";
+
+                        npartsV = this.reader.getFloat(grandChild, 'npartsV');
+                        if (npartsV == null || isNaN(npartsV))
+                            return "[parsePrimitives]: no npartsV defined for plane";
+
+                        var patch = new MyPatch(this.scene, npointsU, npointsV, npartsU, npartsV);
+
+                        var grandgrandChildren = grandChildren.children;
+                        for (let grandgrandChild of grandgrandChildren) {
+                            x = this.reader.getFloat(grandgrandChild, 'x');
+                            if (x == null || isNaN(x))
+                                return "[parsePrimitives]: no x defined for patch's control point";
+
+                                y = this.reader.getFloat(grandgrandChild, 'y');
+                            if (y == null || isNaN(y))
+                                return "[parsePrimitives]: no y defined for patch's control point";
+                                
+                            z = this.reader.getFloat(grandgrandChild, 'z');
+                            if (z == null || isNaN(z))
+                                return "[parsePrimitives]: no z defined for patch's control point";
+
+                            patch.addControlPoint(x,y,z);   
+                        }
+                        this.primitives[id] = patch;
+                        break;
+
+                    case 'cylinder2':
+                        base = this.reader.getFloat(grandChild, 'base');
+                        if (base == null || isNaN(base))
+                            return "[parsePrimitives]: no base defined for cylinder2";
+
+                        top = this.reader.getFloat(grandChild, 'top');
+                        if (top == null || isNaN(top))
+                            return "[parsePrimitives]: no top defined for cylinder2";
+
+                        height = this.reader.getFloat(grandChild, 'height');
+                        if (height == null || isNaN(height))
+                            return "[parsePrimitives]: no height defined for cylinder2";
+
+                        slices = this.reader.getFloat(grandChild, 'slices');
+                        if (slices == null || isNaN(slices))
+                            return "[parsePrimitives]: no slices defined for cylinder2";
+
+                        stacks = this.reader.getFloat(grandChild, 'stacks');
+                        if (stacks == null || isNaN(stacks))
+                            return "[parsePrimitives]: no stacks defined for cylinder2";
+
+                        this.primitives[id] = new MyCylinder2(this.scene, id, base, top, height, slices, stacks);
+                        break;
+
+                    case 'terrain':
+                        idTexture = this.reader.getFloat(grandChild, 'idTexture');
+                        if (idTexture == null || isNaN(idTexture))
+                            return "[parsePrimitives]: no idTexture defined for terrain";
+
+                        idheightmap = this.reader.getFloat(grandChild, 'idheightmap');
+                        if (idheightmap == null || isNaN(idheightmap))
+                            return "[parsePrimitives]: no idheightmap defined for terrain";
+
+                        parts = this.reader.getFloat(grandChild, 'parts');
+                        if (parts == null || isNaN(parts))
+                            return "[parsePrimitives]: no parts defined for terrain";
+
+                        heightscale = this.reader.getFloat(heightscale, 'parts');
+                        if (heightscale == null || isNaN(heightscale))
+                            return "[parsePrimitives]: no heightscale defined for terrain";
+                                  
+                        this.primitives[id] = new MyTerrain(idTexture, idheightmap, parts, heightscale);
+                        break;
+
+                    case 'water':
+                        idTexture = this.reader.getFloat(grandChild, 'idTexture');
+                        if (idTexture == null || isNaN(idTexture))
+                            return "[parsePrimitives]: no idTexture defined for water";
+
+                        idwavemap = this.reader.getFloat(grandChild, 'idwavemap');
+                        if (idwavemap == null || isNaN(idwavemap))
+                            return "[parsePrimitives]: no idwavemap defined for water";
+
+                        parts = this.reader.getFloat(grandChild, 'parts');
+                        if (parts == null || isNaN(parts))
+                            return "[parsePrimitives]: no parts defined for water";
+
+                        heightscale = this.reader.getFloat(grandChild, 'parts');
+                        if (heightscale == null || isNaN(heightscale))
+                            return "[parsePrimitives]: no heightscale defined for water";
+                           
+                        texscale = this.reader.getFloat(grandChild, 'texscale');
+                        if (texscale == null || isNaN(texscale))
+                            return "[parsePrimitives]: no texscale defined for water";
+                                                           
+
+                        this.primitives[id] = new MyWater(idTexture, idwavemap, parts, heightscale, texscale);
+                        break;
+    
+
                     case 'rectangle':
                         x = this.reader.getFloat(grandChild, 'x1');
                         if (x == null || isNaN(x))
