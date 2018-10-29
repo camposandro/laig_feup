@@ -187,6 +187,10 @@
         </transformation>
     </transformations>
 
+    <!-- Animations -->
+    <animations>
+    </animations>
+
     <!-- Primitive objects -->
     <primitives>
         <primitive id="rectangle">

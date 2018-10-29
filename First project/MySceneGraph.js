@@ -13,8 +13,9 @@ var LIGHTS_INDEX = 3;
 var TEXTURES_INDEX = 4;
 var MATERIALS_INDEX = 5;
 var TRANSFORMATIONS_INDEX = 6;
-var PRIMITIVES_INDEX = 7;
-var COMPONENTS_INDEX = 8;
+var ANIMATIONS_INDEX = 7;
+var PRIMITIVES_INDEX = 8;
+var COMPONENTS_INDEX = 9;
 
 /**
  * MySceneGraph class, representing the scene graph.
@@ -49,6 +50,7 @@ class MySceneGraph {
         this.textures = new Array();
         this.materials = new Array();
         this.transformations = new Array();
+        this.animations = new Array();
         this.primitives = new Array();
         this.components = new Array();
 
@@ -179,6 +181,17 @@ class MySceneGraph {
 
             // parse transformations block
             if ((error = this.parseTransformations(nodes[index])) != null) return error;
+        }
+
+        // <animations>
+        if ((index = nodeNames.indexOf("animations")) == -1)
+            return "[parseXMLFile]: tag <animations> missing";
+        else {
+            if (index != ANIMATIONS_INDEX)
+                this.onXMLMinorError("[parseXMLFile]: tag <animations> out of order");
+
+            // parse animations block
+            if ((error = this.parseAnimations(nodes[index])) != null) return error;
         }
 
         // <primitives>
@@ -827,6 +840,89 @@ class MySceneGraph {
         }
 
         this.log("Parsed transformations!");
+
+        return null;
+    }
+
+/**
+     * Parses the <animations> node.
+     * @param {animations block element} animationsNode
+     */
+    parseAnimations(animationsNode) {
+        var animation;
+        var children = animationsNode.children;
+        for (let child of children) {
+            if (child.nodeName != "linear" && child.nodeName != "circular") {
+                this.onXMLMinorError("[parseMaterials]: unknown tag <" + child.nodeName + ">");
+                continue;
+            }
+
+            // parse animation 'id'
+            var id = this.reader.getString(child, 'id');
+            if (id == null)
+                return "[parseAnimations]: no ID defined for animations";
+
+            // check for repeated animation ids
+            if (this.animations[id] != null)
+                return "[parseAnimations]: ID must be unique for each animation (conflict: ID = " + id + ")";
+
+            // parse animation 'span'
+            var span = this.reader.getFloat(child, 'span');
+            if (span == null)
+                return "[parseAnimations]: no span defined for transformation";
+
+
+            switch(child.nodeName) {
+                case 'linear':
+                animation = new MyLinearAnimation(id, span);
+
+                // parse animation control points
+                var x, y, z;
+
+                var grandChildren = child.children;
+                for (let grandChild of grandChildren) {
+
+                    x = this.reader.getFloat(grandChild, 'x');
+                    if (x == null || isNaN(x))
+                        return "[parseAnimations]: no x defined for " + grandChild.nodeName;
+
+                    y = this.reader.getFloat(grandChild, 'y');
+                    if (y == null || isNaN(y))
+                        return "[parseAnimations]: no y defined for " + grandChild.nodeName;
+
+                    z = this.reader.getFloat(grandChild, 'z');
+                    if (z == null || isNaN(z))
+                        return "[parseAnimations]: no z defined for " + grandChild.nodeName;
+                    animation.addControlPoint(x,y,z);
+                }
+                break;
+
+                case 'circular':
+                    // parse animation 'center'
+                    var center = this.reader.getFloat(child, 'center');
+                    if (center == null)
+                        return "[parseAnimations]: no center defined for " + grandChild.nodeName;
+                        
+                    // parse animation 'radius'
+                    var radius = this.reader.getFloat(child, 'radius');
+                    if (radius == null)
+                        return "[parseAnimations]: no radius defined for " + grandChild.nodeName;
+
+                    // parse animation 'startang'
+                    var startang = this.reader.getFloat(child, 'startang');
+                    if (startang == null)
+                        return "[parseAnimations]: no startang defined for " + grandChild.nodeName;
+
+                    // parse animation 'rotang'
+                    var rotang = this.reader.getFloat(child, 'rotang');
+                    if (rotang == null)
+                        return "[parseAnimations]: no rotang defined for " + grandChild.nodeName;
+                
+                this.animations[id] = new MyCircularAnimation(id, span, center, radius, startang, rotang);        
+                break;
+            }   
+        }
+        this.log("Parsed materials!");
 
         return null;
     }
