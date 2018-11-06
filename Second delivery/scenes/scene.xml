@@ -163,19 +163,19 @@
             <scale x="8.0" y="6.0" z="1.0"/>
         </transformation>
 
-	<transformation id="trfTable">
+	    <transformation id="trfTable">
             <translate x="7.5" y="0.0" z="7.5"/>
         </transformation>
-	
-	<transformation id="trfLamp">
-	    <translate x="5.8" y="3.7" z="7.5"/>
-	</transformation>
+        
+        <transformation id="trfLamp">
+            <translate x="5.8" y="3.7" z="7.5"/>
+        </transformation>
 
         <transformation id="trfBox">
             <translate x="9.0" y="4.15" z="7.5"/>
         </transformation>
 
-	<transformation id="trfPyramid">
+	    <transformation id="trfPyramid">
             <translate x="9.0" y="4.65" z="7.5"/>
         </transformation>
 
@@ -189,6 +189,12 @@
 
     <!-- Animations -->
     <animations>
+        <linear id = "1" span = "2">
+            <controlpoint xx = "1" yy = "1" zz = "1" />
+            <controlpoint xx = "2" yy = "2" zz = "2" />
+        </linear>
+
+        <circular id = "2" span = "2" center = "00 00 00" radius = "3" startang = "0" rotang = "45" />
     </animations>
 
     <!-- Primitive objects -->
@@ -201,15 +207,15 @@
             <triangle x1="-0.5" y1="0.0" z1="0.5" x2="0.5" y2="0.0" z2="0.5" x3="0.0" y3="0.5" z3="0.0"/>
         </primitive>
 
-	<primitive id="triangle2">
+	    <primitive id="triangle2">
             <triangle x1="0.5" y1="0.0" z1="0.5" x2="0.5" y2="0.0" z2="-0.5" x3="0.0" y3="0.5" z3="0.0"/>
         </primitive>
 
-	<primitive id="triangle3">
+	    <primitive id="triangle3">
             <triangle x1="0.5" y1="0.0" z1="-0.5" x2="-0.5" y2="0.0" z2="-0.5" x3="0.0" y3="0.5" z3="0.0"/>
         </primitive>
 
-	<primitive id="triangle4">
+	    <primitive id="triangle4">
             <triangle x1="-0.5" y1="0.0" z1="-0.5" x2="-0.5" y2="0.0" z2="0.5" x3="0.0" y3="0.5" z3="0.0"/>
         </primitive>
 
@@ -369,7 +375,7 @@
             </children>
         </component>
 
-	<!-- Pyramid -->
+	    <!-- Pyramid -->
 	 <component id="pyramidTriangle1">
             <transformation>
             </transformation>
@@ -385,7 +391,7 @@
             </children>
         </component>
 
-	<component id="pyramidTriangle2">
+	    <component id="pyramidTriangle2">
             <transformation>
             </transformation>
 
@@ -400,7 +406,7 @@
             </children>
         </component>
 
-	<component id="pyramidTriangle3">
+	    <component id="pyramidTriangle3">
             <transformation>   
             </transformation>
 
@@ -415,7 +421,7 @@
             </children>
         </component>
 
-	<component id="pyramidTriangle4">
+	    <component id="pyramidTriangle4">
             <transformation>
             </transformation>
 
@@ -430,7 +436,7 @@
             </children>
         </component>
 
-	<component id="myPyramid">
+	    <component id="myPyramid">
             <transformation>
                 <transformationref id="trfPyramid"/>
             </transformation>
