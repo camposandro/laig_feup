@@ -196,7 +196,7 @@ class MySceneGraph {
 
         // <primitives>
         if ((index = nodeNames.indexOf("primitives")) == -1)
-            return "[parseXMLFile]: tag <materials> missing";
+            return "[parseXMLFile]: tag <primitives> missing";
         else {
             if (index != PRIMITIVES_INDEX)
                 this.onXMLMinorError("[parseXMLFile]: tag <primitives> out of order");
@@ -882,15 +882,15 @@ class MySceneGraph {
                 var grandChildren = child.children;
                 for (let grandChild of grandChildren) {
 
-                    x = this.reader.getFloat(grandChild, 'x');
+                    x = this.reader.getFloat(grandChild, 'xx');
                     if (x == null || isNaN(x))
                         return "[parseAnimations]: no x defined for " + grandChild.nodeName;
 
-                    y = this.reader.getFloat(grandChild, 'y');
+                    y = this.reader.getFloat(grandChild, 'yy');
                     if (y == null || isNaN(y))
                         return "[parseAnimations]: no y defined for " + grandChild.nodeName;
 
-                    z = this.reader.getFloat(grandChild, 'z');
+                    z = this.reader.getFloat(grandChild, 'zz');
                     if (z == null || isNaN(z))
                         return "[parseAnimations]: no z defined for " + grandChild.nodeName;
                     animation.addControlPoint(x,y,z);
@@ -922,7 +922,7 @@ class MySceneGraph {
                 break;
             }   
         }
-        this.log("Parsed materials!");
+        this.log("Parsed animations!");
 
         return null;
     }
