@@ -92,7 +92,6 @@ class MyComponent {
     }
 
     addAnimation(id, animation) {
-        animation.velocity();
         this.animations.push([id, animation]);
     }
 
