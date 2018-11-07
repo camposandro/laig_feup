@@ -92,9 +92,21 @@ class MyComponent {
     }
 
     addAnimation(id, animation) {
+        animation.velocity();
         this.animations.push([id, animation]);
     }
 
+    updateAnimation() {
+        if(this.animations.length > 0){
+            var d = new Date();
+            var n = d.getTime();
+            var position = this.animations[0][1].update(n / 1000);
+            this.applyAnimation(position);
+        }
+    }
+    applyAnimation(position) {
+        mat4.translate(this.transformationsMatrix, this.transformationsMatrix, position);
+    }
     /**
      * Adds a texture to the component.
      * @param {id} id Texture id
@@ -144,6 +156,8 @@ class MyComponent {
             this.texture[1].bind();
             tex = this.texture;
         }
+
+        this.updateAnimation();
 
         // apply transformations
         this.scene.multMatrix(this.transformationsMatrix);
