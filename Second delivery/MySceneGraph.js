@@ -881,7 +881,6 @@ class MySceneGraph {
 
                 var grandChildren = child.children;
                 for (let grandChild of grandChildren) {
-
                     x = this.reader.getFloat(grandChild, 'xx');
                     if (x == null || isNaN(x))
                         return "[parseAnimations]: no x defined for " + grandChild.nodeName;
@@ -895,6 +894,8 @@ class MySceneGraph {
                         return "[parseAnimations]: no z defined for " + grandChild.nodeName;
                     animation.addControlPoint(x,y,z);
                 }
+                this.animations[id] = animation;
+                
                 break;
 
                 case 'circular':
@@ -917,7 +918,6 @@ class MySceneGraph {
                     var rotang = this.reader.getFloat(child, 'rotang');
                     if (rotang == null)
                         return "[parseAnimations]: no rotang defined for " + grandChild.nodeName;
-                
                 this.animations[id] = new MyCircularAnimation(id, span, center, radius, startang, rotang);        
                 break;
             }   
@@ -1330,7 +1330,9 @@ class MySceneGraph {
 
                                 if (this.animations[id2] != null)
                                     comp.addAnimation(id2, this.animations[id2]);
+
                             }
+                            
                             break;
                         }    
                     case 'texture':
@@ -1465,6 +1467,21 @@ class MySceneGraph {
 
         // display scene graph starting at the root component
         root.display(root.materials[root.currentMaterialIndex][1], root.texture);
+        /*
+        var obj = new MyRectangle(this.scene, 1, -5,-5, 5, 5, 1, 1);
+        var anim = new MyLinearAnimation(1, 10);
+        anim.addControlPoint(0,0,0);
+        anim.addControlPoint(5,0,0);
+        var comp = new MyComponent(this.scene, 1);
+        comp.addChild(obj)
+        var d = new Date();
+        var n = d.getTime();
+        var pos = anim.update(n * 1000);
+        //console.log(pos);
+        //comp.addTranslation(pos);
+*/
+        //comp.display(root.materials[root.currentMaterialIndex][1], root.texture);
+        //console.log(n);
         
     }
 }
