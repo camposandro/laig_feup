@@ -21,6 +21,7 @@ class MyComponent {
         this.materials = [];
         this.currentMaterialIndex = 0;
         this.texture = null;
+        this.animations = [];
     }
 
     /**
@@ -90,6 +91,10 @@ class MyComponent {
         }
     }
 
+    addAnimation(id, animation) {
+        this.animations.push([id, animation]);
+    }
+
     /**
      * Adds a texture to the component.
      * @param {id} id Texture id
@@ -118,10 +123,12 @@ class MyComponent {
         this.scene.pushMatrix();
 
         // apply material
+        
         if (!this.existsMaterial('inherit'))
             mat = this.materials[this.currentMaterialIndex][1];
         if (mat != null) 
             mat.apply();
+
 
         // apply texture
         if (this.texture[0] == 'inherit') {
