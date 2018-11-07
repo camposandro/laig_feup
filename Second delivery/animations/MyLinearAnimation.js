@@ -13,6 +13,8 @@ class MyLinearAnimation extends MyAnimation {
     constructor(id, span) {
         super(id,span);
         this.controlPoints = new Array();
+        this.anteriorPoint = [0,0,0];
+
         this.totalTime = 0;
         var d = new Date();
         var n = d.getTime();
@@ -49,11 +51,16 @@ class MyLinearAnimation extends MyAnimation {
         this.velocityY = (this.controlPoints[1]['y'] - this.controlPoints[0]['y']) / this.span;
         this.velocityZ = (this.controlPoints[1]['z'] - this.controlPoints[0]['z']) / this.span;
 
-        var posX = this.velocityX * this.totalTime * -1;
-        var posY = this.velocityY * this.totalTime * -1;
-        var posZ = this.velocityZ * this.totalTime * -1;
+       
 
-        var position = [posX, posY, posZ];
+        var desX = (this.velocityX * this.totalTime * -1) - this.anteriorPoint[0];
+        var desY = (this.velocityY * this.totalTime * -1) - this.anteriorPoint[1];
+        var desZ = (this.velocityZ * this.totalTime * -1) - this.anteriorPoint[2];
+
+        this.anteriorPoint = [desX, desY, desZ];
+
+        console.log(desX);
+        var position = [desX, desY, desZ];
         
         return position;
     }
