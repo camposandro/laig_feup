@@ -1321,6 +1321,18 @@ class MySceneGraph {
                             }
                             break;
                         }
+                    case 'animations':
+                        {
+                            for (let grandGrandChild of grandGrandChildren) {
+                                id2 = this.reader.getString(grandGrandChild, 'id');
+                                if (id2 == null)
+                                    return "[parseComponents]: no id defined for animationref";
+
+                                if (this.animations[id2] != null)
+                                    comp.addAnimation(id2, this.animations[id2]);
+                            }
+                            break;
+                        }    
                     case 'texture':
                         {
                             id2 = this.reader.getString(grandChild, 'id');
@@ -1453,5 +1465,6 @@ class MySceneGraph {
 
         // display scene graph starting at the root component
         root.display(root.materials[root.currentMaterialIndex][1], root.texture);
+        
     }
 }
