@@ -26,11 +26,6 @@ class MyLinearAnimation extends MyAnimation {
         this.controlPoints.push( {x, y, z} );
     }
 
-    velocity() {
-        this.velocityX = (this.controlPoints[1]['x'] - this.controlPoints[0]['x']) / this.span;
-        this.velocityY = (this.controlPoints[1]['y'] - this.controlPoints[0]['y']) / this.span;
-        this.velocityZ = (this.controlPoints[1]['z'] - this.controlPoints[0]['z']) / this.span;
-    }
     update(currTime) {
         
         var time;
@@ -49,6 +44,10 @@ class MyLinearAnimation extends MyAnimation {
         var point = this.span % this.totalTime;
         
         //console.log(this.controlPoints);
+
+        this.velocityX = (this.controlPoints[1]['x'] - this.controlPoints[0]['x']) / this.span;
+        this.velocityY = (this.controlPoints[1]['y'] - this.controlPoints[0]['y']) / this.span;
+        this.velocityZ = (this.controlPoints[1]['z'] - this.controlPoints[0]['z']) / this.span;
 
         var posX = this.velocityX * this.totalTime * -1;
         var posY = this.velocityY * this.totalTime * -1;
