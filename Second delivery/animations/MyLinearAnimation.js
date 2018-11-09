@@ -47,9 +47,9 @@ class MyLinearAnimation extends MyAnimation {
         }
         //console.log(this.point);
         
-        this.velocityX = (this.controlPoints[this.point]['x'] - this.controlPoints[this.point - 1]['x']) / this.span;
-        this.velocityY = (this.controlPoints[this.point]['y'] - this.controlPoints[this.point - 1]['y']) / this.span;
-        this.velocityZ = (this.controlPoints[this.point]['z'] - this.controlPoints[this.point - 1]['z']) / this.span;
+        this.velocityX = (this.controlPoints[this.point]['x'] - this.controlPoints[this.point - 1]['x']) / secondsPerPoint;
+        this.velocityY = (this.controlPoints[this.point]['y'] - this.controlPoints[this.point - 1]['y']) / secondsPerPoint;
+        this.velocityZ = (this.controlPoints[this.point]['z'] - this.controlPoints[this.point - 1]['z']) / secondsPerPoint;
 
         var desX = (this.velocityX * time * -1);
         var desY = (this.velocityY * time * -1);
