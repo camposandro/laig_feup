@@ -189,9 +189,9 @@
 
     <!-- Animations -->
     <animations>
-        <linear id = "1" span = "4">
+        <linear id = "1" span = "2">
             <controlpoint xx = "0" yy = "0" zz = "0" />
-            <controlpoint xx = "0.1" yy = "0" zz = "0" />
+            <controlpoint xx = "5" yy = "0" zz = "0" />
         </linear>
 
         <circular id = "2" span = "2" center = "00 00 00" radius = "3" startang = "0" rotang = "45" />
