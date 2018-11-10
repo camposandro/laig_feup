@@ -14,6 +14,7 @@ class MyLinearAnimation extends MyAnimation {
         super(id,span);
         this.controlPoints = new Array();
         this.anteriorPoint = [0,0,0];
+        this.finished = false;
 
         this.totalTime = 0;
         this.lastCurrTime = -1;
@@ -21,6 +22,7 @@ class MyLinearAnimation extends MyAnimation {
         this.velocityY = 0;
         this.velocityZ = 0;
         this.point = 1;
+        this.position;
     };
 
     addControlPoint(x, y, z){
@@ -28,7 +30,9 @@ class MyLinearAnimation extends MyAnimation {
     }
 
     update(currTime) {
-        
+        if(this.finished)
+            return true;
+
         var time;
         if(this.lastCurrTime > 0) {
             time = currTime - this.lastCurrTime;
@@ -37,15 +41,16 @@ class MyLinearAnimation extends MyAnimation {
             time = 0;
         this.lastCurrTime = currTime;
         this.totalTime += time;
-        if((this.totalTime > this.span) || (this.totalTime == 0))
-            return [0,0,0];
+        if((this.totalTime > this.span)){
+            this.finished = true;
+            return true;
+        }
             
         var secondsPerPoint = this.span / (this.controlPoints.length - 1);
 
         if((secondsPerPoint * this.point) < this.totalTime) {
             this.point++;
         }
-        //console.log(this.point);
         
         this.velocityX = (this.controlPoints[this.point]['x'] - this.controlPoints[this.point - 1]['x']) / secondsPerPoint;
         this.velocityY = (this.controlPoints[this.point]['y'] - this.controlPoints[this.point - 1]['y']) / secondsPerPoint;
@@ -57,12 +62,13 @@ class MyLinearAnimation extends MyAnimation {
 
         this.anteriorPoint = [desX, desY, desZ];
 
-        var position = [desX, desY, desZ];
-        
-        return position;
+        this.position = [desX, desY, desZ];
     }
 
-    apply() {
-
+    apply(transformationsMatrix) {
+        if(!this.finished) {
+            mat4.translate(transformationsMatrix, transformationsMatrix, this.position);
+            return transformationsMatrix;
+        }
     }
 }
