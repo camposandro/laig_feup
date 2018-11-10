@@ -22,6 +22,7 @@ class MyComponent {
         this.currentMaterialIndex = 0;
         this.texture = null;
         this.animations = [];
+        this.currentAnimationIndex = 0;
     }
 
     /**
@@ -95,13 +96,21 @@ class MyComponent {
         this.animations.push([id, animation]);
     }
 
+    changeAnimation() {
+        if(this.currentAnimationIndex < this.animations.length - 1)
+            this.currentAnimationIndex++;
+            
+    }
+
     updateAnimation() {
-        if(this.animations.length > 0){
-            var d = new Date();
-            var n = d.getTime();
-            var position = this.animations[0][1].update(n / 1000);
-            this.applyAnimation(position);
+        var d = new Date();
+        var n = d.getTime();
+        if(!this.animations[this.currentAnimationIndex][1].update(n / 1000)){
+            this.animations[this.currentAnimationIndex][1].apply(this.transformationsMatrix);
+            return;
         }
+        this.changeAnimation();
+        
     }
     applyAnimation(position) {
         mat4.translate(this.transformationsMatrix, this.transformationsMatrix, position);
@@ -155,8 +164,10 @@ class MyComponent {
             this.texture[1].bind();
             tex = this.texture;
         }
-
-        this.updateAnimation();
+        
+        // apply animations
+        if(this.animations.length > 0)
+            this.updateAnimation();
 
         // apply transformations
         this.scene.multMatrix(this.transformationsMatrix);
