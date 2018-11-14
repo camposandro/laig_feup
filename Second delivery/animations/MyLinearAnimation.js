@@ -61,7 +61,6 @@ class MyLinearAnimation extends MyAnimation {
         var desZ = (this.velocityZ * time * -1);
 
         this.anteriorPoint = [desX, desY, desZ];
-
         this.position = [desX, desY, desZ];
     }
 
