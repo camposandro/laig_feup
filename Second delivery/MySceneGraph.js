@@ -900,10 +900,10 @@ class MySceneGraph {
 
                 case 'circular':
                     // parse animation 'center'
-                    var center = this.reader.getFloat(child, 'center');
+                    var center = this.reader.getString(child, 'center');
                     if (center == null)
                         return "[parseAnimations]: no center defined for " + grandChild.nodeName;
-                        
+
                     // parse animation 'radius'
                     var radius = this.reader.getFloat(child, 'radius');
                     if (radius == null)
@@ -918,7 +918,7 @@ class MySceneGraph {
                     var rotang = this.reader.getFloat(child, 'rotang');
                     if (rotang == null)
                         return "[parseAnimations]: no rotang defined for " + grandChild.nodeName;
-                this.animations[id] = new MyCircularAnimation(id, span, center, radius, startang, rotang);        
+                this.animations[id] = new MyCircularAnimation(id, span, center, radius, startang * DEGREE_TO_RAD, rotang * DEGREE_TO_RAD);        
                 break;
             }   
         }
@@ -1328,9 +1328,32 @@ class MySceneGraph {
                                 if (id2 == null)
                                     return "[parseComponents]: no id defined for animationref";
 
-                                if (this.animations[id2] != null)
-                                    comp.addAnimation(id2, this.animations[id2]);
+                                if (this.animations[id2] != null) {
+                                    var anim, id3, span;
+                                    
+                                    if(this.animations[id2] instanceof MyLinearAnimation ){
+                                        id3 = this.animations[id2].id;
+                                        span = this.animations[id2].span;
+                                        var controlPoints = this.animations[id2].controlPoints;
+                                        
+                                        anim = new MyLinearAnimation(id3,span);
+                                        for(let controlPoint of controlPoints)
+                                            anim.addControlPoint(controlPoint['x'],controlPoint['y'],controlPoint['z']);
 
+                                    } 
+                                    else if( this.animations[id2] instanceof MyCircularAnimation ){
+                                        
+                                        id3 = this.animations[id2].id;
+                                        span = this.animations[id2].span;
+                                        var center = this.animations[id2].center;
+                                        var radius = this.animations[id2].radius;
+                                        var startang = this.animations[id2].startang;
+                                        var rotang = this.animations[id2].rotang;
+
+                                        anim = new MyCircularAnimation(id3, span, center, radius, startang, rotang);
+                                    }
+                                    comp.addAnimation(id2, anim);
+                                }
                             }
                             
                             break;
