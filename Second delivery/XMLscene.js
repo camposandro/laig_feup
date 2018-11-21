@@ -167,8 +167,6 @@ class XMLscene extends CGFscene {
         // adds views group
         this.interface.addViewsGroup(this.viewsValues);
 
-        this.cylinder = new MyCylinder2(this,0,2,2,4,4,4);
-
         this.sceneInited = true;
     }
 
@@ -202,8 +200,7 @@ class XMLscene extends CGFscene {
             this.updateLights();
 
             // displays the scene
-            //this.graph.displayScene();
-            this.cylinder.display();
+            this.graph.displayScene();
         }
         else {
             // draw axis

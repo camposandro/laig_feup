@@ -36,7 +36,7 @@ class MyCylinder2 extends CGFobject {
      * Initializes cylinder surfaces.
      */
     initNurbs(scene) {
-
+        var variation = (this.top - this.base) / this.stacks;
         var angle = Math.PI / this.slices;
 
         var controlVertexes = new Array();
@@ -47,8 +47,8 @@ class MyCylinder2 extends CGFobject {
 
                 controlVertexesV.push(
                     [
-                        Math.cos(angle * j),
-                        Math.sin(angle * j),
+                        Math.cos(j * angle) * (this.base + variation * i),
+                        -Math.sin(j * angle) * (this.base + variation * i),
                         i * this.height / this.stacks,
                         1
                     ]
@@ -57,39 +57,12 @@ class MyCylinder2 extends CGFobject {
             controlVertexes.push(controlVertexesV);
         }
 
-        this.firstHalf = new MyPatch(
+        this.half = new MyPatch(
             scene,
-            3,
-            4,
-            2,
-            3,
-            controlVertexes
-        );
-
-        controlVertexes = new Array();
-        for (var i = 0; i <= this.stacks; i++) {
-
-            var controlVertexesV = new Array();
-            for (var j = 0; j <= this.slices; j++) {
-
-                controlVertexesV.push(
-                    [
-                        Math.cos(angle * j),
-                        Math.sin(angle * j),
-                        i * this.height / this.stacks,
-                        1
-                    ]
-                );
-            }
-            controlVertexes.push(controlVertexesV);
-        }
-
-        this.secondHalf = new MyPatch(
-            scene,
-            3,
-            4,
-            2,
-            3,
+            this.slices + 1,
+            this.stacks + 1,
+            this.slices,
+            this.stacks,
             controlVertexes
         );
     };
@@ -99,8 +72,11 @@ class MyCylinder2 extends CGFobject {
      */
     display() {
         this.scene.pushMatrix();
-        this.firstHalf.display();
-        this.secondHalf.display();
+        this.half.display();
+            this.scene.pushMatrix();
+                this.scene.rotate(Math.PI,0,0,1);
+                this.half.display();
+            this.scene.popMatrix();
         this.scene.popMatrix();
     };
 }

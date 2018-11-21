@@ -43,15 +43,15 @@ class MyCylinder extends CGFobject {
         this.normals = new Array();
         this.texCoords = new Array();
 
-        var variation = Math.abs(this.base - this.top) / this.stacks;
+        var variation = (this.top - this.base) / this.stacks;
         var angle = (2 * Math.PI) / this.slices;
 
         for (var j = 0; j <= this.stacks; j++) {
             for (var i = 0; i <= this.slices; i++) {
 
                 this.vertices.push(
-                    Math.cos(i * angle) * (this.base - variation * j),
-                    Math.sin(i * angle)* (this.base - variation * j),
+                    Math.cos(i * angle) * (this.base + variation * j),
+                    Math.sin(i * angle)* (this.base + variation * j),
                     j * this.height / this.stacks
                 );
 
@@ -86,6 +86,7 @@ class MyCylinder extends CGFobject {
      */
     display() {
         this.scene.pushMatrix();
+            this.scene.translate(10,0,0);
             CGFobject.prototype.display.call(this);
             this.scene.pushMatrix();
                 this.scene.translate(0, 0, this.height);
