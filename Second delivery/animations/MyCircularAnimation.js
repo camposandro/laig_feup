@@ -16,6 +16,7 @@ class MyCircularAnimation extends MyAnimation {
     constructor(id, span, center, radius, startang, rotang) {
         super(id,span);
 
+        this.center = center;
         var centerS = center += '';
         const splitString = centerS.split(" ") ;
 
@@ -55,7 +56,7 @@ class MyCircularAnimation extends MyAnimation {
             return true;
         }
         
-        this.angle = this.startang + this.rotang / this.span * time;
+        this.angle = this.startang + this.rotang / this.span * this.totalTime;
         
         var posX = this.radius * Math.cos(this.angle);
         var posZ = this.radius * Math.sin(this.angle);
@@ -72,6 +73,8 @@ class MyCircularAnimation extends MyAnimation {
             this.first = false;
         }*/
         if(!this.finished) {
+            mat4.translate(transformationsMatrix, transformationsMatrix, [this.centerX,this.centerY,this.centerZ]);
+            mat4.translate(transformationsMatrix, transformationsMatrix, position);
             mat4.rotate(transformationsMatrix, transformationsMatrix, this.angle, [0,1,0]);
             return transformationsMatrix;
         }
