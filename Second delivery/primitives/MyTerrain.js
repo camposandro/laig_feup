@@ -2,7 +2,7 @@
  * MyTerrain
  * @constructor
  */
-class MyTerrain {
+class MyTerrain extends MyPlane {
 
     /**
      * @constructor
@@ -11,6 +11,8 @@ class MyTerrain {
      * @param {npartsV} npartsV Circle radius
      */
     constructor(idTexture, idHeightmap, parts, heightScale) {
+        super(scene,0,parts,parts);
+
         this.idTexture = idTexture
         this.idHeightmap = idHeightmap;
         this.parts = parts;

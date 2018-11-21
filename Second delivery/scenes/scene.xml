@@ -64,7 +64,10 @@
 
     <!-- Textures -->
     <textures>
-
+        <texture id="terrainTexture" file="textures/terrainTexture.png"/>
+        <texture id="heightMapTexture" file="textures/heightMapTexture.png"/>
+        <texture id="waterTexture" file="textures/waterTexture.png"/>
+        <texture id="waveMapTexture" file="textures/waveMapTexture.png"/>
     </textures>
 
     <!-- Materials -->
@@ -130,7 +133,17 @@
             <plane npartsU="5" npartsV="8"/>
         </primitive>
 
-        <primitive id="patch">
+        <primitive id="testPatch">
+            <patch npointsU="2" npointsV="2" npartsU="1" npartsV="1">
+                <controlpoint xx="-2.0" yy="-2.0" zz="0.0"/>
+                <controlpoint xx="-2.0" yy="2.0" zz="0.0"/>
+
+                <controlpoint xx="2.0" yy="-2.0" zz="0.0"/>
+                <controlpoint xx="2.0" yy="2.0" zz="0.0"/>
+            </patch>
+        </primitive>
+
+        <primitive id="testPatch2">
             <patch npointsU="3" npointsV="4" npartsU="2" npartsV="3">
                 <controlpoint xx="-1.5" yy="-1.5" zz="0.0"/>
                 <controlpoint xx="-2.0" yy="-2.0" zz="2.0"/>
@@ -150,21 +163,20 @@
         </primitive>
 
         <primitive id="vehicle">
-            <vehicle>
-            </vehicle>
+            <vehicle/>
         </primitive>
 
         <primitive id="cylinder2">
-            <cylinder2 base="2" top="2" height="4" slices="4" stacks="4"/>
+            <cylinder2 base="4" top="2" height="4" slices="10" stacks="10"/>
         </primitive>
 
-        <!--<primitive id="terrain">
-            <terrain idtexture="ss" idheightmap="ss" parts="ii" heightscale="ff"/>
+        <primitive id="terrain">
+            <terrain idtexture="terrainTexture" idheightmap="heightMapTexture" parts=5 heightscale=50/>
         </primitive>
 
         <primitive id="water">
-            <water idtexture="ss" idwavemap="ss" parts="ii" heightscale="ff" texscale="ff"/>
-        </primitive>-->
+            <water idtexture="waterTexture" idwavemap="waveMapTexture" parts=5 heightscale=5 texscale=50/>
+        </primitive>
 
     </primitives>
 
@@ -183,7 +195,10 @@
             <texture id="none"/>
 
             <children>
-                
+                <primitiveref id="terrain"/>
+                <!--<primitiveref id="cylinder2"/>
+                <primitiveref id="testPatch2"/>
+                <primitiveref id="vehicle"/>-->
             </children>
         </component>
 

@@ -143,7 +143,6 @@ class MyComponent {
         this.scene.pushMatrix();
 
         // apply material
-        
         if (!this.existsMaterial('inherit'))
             mat = this.materials[this.currentMaterialIndex][1];
         if (mat != null) 
