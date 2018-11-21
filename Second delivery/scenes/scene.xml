@@ -68,6 +68,7 @@
         <texture id="heightMapTexture" file="textures/heightMapTexture.png"/>
         <texture id="waterTexture" file="textures/waterTexture.png"/>
         <texture id="waveMapTexture" file="textures/waveMapTexture.png"/>
+        <texture id="sphereAppearance" file="textures/sphere.png"/>
     </textures>
 
     <!-- Materials -->
@@ -92,7 +93,7 @@
             <controlpoint xx = "5" yy = "0" zz = "0" />
         </linear>
 
-        <circular id = "2" span = "2" center = "00 00 00" radius = "3" startang = "0" rotang = "45" />
+        <circular id = "2" span = "2" center = "00 00 00" radius = "1" startang = "0" rotang = "360" />
     </animations>
 
     <!-- Primitive objects -->
@@ -133,6 +134,10 @@
             <plane npartsU="5" npartsV="8"/>
         </primitive>
 
+        <primitive id="cylinder2">
+            <cylinder2 base="4" top="2" height="4" slices="10" stacks="10"/>
+        </primitive>
+
         <primitive id="testPatch">
             <patch npointsU="2" npointsV="2" npartsU="1" npartsV="1">
                 <controlpoint xx="-2.0" yy="-2.0" zz="0.0"/>
@@ -161,13 +166,9 @@
                 <controlpoint xx="1.5" yy="1.5" zz="0.0"/>
             </patch>
         </primitive>
-
+       
         <primitive id="vehicle">
             <vehicle/>
-        </primitive>
-
-        <primitive id="cylinder2">
-            <cylinder2 base="4" top="2" height="4" slices="10" stacks="10"/>
         </primitive>
 
         <primitive id="terrain">
@@ -196,9 +197,28 @@
 
             <children>
                 <primitiveref id="terrain"/>
-                <!--<primitiveref id="cylinder2"/>
+                <!--<componentref id ="mySphere"/>
+                <primitiveref id="cylinder2"/>
                 <primitiveref id="testPatch2"/>
                 <primitiveref id="vehicle"/>-->
+            </children>
+        </component>
+
+        <component id="mySphere">
+           <transformation>
+                <translate x="0" y="0" z="0"/>
+            </transformation>
+            <animations>
+                <animationref id = "2"/>
+            </animations>
+            <materials>
+                <material id="default"/>
+            </materials>
+
+            <texture id="sphereAppearance" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="sphere"/>
             </children>
         </component>
 

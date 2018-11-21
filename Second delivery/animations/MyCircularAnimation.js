@@ -16,6 +16,7 @@ class MyCircularAnimation extends MyAnimation {
     constructor(id, span, center, radius, startang, rotang) {
         super(id,span);
 
+        this.center = center;
         var centerS = center += '';
         const splitString = centerS.split(" ") ;
 
@@ -29,10 +30,13 @@ class MyCircularAnimation extends MyAnimation {
         this.rotang = rotang;
         this.finished = false;
         this.totalTime = 0;
+        this.lastAngle = 0;
         
         this.position;
-        this.anteriorPoint = [0,0,0];
         this.angle = startang;
+        this.lastIteration = false;
+
+        this.angleVelocity = this.rotang / this.span;
 
     };
 
@@ -50,29 +54,38 @@ class MyCircularAnimation extends MyAnimation {
 
         this.lastCurrTime = currTime;
         this.totalTime += time;
-        if((this.totalTime > this.span)){
+        if(this.totalTime > this.span){
             this.finished = true;
-            return true;
+            this.lastIteration = true;
+            this.totalTime = this.span;
         }
-        
-        this.angle = this.startang + this.rotang / this.span * time;
-        
+
+        this.angle = this.startang + this.angleVelocity * this.totalTime;
+        this.transAngle = this.angle - this.lastAngle;
+        this.lastAngle = this.angle;
+
+
         var posX = this.radius * Math.cos(this.angle);
         var posZ = this.radius * Math.sin(this.angle);
+
         
-        this.anteriorPoint = this.position;
+        
         this.position = [posX, 0, posZ];
+        //console.log(this.position);
+        this.invertposition = [-posX, 0, -posZ];
     }
 
 
     apply(transformationsMatrix) {
-        /*
-        if(this.first){
-            mat4.translate(transformationsMatrix, transformationsMatrix, this.center);
-            this.first = false;
-        }*/
-        if(!this.finished) {
-            mat4.rotate(transformationsMatrix, transformationsMatrix, this.angle, [0,1,0]);
+        if(!this.finished || this.lastIteration) {
+            this.lastIteration = false;
+            mat4.translate(transformationsMatrix, transformationsMatrix, [this.centerX,this.centerY,this.centerZ]);
+            mat4.translate(transformationsMatrix, transformationsMatrix, this.position);
+            mat4.rotate(transformationsMatrix, transformationsMatrix, this.transAngle, [0,1,0]);
+            mat4.translate(transformationsMatrix, transformationsMatrix, this.invertposition);
+            mat4.translate(transformationsMatrix, transformationsMatrix, [-this.centerX,-this.centerY,-this.centerZ]);
+            
+            
             return transformationsMatrix;
         }
         
