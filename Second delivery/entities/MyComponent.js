@@ -112,9 +112,7 @@ class MyComponent {
         this.changeAnimation();
         
     }
-    applyAnimation(position) {
-        mat4.translate(this.transformationsMatrix, this.transformationsMatrix, position);
-    }
+ 
     /**
      * Adds a texture to the component.
      * @param {id} id Texture id

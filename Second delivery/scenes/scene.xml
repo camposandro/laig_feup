@@ -64,7 +64,7 @@
 
     <!-- Textures -->
     <textures>
-
+        <texture id="sphereAppearance" file="textures/sphere.png"/>
     </textures>
 
     <!-- Materials -->
@@ -89,7 +89,7 @@
             <controlpoint xx = "5" yy = "0" zz = "0" />
         </linear>
 
-        <circular id = "2" span = "2" center = "00 00 00" radius = "3" startang = "0" rotang = "45" />
+        <circular id = "2" span = "2" center = "00 00 00" radius = "1" startang = "0" rotang = "360" />
     </animations>
 
     <!-- Primitive objects -->
@@ -148,7 +148,7 @@
                 <controlpoint xx="1.5" yy="1.5" zz="0.0"/>
             </patch>
         </primitive>
-
+        <!-->
         <primitive id="vehicle">
             <vehicle>
             </vehicle>
@@ -156,7 +156,7 @@
 
         <primitive id="cylinder2">
             <cylinder2 base="2" top="2" height="4" slices="4" stacks="4"/>
-        </primitive>
+        </primitive> -->
 
         <!--<primitive id="terrain">
             <terrain idtexture="ss" idheightmap="ss" parts="ii" heightscale="ff"/>
@@ -183,7 +183,25 @@
             <texture id="none"/>
 
             <children>
-                
+                <!--<componentref id ="mySphere" /> -->
+            </children>
+        </component>
+
+        <component id="mySphere">
+           <transformation>
+                <translate x="0" y="0" z="0"/>
+            </transformation>
+            <animations>
+                <animationref id = "2"/>
+            </animations>
+            <materials>
+                <material id="default"/>
+            </materials>
+
+            <texture id="sphereAppearance" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="sphere"/>
             </children>
         </component>
 
