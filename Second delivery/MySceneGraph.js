@@ -844,10 +844,10 @@ class MySceneGraph {
         return null;
     }
 
-/**
-     * Parses the <animations> node.
-     * @param {animations block element} animationsNode
-     */
+    /**
+         * Parses the <animations> node.
+         * @param {animations block element} animationsNode
+         */
     parseAnimations(animationsNode) {
         var animation;
         var children = animationsNode.children;
@@ -872,38 +872,38 @@ class MySceneGraph {
                 return "[parseAnimations]: no span defined for transformation";
 
 
-            switch(child.nodeName) {
+            switch (child.nodeName) {
                 case 'linear':
-                animation = new MyLinearAnimation(id, span);
+                    animation = new MyLinearAnimation(id, span);
 
-                // parse animation control points
-                var x, y, z;
+                    // parse animation control points
+                    var x, y, z;
 
-                var grandChildren = child.children;
-                for (let grandChild of grandChildren) {
-                    x = this.reader.getFloat(grandChild, 'xx');
-                    if (x == null || isNaN(x))
-                        return "[parseAnimations]: no x defined for " + grandChild.nodeName;
+                    var grandChildren = child.children;
+                    for (let grandChild of grandChildren) {
+                        x = this.reader.getFloat(grandChild, 'xx');
+                        if (x == null || isNaN(x))
+                            return "[parseAnimations]: no x defined for " + grandChild.nodeName;
 
-                    y = this.reader.getFloat(grandChild, 'yy');
-                    if (y == null || isNaN(y))
-                        return "[parseAnimations]: no y defined for " + grandChild.nodeName;
+                        y = this.reader.getFloat(grandChild, 'yy');
+                        if (y == null || isNaN(y))
+                            return "[parseAnimations]: no y defined for " + grandChild.nodeName;
 
-                    z = this.reader.getFloat(grandChild, 'zz');
-                    if (z == null || isNaN(z))
-                        return "[parseAnimations]: no z defined for " + grandChild.nodeName;
-                    animation.addControlPoint(x,y,z);
-                }
-                this.animations[id] = animation;
-                
-                break;
+                        z = this.reader.getFloat(grandChild, 'zz');
+                        if (z == null || isNaN(z))
+                            return "[parseAnimations]: no z defined for " + grandChild.nodeName;
+
+                        animation.addControlPoint(x, y, z);
+                    }
+                    this.animations[id] = animation;
+                    break;
 
                 case 'circular':
                     // parse animation 'center'
                     var center = this.reader.getFloat(child, 'center');
                     if (center == null)
                         return "[parseAnimations]: no center defined for " + grandChild.nodeName;
-                        
+
                     // parse animation 'radius'
                     var radius = this.reader.getFloat(child, 'radius');
                     if (radius == null)
@@ -918,10 +918,14 @@ class MySceneGraph {
                     var rotang = this.reader.getFloat(child, 'rotang');
                     if (rotang == null)
                         return "[parseAnimations]: no rotang defined for " + grandChild.nodeName;
-                this.animations[id] = new MyCircularAnimation(id, span, center, radius, startang, rotang);        
-                break;
-            }   
+
+                    this.animations[id] = new MyCircularAnimation(id, span, center, radius, startang, rotang);
+                    break;
+                default:
+                    return "[parseAnimations]: invalid " + child.nodeName;
+            }
         }
+
         this.log("Parsed animations!");
 
         return null;
@@ -954,6 +958,7 @@ class MySceneGraph {
             var base, top, height, radius, slices, stacks, inner, outer, loops;
             var npartsU, npartsV, npointsU, npointsV;
             var idTexture, idheightmap, parts, heightscale, idwavemap, texscale;
+
             var grandChildren = child.children;
             for (let grandChild of grandChildren) {
                 switch (grandChild.nodeName) {
@@ -978,7 +983,7 @@ class MySceneGraph {
                         npointsV = this.reader.getFloat(grandChild, 'npointsV');
                         if (npointsV == null || isNaN(npointsV))
                             return "[parsePrimitives]: no npointsV defined for npointsV";
-                            
+
                         npartsU = this.reader.getFloat(grandChild, 'npartsU');
                         if (npartsU == null || isNaN(npartsU))
                             return "[parsePrimitives]: no npartsU defined for plane";
@@ -986,26 +991,44 @@ class MySceneGraph {
                         npartsV = this.reader.getFloat(grandChild, 'npartsV');
                         if (npartsV == null || isNaN(npartsV))
                             return "[parsePrimitives]: no npartsV defined for plane";
+                        
+                        var grandGrandChildren = grandChild.children;
+                        if (grandGrandChildren.length != (npointsU * npointsV)) 
+                            return "[parsePrimitives]: controlPoints != (nPointsU * nPoints V)!";
 
-                        var patch = new MyPatch(this.scene, npointsU, npointsV, npartsU, npartsV);
+                        var cPoints = new Array();
+                        for (var i = 0; i < npointsU; i++) {
 
-                        var grandgrandChildren = grandChildren.children;
-                        for (let grandgrandChild of grandgrandChildren) {
-                            x = this.reader.getFloat(grandgrandChild, 'x');
-                            if (x == null || isNaN(x))
-                                return "[parsePrimitives]: no x defined for patch's control point";
-
-                                y = this.reader.getFloat(grandgrandChild, 'y');
-                            if (y == null || isNaN(y))
-                                return "[parsePrimitives]: no y defined for patch's control point";
+                            var uControlVertices = new Array();
+                            for (var j = 0; j < npointsV; j++) {
                                 
-                            z = this.reader.getFloat(grandgrandChild, 'z');
-                            if (z == null || isNaN(z))
-                                return "[parsePrimitives]: no z defined for patch's control point";
+                                var index = i * npointsU + j;
 
-                            patch.addControlPoint(x,y,z);   
+                                x = this.reader.getFloat(grandGrandChildren[index], 'xx');
+                                if (x == null || isNaN(x))
+                                    return "[parsePrimitives]: no x defined for patch's control point";
+    
+                                y = this.reader.getFloat(grandGrandChildren[index], 'yy');
+                                if (y == null || isNaN(y))
+                                    return "[parsePrimitives]: no y defined for patch's control point";
+    
+                                z = this.reader.getFloat(grandGrandChildren[index], 'zz');
+                                if (z == null || isNaN(z))
+                                    return "[parsePrimitives]: no z defined for patch's control point";
+    
+                                uControlVertices.push([x, y, z]);
+                            }
+                            cPoints.push(uControlVertices);
                         }
-                        this.primitives[id] = patch;
+
+                        this.primitives[id] = new MyPatch(this.scene, npointsU, npointsV, npartsU, npartsV, cPoints);
+                        break;
+
+                    case 'vehicle':
+                        
+
+
+
                         break;
 
                     case 'cylinder2':
@@ -1048,7 +1071,7 @@ class MySceneGraph {
                         heightscale = this.reader.getFloat(heightscale, 'parts');
                         if (heightscale == null || isNaN(heightscale))
                             return "[parsePrimitives]: no heightscale defined for terrain";
-                                  
+
                         this.primitives[id] = new MyTerrain(idTexture, idheightmap, parts, heightscale);
                         break;
 
@@ -1068,15 +1091,13 @@ class MySceneGraph {
                         heightscale = this.reader.getFloat(grandChild, 'parts');
                         if (heightscale == null || isNaN(heightscale))
                             return "[parsePrimitives]: no heightscale defined for water";
-                           
+
                         texscale = this.reader.getFloat(grandChild, 'texscale');
                         if (texscale == null || isNaN(texscale))
                             return "[parsePrimitives]: no texscale defined for water";
-                                                           
 
                         this.primitives[id] = new MyWater(idTexture, idwavemap, parts, heightscale, texscale);
                         break;
-    
 
                     case 'rectangle':
                         x = this.reader.getFloat(grandChild, 'x1');
@@ -1332,9 +1353,9 @@ class MySceneGraph {
                                     comp.addAnimation(id2, this.animations[id2]);
 
                             }
-                            
+
                             break;
-                        }    
+                        }
                     case 'texture':
                         {
                             id2 = this.reader.getString(grandChild, 'id');
@@ -1482,6 +1503,6 @@ class MySceneGraph {
 */
         //comp.display(root.materials[root.currentMaterialIndex][1], root.texture);
         //console.log(n);
-        
+
     }
 }

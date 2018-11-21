@@ -2,18 +2,16 @@
  * MyPlane
  * @constructor
  */
-class MyPlane extends CGFobject {
+class MyPlane extends Plane {
 
     /**
      * @constructor
      * @param {XMLScene} scene Scene
+     * @param {id} id Plane id
      * @param {npartsU} npartsU Number of circle slices
      * @param {npartsV} npartsV Circle radius
      */
-    constructor(scene, npartsU, npartsV) {
-        super(scene);
-        this.npartsU = npartsU;
-        this.npartsV = npartsV;
-
+    constructor(scene, id, npartsU, npartsV) {
+        super(scene, id, npartsU, npartsV);
     };
 }
