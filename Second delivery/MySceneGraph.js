@@ -1065,11 +1065,11 @@ class MySceneGraph {
                         if (parts == null || isNaN(parts))
                             return "[parsePrimitives]: no parts defined for terrain";
 
-                        heightscale = this.reader.getFloat(heightscale, 'heightscale');
+                        heightscale = this.reader.getFloat(grandChild, 'heightscale');
                         if (heightscale == null || isNaN(heightscale))
                             return "[parsePrimitives]: no heightscale defined for terrain";
 
-                        this.primitives[id] = new MyTerrain(idtexture, idheightmap, parts, heightscale);
+                        this.primitives[id] = new MyTerrain(this.scene, idtexture, idheightmap, parts, heightscale);
                         break;
 
                     case 'water':
@@ -1093,7 +1093,7 @@ class MySceneGraph {
                         if (texscale == null || isNaN(texscale))
                             return "[parsePrimitives]: no texscale defined for water";
 
-                        this.primitives[id] = new MyWater(idtexture, idwavemap, parts, heightscale, texscale);
+                        this.primitives[id] = new MyWater(this.scene, idtexture, idwavemap, parts, heightscale, texscale);
                         break;
 
                     case 'rectangle':

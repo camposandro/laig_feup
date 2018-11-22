@@ -10,7 +10,7 @@ class MyTerrain extends MyPlane {
      * @param {npartsU} npartsU Number of circle slices
      * @param {npartsV} npartsV Circle radius
      */
-    constructor(idTexture, idHeightmap, parts, heightScale) {
+    constructor(scene, idTexture, idHeightmap, parts, heightScale) {
         super(scene,0,parts,parts);
 
         this.idTexture = idTexture

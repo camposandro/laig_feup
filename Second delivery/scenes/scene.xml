@@ -68,7 +68,7 @@
         <texture id="heightMapTexture" file="textures/heightMapTexture.png"/>
         <texture id="waterTexture" file="textures/waterTexture.png"/>
         <texture id="waveMapTexture" file="textures/waveMapTexture.png"/>
-        <texture id="sphereAppearance" file="textures/sphere.png"/>
+        <!--<texture id="sphereAppearance" file="textures/sphere.png"/>-->
     </textures>
 
     <!-- Materials -->
@@ -172,11 +172,11 @@
         </primitive>
 
         <primitive id="terrain">
-            <terrain idtexture="terrainTexture" idheightmap="heightMapTexture" parts=5 heightscale=50/>
+            <terrain idtexture="terrainTexture" idheightmap="heightMapTexture" parts="5" heightscale="50"/>
         </primitive>
 
         <primitive id="water">
-            <water idtexture="waterTexture" idwavemap="waveMapTexture" parts=5 heightscale=5 texscale=50/>
+            <water idtexture="waterTexture" idwavemap="waveMapTexture" parts="5" heightscale="5" texscale="50"/>
         </primitive>
 
     </primitives>
@@ -196,9 +196,9 @@
             <texture id="none"/>
 
             <children>
-                <primitiveref id="terrain"/>
-                <!--<componentref id ="mySphere"/>
-                <primitiveref id="cylinder2"/>
+                <!--<primitiveref id="terrain"/>-->
+                <componentref id ="mySphere"/>
+                <!--<primitiveref id="cylinder2"/>
                 <primitiveref id="testPatch2"/>
                 <primitiveref id="vehicle"/>-->
             </children>
@@ -208,14 +208,16 @@
            <transformation>
                 <translate x="0" y="0" z="0"/>
             </transformation>
+
             <animations>
-                <animationref id = "2"/>
+                <!--<animationref id="2"/>-->
             </animations>
+
             <materials>
                 <material id="default"/>
             </materials>
 
-            <texture id="sphereAppearance" length_s="1" length_t="1"/>
+            <texture id="none"/>
 
             <children>
                 <primitiveref id="sphere"/>

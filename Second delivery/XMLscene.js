@@ -40,6 +40,17 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
+
+        this.texture = new CGFtexture(this, "textures/terrainTexture.png");
+
+        this.shaders = new Array();
+        this.shaders['terrain'] = new CGFshader(this.gl, "shaders/terrain.vert", "shaders/terrain.frag");
+        this.shaders['water'] = new CGFshader(this.gl, "shaders/water.vert", "shaders/water.frag");
+
+        this.shaders['terrain'].setUniformsValues({ uSampler: 1 });
+        this.shaders['water'].setUniformsValues({ uSampler: 1 });
+
+        this.updateScaleFactor(2);
     }
 
     /**
@@ -83,7 +94,7 @@ class XMLscene extends CGFscene {
                 if (light instanceof MySpotlight) {
                     this.lights[i].setSpotCutOff(light.angle);
                     this.lights[i].setSpotExponent(light.exponent);
-                    
+
                     let directionX = light.target[0] - light.location[0];
                     let directionY = light.target[1] - light.location[1];
                     let directionZ = light.target[2] - light.location[2];
@@ -97,6 +108,15 @@ class XMLscene extends CGFscene {
                 i++;
             }
         }
+    }
+
+    updateScaleFactor(factor) {
+        this.shaders['terrain'].setUniformsValues({ normScale: factor });
+    }
+
+    update(time) {
+        var factor = (Math.sin((time * 3.0) % 3141 * 0.002) + 1.0) * .5;
+        this.shaders['water'].setUniformsValues({ timeFactor: factor });
     }
 
     /**
@@ -199,8 +219,16 @@ class XMLscene extends CGFscene {
             // update lights
             this.updateLights();
 
+            // set current shader
+            this.setActiveShader(this.shaders['terrain']);
+
+            this.texture.bind(0);
+
             // displays the scene
             this.graph.displayScene();
+
+            // set default shader
+            this.setActiveShader(this.defaultShader);
         }
         else {
             // draw axis
