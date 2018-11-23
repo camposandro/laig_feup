@@ -197,24 +197,9 @@
             <children>
                 <primitiveref id="terrain"/>
                 <primitiveref id="water"/>
+                <primitiveref id="vehicle"/>
             </children>
         </component>
-
-        <!-- Water element
-        <component id="MyTerrain">
-            <transformation>
-            </transformation>
-
-            <materials>
-                <material id="default"/>
-            </materials>
-
-            <texture id="terrainTexture" length_s="1" length_t="1"/>
-
-            <children>
-                <primitiveref id="terrain"/>
-            </children>
-        </component>-->
 
     </components>
 

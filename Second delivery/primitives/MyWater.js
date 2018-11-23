@@ -44,6 +44,11 @@ class MyWater extends MyPlane {
             super.display();
         this.scene.popMatrix();
 
+        // Sets default shader
         this.scene.setActiveShader(this.scene.defaultShader);
+
+        // Textures unbinding
+        this.scene.graph.textures[this.idTexture].unbind();
+        this.scene.graph.textures[this.idWavemap].unbind();
     };
 }
