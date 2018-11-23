@@ -41,7 +41,9 @@ class XMLscene extends CGFscene {
 
         this.axis = new CGFaxis(this);
 
-        //this.initShaders();
+        this.setUpdatePeriod(20);
+
+        this.initShaders();
     }
 
     /**
@@ -105,35 +107,18 @@ class XMLscene extends CGFscene {
     * Initializes shaders with its needed textures.
     */
     initShaders() {
-        
-        this.scaleFactor = 0.0;
-
-        this.terrainTextures = [
-            new CGFtexture(this, "textures/terrainTexture.png"),
-            new CGFtexture(this, "textures/heightMapTexture.png")
-        ];
-
-        this.waterTextures = [
-            new CGFtexture(this, "textures/waterTexture.png"),
-            new CGFtexture(this, "textures/waterMapTextures.png")
-        ];
-
         this.shaders = [
             new CGFshader(this.gl, "shaders/terrain.vert", "shaders/terrain.frag"),
             new CGFshader(this.gl, "shaders/water.vert", "shaders/water.frag")
         ];
-
-        this.shaders[0].setUniformsValues({ normScale : this.scaleFactor });
-        this.shaders[0].setUniformsValues({ uSampler2 : 1});
-        this.shaders[1].setUniformsValues({ uSampler2 : 1});
     }
 
     /**
     * Updates water vertices timeFactor.
     */
     update(time) {
-        var factor = (Math.sin((time * 3.0) % 3141 * 0.002) + 1.0) * .5;
-        this.shaders[1].setUniformsValues({ timeFactor: factor });
+        var factor = (Math.sin(time % 3141 * 0.002) + 1.0) * .5;
+	    this.shaders[1].setUniformsValues({ timeFactor: factor });
     }
 
     /**
@@ -236,14 +221,8 @@ class XMLscene extends CGFscene {
             // update lights
             this.updateLights();
 
-            // set current shader
-            //this.setActiveShader(this.shaders[0]);
-
             // displays the scene
             this.graph.displayScene();
-
-            // set default shader
-            //this.setActiveShader(this.defaultShader);
         }
         else {
             // draw axis

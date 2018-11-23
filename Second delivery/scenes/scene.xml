@@ -171,11 +171,11 @@
         </primitive>
 
         <primitive id="terrain">
-            <terrain idtexture="terrainTexture" idheightmap="heightMapTexture" parts="5" heightscale="50"/>
+            <terrain idtexture="terrainTexture" idheightmap="heightMapTexture" parts="10" heightscale="3"/>
         </primitive>
 
         <primitive id="water">
-            <water idtexture="waterTexture" idwavemap="waveMapTexture" parts="5" heightscale="5" texscale="50"/>
+            <water idtexture="waterTexture" idwavemap="waveMapTexture" parts="10" heightscale="1" texscale="50"/>
         </primitive>
 
     </primitives>
@@ -188,10 +188,6 @@
             <transformation>
             </transformation>
 
-            <animations>
-                <animationref id="2"/>
-            </animations>
-
             <materials>
                 <material id="default"/>
             </materials>
@@ -199,7 +195,8 @@
             <texture id="none"/>
 
             <children>
-                <primitiveref id="vehicle"/>
+                <primitiveref id="terrain"/>
+                <primitiveref id="water"/>
             </children>
         </component>
 

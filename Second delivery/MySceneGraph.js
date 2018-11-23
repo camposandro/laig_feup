@@ -920,7 +920,7 @@ class MySceneGraph {
                     if (rotang == null)
                         return "[parseAnimations]: no rotang defined for " + grandChild.nodeName;
 
-                    this.animations[id] = new MyCircularAnimation(id, span, center, radius, startang * DEGREE_TO_RAD, rotang * DEGREE_TO_RAD);        
+                    this.animations[id] = new MyCircularAnimation(id, span, center, radius, startang * DEGREE_TO_RAD, rotang * DEGREE_TO_RAD);
                     break;
 
                 default:
@@ -993,9 +993,9 @@ class MySceneGraph {
                         npartsV = this.reader.getFloat(grandChild, 'npartsV');
                         if (npartsV == null || isNaN(npartsV))
                             return "[parsePrimitives]: no npartsV defined for plane";
-                        
+
                         var grandGrandChildren = grandChild.children;
-                        if (grandGrandChildren.length != (npointsU * npointsV)) 
+                        if (grandGrandChildren.length != (npointsU * npointsV))
                             return "[parsePrimitives]: controlPoints != (nPointsU * nPoints V)!";
 
                         var cPoints = new Array();
@@ -1003,19 +1003,19 @@ class MySceneGraph {
 
                             var uControlVertices = new Array();
                             for (var j = i * npointsU; j < npointsV * (i + 1); j++) {
-                                
+
                                 x = this.reader.getFloat(grandGrandChildren[j], 'xx');
                                 if (x == null || isNaN(x))
                                     return "[parsePrimitives]: no xx defined for patch's control point";
-    
+
                                 y = this.reader.getFloat(grandGrandChildren[j], 'yy');
                                 if (y == null || isNaN(y))
                                     return "[parsePrimitives]: no yy defined for patch's control point";
-    
+
                                 z = this.reader.getFloat(grandGrandChildren[j], 'zz');
                                 if (z == null || isNaN(z))
                                     return "[parsePrimitives]: no zz defined for patch's control point";
-    
+
                                 uControlVertices.push([x, y, z, 1]);
                             }
 
@@ -1054,11 +1054,11 @@ class MySceneGraph {
                         break;
 
                     case 'terrain':
-                        idtexture = this.reader.getFloat(grandChild, 'idtexture');
+                        idtexture = this.reader.getString(grandChild, 'idtexture');
                         if (idtexture == null)
                             return "[parsePrimitives]: no idtexture defined for terrain";
 
-                        idheightmap = this.reader.getFloat(grandChild, 'idheightmap');
+                        idheightmap = this.reader.getString(grandChild, 'idheightmap');
                         if (idheightmap == null)
                             return "[parsePrimitives]: no idheightmap defined for terrain";
 
@@ -1070,15 +1070,20 @@ class MySceneGraph {
                         if (heightscale == null || isNaN(heightscale))
                             return "[parsePrimitives]: no heightscale defined for terrain";
 
+                        if (this.textures[idtexture] == null)
+                            return "[parsePrimitives]: texture of id " + idtexture + " defined for terrain does not exist";
+                        if (this.textures[idheightmap] == null)
+                            return "[parsePrimitives]: texture of id " + idheightmap + " defined for terrain does not exist";
+
                         this.primitives[id] = new MyTerrain(this.scene, idtexture, idheightmap, parts, heightscale);
                         break;
 
                     case 'water':
-                        idtexture = this.reader.getFloat(grandChild, 'idtexture');
+                        idtexture = this.reader.getString(grandChild, 'idtexture');
                         if (idtexture == null)
                             return "[parsePrimitives]: no idtexture defined for water";
 
-                        idwavemap = this.reader.getFloat(grandChild, 'idwavemap');
+                        idwavemap = this.reader.getString(grandChild, 'idwavemap');
                         if (idwavemap == null)
                             return "[parsePrimitives]: no idwavemap defined for water";
 
@@ -1093,6 +1098,11 @@ class MySceneGraph {
                         texscale = this.reader.getFloat(grandChild, 'texscale');
                         if (texscale == null || isNaN(texscale))
                             return "[parsePrimitives]: no texscale defined for water";
+
+                        if (this.textures[idtexture] == null)
+                            return "[parsePrimitives]: texture of id " + idtexture + " defined for water does not exist";
+                        if (this.textures[idwavemap] == null)
+                            return "[parsePrimitives]: texture of id " + idwavemap + " defined for water does not exist";
 
                         this.primitives[id] = new MyWater(this.scene, idtexture, idwavemap, parts, heightscale, texscale);
                         break;
@@ -1349,19 +1359,19 @@ class MySceneGraph {
 
                                 if (this.animations[id2] != null) {
                                     var anim, id3, span;
-                                    
-                                    if(this.animations[id2] instanceof MyLinearAnimation ){
+
+                                    if (this.animations[id2] instanceof MyLinearAnimation) {
                                         id3 = this.animations[id2].id;
                                         span = this.animations[id2].span;
                                         var controlPoints = this.animations[id2].controlPoints;
-                                        
-                                        anim = new MyLinearAnimation(id3,span);
-                                        for(let controlPoint of controlPoints)
-                                            anim.addControlPoint(controlPoint['x'],controlPoint['y'],controlPoint['z']);
 
-                                    } 
-                                    else if( this.animations[id2] instanceof MyCircularAnimation ){
-                                        
+                                        anim = new MyLinearAnimation(id3, span);
+                                        for (let controlPoint of controlPoints)
+                                            anim.addControlPoint(controlPoint['x'], controlPoint['y'], controlPoint['z']);
+
+                                    }
+                                    else if (this.animations[id2] instanceof MyCircularAnimation) {
+
                                         id3 = this.animations[id2].id;
                                         span = this.animations[id2].span;
                                         var center = this.animations[id2].center;
