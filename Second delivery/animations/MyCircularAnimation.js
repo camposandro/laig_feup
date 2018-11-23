@@ -14,15 +14,15 @@ class MyCircularAnimation extends MyAnimation {
      * @param {rotang} rotang CircularAnimation total rotation angle
      */
     constructor(id, span, center, radius, startang, rotang) {
-        super(id,span);
+        super(id, span);
 
         this.center = center;
         var centerS = center += '';
-        const splitString = centerS.split(" ") ;
+        const splitString = centerS.split(" ");
 
-        this.centerX = splitString[0];
-        this.centerY = splitString[1];
-        this.centerZ = splitString[2];
+        this.centerX = parseInt(splitString[0]);
+        this.centerY = parseInt(splitString[1]);
+        this.centerZ = parseInt(splitString[2]);
         this.first = true;
 
         this.radius = radius;
@@ -31,7 +31,8 @@ class MyCircularAnimation extends MyAnimation {
         this.finished = false;
         this.totalTime = 0;
         this.lastAngle = 0;
-        
+        this.firstTranslation = true;
+
         this.position;
         this.angle = startang;
         this.lastIteration = false;
@@ -42,19 +43,19 @@ class MyCircularAnimation extends MyAnimation {
 
 
     update(currTime) {
-        if(this.finished)
+        if (this.finished)
             return true;
-            
+
         var time;
-        if(this.lastCurrTime > 0) {
+        if (this.lastCurrTime > 0) {
             time = currTime - this.lastCurrTime;
         }
-        else 
+        else
             time = 0;
 
         this.lastCurrTime = currTime;
         this.totalTime += time;
-        if(this.totalTime > this.span){
+        if (this.totalTime > this.span) {
             this.finished = true;
             this.lastIteration = true;
             this.totalTime = this.span;
@@ -64,30 +65,35 @@ class MyCircularAnimation extends MyAnimation {
         this.transAngle = this.angle - this.lastAngle;
         this.lastAngle = this.angle;
 
+        var posX = this.radius * Math.cos(this.transAngle);
+        var posZ = this.radius * Math.sin(this.transAngle);
 
-        var posX = this.radius * Math.cos(this.angle);
-        var posZ = this.radius * Math.sin(this.angle);
-
-        
-        
         this.position = [posX, 0, posZ];
-        //console.log(this.position);
         this.invertposition = [-posX, 0, -posZ];
     }
 
 
-    apply(transformationsMatrix) {
-        if(!this.finished || this.lastIteration) {
+    apply() {
+        if (!this.finished || this.lastIteration) {
+
+            var transMatrix = mat4.create();
+            mat4.identity(transMatrix);
+
+            if (this.firstTranslation) {
+                console.log(this.centerX);
+                mat4.translate(transMatrix, transMatrix, [this.centerX - this.radius, this.centerY, this.centerZ]);
+
+                this.firstTranslation = false;
+            }
+            mat4.translate(transMatrix, transMatrix, this.position);
+
+            mat4.rotate(transMatrix, transMatrix, this.transAngle, [0, 1, 0]);
+
+            mat4.translate(transMatrix, transMatrix, this.invertposition);
+
             this.lastIteration = false;
-            mat4.translate(transformationsMatrix, transformationsMatrix, [this.centerX,this.centerY,this.centerZ]);
-            mat4.translate(transformationsMatrix, transformationsMatrix, this.position);
-            mat4.rotate(transformationsMatrix, transformationsMatrix, this.transAngle, [0,1,0]);
-            mat4.translate(transformationsMatrix, transformationsMatrix, this.invertposition);
-            mat4.translate(transformationsMatrix, transformationsMatrix, [-this.centerX,-this.centerY,-this.centerZ]);
-            
-            
-            return transformationsMatrix;
+
+            return transMatrix;
         }
-        
     }
 }

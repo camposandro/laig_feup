@@ -99,7 +99,6 @@ class MyComponent {
     changeAnimation() {
         if(this.currentAnimationIndex < this.animations.length - 1)
             this.currentAnimationIndex++;
-            
     }
 
     updateAnimation() {
@@ -110,7 +109,6 @@ class MyComponent {
             return;
         }
         this.changeAnimation();
-        
     }
  
     /**
@@ -138,14 +136,13 @@ class MyComponent {
      * @param {array} tex Array containing the texture and its parameters
      */
     display(mat, tex) {
-        this.scene.pushMatrix();
+        this.scene.pushMatrix(); 
 
         // apply material
         if (!this.existsMaterial('inherit'))
             mat = this.materials[this.currentMaterialIndex][1];
         if (mat != null) 
             mat.apply();
-
 
         // apply texture
         if (this.texture[0] == 'inherit') {

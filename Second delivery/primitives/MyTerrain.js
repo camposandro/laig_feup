@@ -13,6 +13,7 @@ class MyTerrain extends MyPlane {
     constructor(scene, idTexture, idHeightmap, parts, heightScale) {
         super(scene,0,parts,parts);
 
+        this.scene = scene;
         this.idTexture = idTexture
         this.idHeightmap = idHeightmap;
         this.parts = parts;

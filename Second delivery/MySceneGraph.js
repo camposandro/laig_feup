@@ -1026,6 +1026,7 @@ class MySceneGraph {
                         break;
 
                     case 'vehicle':
+                        this.primitives['vehicle'] = new MyVehicle(this.scene);
                         break;
 
                     case 'cylinder2':
