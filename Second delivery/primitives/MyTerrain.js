@@ -29,7 +29,7 @@ class MyTerrain extends MyPlane {
 
     display() {
 
-        //Bind terrain texture to the unit 0
+        // Bind terrain texture to the unit 0
         this.scene.graph.textures[this.idTexture].bind(0);
 
         // Bind height map texture to the unit 1

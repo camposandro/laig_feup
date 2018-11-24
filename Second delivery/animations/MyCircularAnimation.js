@@ -38,9 +38,7 @@ class MyCircularAnimation extends MyAnimation {
         this.lastIteration = false;
 
         this.angleVelocity = this.rotang / this.span;
-
     };
-
 
     update(currTime) {
         if (this.finished)
@@ -80,9 +78,7 @@ class MyCircularAnimation extends MyAnimation {
             mat4.identity(transMatrix);
 
             if (this.firstTranslation) {
-                console.log(this.centerX);
                 mat4.translate(transMatrix, transMatrix, [this.centerX - this.radius, this.centerY, this.centerZ]);
-
                 this.firstTranslation = false;
             }
             mat4.translate(transMatrix, transMatrix, this.position);

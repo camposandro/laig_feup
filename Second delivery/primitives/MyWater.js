@@ -19,12 +19,12 @@ class MyWater extends MyPlane {
         this.heightScale = heightScale;
         this.texScale = texScale;
 
-        this.updateUniformValues(heightScale);
+        this.updateUniformValues();
     };
 
-    updateUniformValues(heightScale) {
+    updateUniformValues() {
         this.scene.shaders[1].setUniformsValues({ uSampler: 0, uSampler2: 1 });
-        this.scene.shaders[1].setUniformsValues({ normScale: heightScale });
+        this.scene.shaders[1].setUniformsValues({ normScale: this.heightScale, texScale : this.texScale });
     };
 
     display() {
@@ -39,7 +39,7 @@ class MyWater extends MyPlane {
         this.scene.setActiveShader(this.scene.shaders[1]);
 
         this.scene.pushMatrix();
-            this.scene.translate(0, 0.5, 0);
+            this.scene.translate(0, 1, 0);
             this.scene.scale(15, 1, 15);
             super.display();
         this.scene.popMatrix();

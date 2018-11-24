@@ -22,7 +22,6 @@ class MyLinearAnimation extends MyAnimation {
         this.angle = 0;
         this.lastAngle = 0;
         this.rotateFrame = true;
-        this.desY
     };
 
     addControlPoint(x, y, z) {
@@ -33,12 +32,15 @@ class MyLinearAnimation extends MyAnimation {
         if (this.finished)
             return true;
 
+        if (this.controlPoints.length < 2)
+            return false;
+
         var time;
-        if (this.lastCurrTime > 0) {
+        if (this.lastCurrTime > 0)
             time = currTime - this.lastCurrTime;
-        }
         else
             time = 0;
+
         this.lastCurrTime = currTime;
         this.totalTime += time;
         if ((this.totalTime > this.span)) {
@@ -52,8 +54,6 @@ class MyLinearAnimation extends MyAnimation {
             this.lastAngle = this.angle * -1;
             this.rotateFrame = true;
         }
-
-
 
         var difX = (this.controlPoints[this.point]['x'] - this.controlPoints[this.point - 1]['x']);
         var difY = (this.controlPoints[this.point]['y'] - this.controlPoints[this.point - 1]['y']);
@@ -74,7 +74,6 @@ class MyLinearAnimation extends MyAnimation {
         else
             this.angle = Math.atan(difZ / difX);
 
-
         if (difZ < 0 && difX < 0)
             this.angle += Math.PI;
 
@@ -88,12 +87,11 @@ class MyLinearAnimation extends MyAnimation {
         var velocityY = difY / secondsPerPoint;
         var velocityZ = difZ / secondsPerPoint;
 
-        var desX = (velocityX * time);
-        this.desY = (velocityY * time);
-        var desZ = (velocityZ * time);
+        var desX = velocityX * time;
+        this.desY = velocityY * time;
+        var desZ = velocityZ * time;
 
         this.hipotenuse = Math.sqrt(desX * desX + desZ * desZ);
-
     }
 
     apply() {

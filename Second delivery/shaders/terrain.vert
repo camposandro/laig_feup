@@ -13,10 +13,11 @@ uniform mat4 uNMatrix;
 varying vec2 vTextureCoord;
 
 uniform float normScale;
+
 uniform sampler2D uSampler2;
 
-void main() {
-	
+void main() 
+{
 	vTextureCoord = aTextureCoord;
 
 	vec4 color = texture2D(uSampler2, vTextureCoord);

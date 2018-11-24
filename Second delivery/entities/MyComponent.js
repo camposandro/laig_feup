@@ -97,20 +97,21 @@ class MyComponent {
     }
 
     changeAnimation() {
-        if(this.currentAnimationIndex < this.animations.length - 1)
+        if (this.currentAnimationIndex < this.animations.length - 1)
             this.currentAnimationIndex++;
     }
 
     updateAnimation() {
         var d = new Date();
         var n = d.getTime();
-        if(!this.animations[this.currentAnimationIndex][1].update(n / 1000)){
-            this.animations[this.currentAnimationIndex][1].apply(this.transformationsMatrix);
+        if (!this.animations[this.currentAnimationIndex][1].update(n / 1000)) {
+            var animationMatrix = this.animations[this.currentAnimationIndex][1].apply();
+            mat4.multiply(this.transformationsMatrix, this.transformationsMatrix, animationMatrix);
             return;
         }
         this.changeAnimation();
     }
- 
+
     /**
      * Adds a texture to the component.
      * @param {id} id Texture id
@@ -136,12 +137,12 @@ class MyComponent {
      * @param {array} tex Array containing the texture and its parameters
      */
     display(mat, tex) {
-        this.scene.pushMatrix(); 
+        this.scene.pushMatrix();
 
         // apply material
         if (!this.existsMaterial('inherit'))
             mat = this.materials[this.currentMaterialIndex][1];
-        if (mat != null) 
+        if (mat != null)
             mat.apply();
 
         // apply texture
@@ -158,9 +159,9 @@ class MyComponent {
             this.texture[1].bind();
             tex = this.texture;
         }
-        
+
         // apply animations
-        if(this.animations.length > 0)
+        if (this.animations.length > 0)
             this.updateAnimation();
 
         // apply transformations
