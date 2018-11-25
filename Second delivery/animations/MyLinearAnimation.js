@@ -1,5 +1,5 @@
 /**
- * MyLinearAnimation
+ * MyLinearAnimation, representing a linear animation.
  * @constructor
  */
 class MyLinearAnimation extends MyAnimation {
@@ -8,7 +8,7 @@ class MyLinearAnimation extends MyAnimation {
      * @constructor
      * @param {id} id LinearAnimation id
      * @param {span} span LinearAnimation span
-     * @param {controlPoints} controlPoints the control points of the Animation
+     * @param {controlPoints} controlPoints LinearAnimation control points
      */
     constructor(id, span) {
         super(id, span);
@@ -24,10 +24,21 @@ class MyLinearAnimation extends MyAnimation {
         this.rotateFrame = true;
     };
 
+    /**
+     * Adds a control point to the animation.
+     * @param {x} x Control point x-coordinate
+     * @param {y} y Control point y-coordinate
+     * @param {z} z Control point z-coordinate
+     */
     addControlPoint(x, y, z) {
         this.controlPoints.push({ x, y, z });
     }
 
+    /**
+     * Updates the object's position during the course
+     * of its linear animation.
+     * @param {currTime} currTime Time
+     */
     update(currTime) {
         if (this.finished)
             return true;
@@ -94,6 +105,10 @@ class MyLinearAnimation extends MyAnimation {
         this.hipotenuse = Math.sqrt(desX * desX + desZ * desZ);
     }
 
+    /**
+     * Calculates and returns the transformation matrices for
+     * the object afected by a linear animation, during its motion.
+     */
     apply() {
         if (!this.finished) {
             var transMatrix = mat4.create();

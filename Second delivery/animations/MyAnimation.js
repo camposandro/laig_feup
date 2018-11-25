@@ -1,5 +1,5 @@
 /**
- * MyAnimation
+ * MyAnimation, representing an animation.
  * @constructor
  */
 class MyAnimation {

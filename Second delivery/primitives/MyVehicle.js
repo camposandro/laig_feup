@@ -1,5 +1,5 @@
 /**
- * MyVehicle
+ * MyVehicle, representing a flying zeppelin.
  * @constructor
  */
 class MyVehicle extends CGFobject {
@@ -12,8 +12,12 @@ class MyVehicle extends CGFobject {
         super(scene);
         this.surfaceId = 0;
         this.initSurfaces();
+        this.initTextures();
     };
 
+    /**
+     * Initializes the nurbs surfaces needed for the zeppelin.
+     */
     initSurfaces() {
         this.backCone = new MyCylinder2(this.scene,this.surfaceId++,0,1,1,15,15);
         this.backBodyCone = new MyCylinder2(this.scene,this.surfaceId++,1,2,2,15,15);
@@ -21,10 +25,20 @@ class MyVehicle extends CGFobject {
         this.frontBodyCone = new MyCylinder2(this.scene,this.surfaceId++,2,1,2,15,15);
         this.frontCone = new MyCylinder2(this.scene,this.surfaceId++,1,0,1,15,15);
         this.cabinPatch = new Plane(this.scene,this.surfaceId++,5,5);
+      
+    };
+
+    /**
+     * Initializes the textures needed for the zeppelin.
+     */
+    initTextures() {
         this.bodyTexture = this.scene.graph.textures['goodyearTexture'];
         this.cabinTexture = this.scene.graph.textures['windowsTexture'];
     };
 
+    /**
+     * Displays the zeppelin.
+     */
     display() {
 
         this.scene.pushMatrix();

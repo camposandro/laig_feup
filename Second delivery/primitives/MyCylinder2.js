@@ -4,7 +4,7 @@
 var DEGREE_TO_RAD = Math.PI / 180;
 
 /**
- * MyCylinder class, representing a cylinder.
+ * MyCylinder2 class, representing a cylinder made of nurbs.
  */
 class MyCylinder2 extends CGFobject {
 
@@ -29,13 +29,13 @@ class MyCylinder2 extends CGFobject {
         this.slices = slices;
         this.stacks = stacks;
 
-        this.initNurbs(scene);
+        this.initNurbs();
     };
 
     /**
-     * Initializes cylinder surfaces.
+     * Initializes cylinder two-halves surfaces.
      */
-    initNurbs(scene) {
+    initNurbs() {
         var variation = (this.top - this.base) / this.stacks;
         var angle = Math.PI / this.slices;
 
@@ -58,7 +58,7 @@ class MyCylinder2 extends CGFobject {
         }
 
         this.firstHalf = new MyPatch(
-            scene,
+            this.scene,
             this.slices + 1,
             this.stacks + 1,
             this.slices,
@@ -88,7 +88,7 @@ class MyCylinder2 extends CGFobject {
         }
 
         this.secondHalf = new MyPatch(
-            scene,
+            this.scene,
             this.slices + 1,
             this.stacks + 1,
             this.slices,

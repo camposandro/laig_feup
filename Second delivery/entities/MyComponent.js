@@ -92,18 +92,30 @@ class MyComponent {
         }
     }
 
+    /**
+     * Adds an animation to the component.
+     * @param {id} id Animation id
+     * @param {Animation} animation Animation
+     */
     addAnimation(id, animation) {
         this.animations.push([id, animation]);
     }
 
+    /**
+     * Changes to the next animation of the sequence.
+     */
     changeAnimation() {
         if (this.currentAnimationIndex < this.animations.length - 1)
             this.currentAnimationIndex++;
     }
 
+    /**
+     * Updates every frame the animation for the component.
+     */
     updateAnimation() {
         var d = new Date();
         var n = d.getTime();
+
         if (!this.animations[this.currentAnimationIndex][1].update(n / 1000)) {
             var animationMatrix = this.animations[this.currentAnimationIndex][1].apply();
             mat4.multiply(this.transformationsMatrix, this.transformationsMatrix, animationMatrix);

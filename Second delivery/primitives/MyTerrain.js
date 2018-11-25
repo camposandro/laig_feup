@@ -1,14 +1,16 @@
 /**
- * MyTerrain
+ * MyTerrain, representing a terrain.
  * @constructor
  */
 class MyTerrain extends Plane {
 
     /**
      * @constructor
-     * @param {XMLScene} scene Scene
-     * @param {npartsU} npartsU Number of circle slices
-     * @param {npartsV} npartsV Circle radius
+     * @param {XMLscene} scene Scene
+     * @param {idTexture} idTexture Terrain's texture id
+     * @param {idHeightmap} idHeightmap Terrain's heightmap texture id
+     * @param {parts} parts Number of terrain's U and V parts
+     * @param {heightScale} heightScale Terrain's height scaling factor
      */
     constructor(scene, idTexture, idHeightmap, parts, heightScale) {
         super(scene, 0, parts, parts);
@@ -19,14 +21,21 @@ class MyTerrain extends Plane {
         this.parts = parts;
         this.heightScale = heightScale;
 
-        this.updateUniformValues(heightScale);
+        this.updateUniformValues();
     };
 
-    updateUniformValues(heightScale) {
+    /**
+     * Updates terrain uniform values, binding its textures to different
+     * units and setting the normScale factor needed for the shader.
+     */
+    updateUniformValues() {
         this.scene.shaders[0].setUniformsValues({ uSampler: 0, uSampler2: 1 });
-        this.scene.shaders[0].setUniformsValues({ normScale: heightScale });
+        this.scene.shaders[0].setUniformsValues({ normScale: this.heightScale });
     };
 
+    /**
+     * Displays the terrain.
+     */
     display() {
 
         // Bind terrain texture to the unit 0

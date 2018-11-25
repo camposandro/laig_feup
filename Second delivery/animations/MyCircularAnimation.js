@@ -1,5 +1,5 @@
 /**
- * MyLinearMyCircularAnimationAnimation
+ * MyCircularAnimation, representing a circular animation.
  * @constructor
  */
 class MyCircularAnimation extends MyAnimation {
@@ -40,6 +40,11 @@ class MyCircularAnimation extends MyAnimation {
         this.angleVelocity = this.rotang / this.span;
     };
 
+    /**
+     * Updates the object's position during the course
+     * of its circular animation.
+     * @param {currTime} currTime Time
+     */
     update(currTime) {
         if (this.finished)
             return true;
@@ -70,7 +75,10 @@ class MyCircularAnimation extends MyAnimation {
         this.invertposition = [-posX, 0, -posZ];
     }
 
-
+    /**
+     * Calculates and returns the transformation matrices for
+     * the object afected by a circular animation, during its motion.
+     */
     apply() {
         if (!this.finished || this.lastIteration) {
 

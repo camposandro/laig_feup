@@ -21,14 +21,20 @@ class MyPatch {
         this.nPointsV = nPointsV;
         this.controlPoints = controlPoints;
 
-        this.initNurb(scene);
+        this.initNurb();
     }
 
-    initNurb(scene) {
+    /**
+     * Initializes nurb surface and its corresponding object.
+     */
+    initNurb() {
         var planeSurface = new CGFnurbsSurface(this.nPointsU - 1, this.nPointsV - 1, this.controlPoints);
-        this.planeObject = new CGFnurbsObject(scene, this.nPartsU, this.nPartsV, planeSurface);
+        this.planeObject = new CGFnurbsObject(this.scene, this.nPartsU, this.nPartsV, planeSurface);
     }
 
+    /**
+     * Displays the nurbs object.
+     */
     display() {
         this.planeObject.display();
     }

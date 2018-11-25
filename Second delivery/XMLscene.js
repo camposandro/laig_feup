@@ -104,7 +104,7 @@ class XMLscene extends CGFscene {
     }
 
     /**
-    * Initializes shaders with its needed textures.
+    * Initializes the terrain and water shaders.
     */
     initShaders() {
         this.shaders = [
@@ -114,7 +114,7 @@ class XMLscene extends CGFscene {
     }
 
     /**
-    * Updates water vertices timeFactor.
+    * Updates MyWater's time factors needed for its shader.
     */
     update(time) {
         var factor1 = (Math.sin(time % 3141 * 0.002) + 1.0) * .5;

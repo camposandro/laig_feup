@@ -4,20 +4,20 @@
     <scene root="root" axis_length="5"/>
 
     <!-- Views specification -->
-    <views default="perspective_1">
-        <perspective id="perspective_1" near="0.1" far="500" angle="20">
-            <from x="15.0" y="10.0" z="15.0"/>
+    <views default="Perspective">
+        <perspective id="Perspective" near="0.1" far="500" angle="20">
+            <from x="25.0" y="20.0" z="25.0"/>
             <to x="0.0" y="0.0" z="0.0"/>
         </perspective>
 
-        <ortho id="ortho_1" near="0.1" far="70" left="-10" right="10" top="7" bottom="-4">
-            <from x="7.5" y="5.0" z="15.0"/>
-            <to x="7.5" y="0.0" z="0.0"/>
+        <ortho id="Ortho_HorizonView" near="0.1" far="70" left="-10" right="10" top="3" bottom="-4">
+            <from x="15.0" y="5.0" z="15.0"/>
+            <to x="0.0" y="4.0" z="0.0"/>
         </ortho>
 
-        <ortho id="ortho_2" near="0.1" far="70" left="-10" right="10" top="4" bottom="-5">
-            <from x="15.0" y="5.0" z="8.0"/>
-            <to x="0.0" y="4.0" z="8.0"/>
+        <ortho id="Ortho_TopView" near="0.1" far="70" left="-10" right="10" top="5" bottom="-5">
+            <from x="0.0" y="20.0" z="0.0"/>
+            <to x="0.0" y="0.0" z="0.0"/>
         </ortho>
     </views>
 
