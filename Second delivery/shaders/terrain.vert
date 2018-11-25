@@ -10,13 +10,12 @@ uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
+uniform float normScale;
+uniform sampler2D uSampler2;
+
 varying vec3 vertexPosition;
 varying vec3 vertexNormal;
 varying vec2 vTextureCoord;
-
-uniform float normScale;
-
-uniform sampler2D uSampler2;
 
 void main() 
 {

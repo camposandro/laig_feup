@@ -33,19 +33,19 @@
             <location x="4.0" y="4.0" z="0.0" w="1.0"/>
             <ambient r="0.0" g="0.0" b="0.0" a="0.0"/>
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
-            <specular r="1.0" g="1.0" b="0.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
         </omni>
         <omni id="light2" enabled="1">
             <location x="0.0" y="4.0" z="4.0" w="1.0"/>
             <ambient r="0.0" g="0.0" b="0.0" a="0.0"/>
-            <diffuse r="1.0" g="0.7" b="0.7" a="1.0"/>
-            <specular r="1.0" g="1.0" b="0.0" a="1.0"/>
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
         </omni>
         <omni id="light3" enabled="1">
             <location x="0.0" y="4.0" z="-4.0" w="1.0"/>
             <ambient r="0.0" g="0.0" b="0.0" a="0.0"/>
-            <diffuse r="0.7" g="0.7" b="0.7" a="1.0"/>
-            <specular r="1.0" g="1.0" b="0.0" a="1.0"/>
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
         </omni>
         <omni id="light4" enabled="1">
             <location x="-4.0" y="6.0" z="0.0" w="1.0"/>
@@ -61,8 +61,8 @@
         <texture id="heightMapTexture" file="textures/heightMapTexture.png"/>
         <texture id="waterTexture" file="textures/waterTexture.png"/>
         <texture id="waveMapTexture" file="textures/waveMapTexture.png"/>
-        <texture id="goodyear" file="textures/goodyear.png"/>
-        <texture id="windows" file="textures/windows.png"/>
+        <texture id="goodyearTexture" file="textures/goodyearTexture.png"/>
+        <texture id="windowsTexture" file="textures/windowsTexture.png"/>
     </textures>
 
     <!-- Materials -->

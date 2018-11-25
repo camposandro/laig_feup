@@ -25,10 +25,6 @@ struct materialProperties {
     float shininess;                // Default: 0 (possible values [0, 128])
 };
 
-uniform mat4 uMVMatrix;
-uniform mat4 uPMatrix;
-uniform mat4 uNMatrix;
-
 #define NUMBER_OF_LIGHTS 8
 uniform lightProperties uLight[NUMBER_OF_LIGHTS];
 
@@ -37,11 +33,15 @@ uniform vec4 uGlobalAmbient;
 uniform materialProperties uFrontMaterial;
 uniform materialProperties uBackMaterial;
 
+uniform mat4 uMVMatrix;
+uniform mat4 uPMatrix;
+uniform mat4 uNMatrix;
+
+uniform sampler2D uSampler;
+
 varying vec3 vertexPosition;
 varying vec3 vertexNormal;
 varying vec2 vTextureCoord;
-
-uniform sampler2D uSampler;
 
 vec4 lighting(vec4 vertex, vec3 E, vec3 N) {
 

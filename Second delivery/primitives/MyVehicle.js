@@ -21,8 +21,8 @@ class MyVehicle extends CGFobject {
         this.frontBodyCone = new MyCylinder2(this.scene,this.surfaceId++,2,1,2,15,15);
         this.frontCone = new MyCylinder2(this.scene,this.surfaceId++,1,0,1,15,15);
         this.cabinPatch = new Plane(this.scene,this.surfaceId++,5,5);
-        this.bodyTexture = this.scene.graph.textures['goodyear'];
-        this.cabinTexture = this.scene.graph.textures['windows'];
+        this.bodyTexture = this.scene.graph.textures['goodyearTexture'];
+        this.cabinTexture = this.scene.graph.textures['windowsTexture'];
     };
 
     display() {
