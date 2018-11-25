@@ -10,6 +10,8 @@ uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
+varying vec3 vertexPosition;
+varying vec3 vertexNormal;
 varying vec2 vTextureCoord;
 
 uniform float normScale;
@@ -20,6 +22,8 @@ uniform sampler2D uSampler2;
 
 void main() 
 {
+    vertexPosition = aVertexPosition;
+	vertexNormal = aVertexNormal;
     vTextureCoord = vec2(aTextureCoord.x + runningFactor, aTextureCoord.y);
 
     vec4 color = texture2D(uSampler2, vTextureCoord);

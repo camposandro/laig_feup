@@ -2,7 +2,7 @@
  * MyWater
  * @constructor
  */
-class MyWater extends MyPlane {
+class MyWater extends Plane {
 
     /**
      * @constructor

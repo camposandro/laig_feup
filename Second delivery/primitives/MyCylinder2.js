@@ -57,7 +57,7 @@ class MyCylinder2 extends CGFobject {
             controlVertexes.push(controlVertexesV);
         }
 
-        this.half = new MyPatch(
+        this.firstHalf = new MyPatch(
             scene,
             this.slices + 1,
             this.stacks + 1,
@@ -65,18 +65,53 @@ class MyCylinder2 extends CGFobject {
             this.stacks,
             controlVertexes
         );
+
+        var variation2 = (this.base - this.top) / this.stacks;
+        var angle = Math.PI / this.slices;
+
+        var controlVertexes2 = new Array();
+        for (var i = 0; i <= this.stacks; i++) {
+
+            var controlVertexesV2 = new Array();
+            for (var j = 0; j <= this.slices; j++) {
+
+                controlVertexesV2.push(
+                    [
+                        Math.cos(j * angle) * (this.top + variation2 * i),
+                        -Math.sin(j * angle) * (this.top + variation2 * i),
+                        i * this.height / this.stacks,
+                        1
+                    ]
+                );
+            }
+            controlVertexes2.push(controlVertexesV2);
+        }
+
+        this.secondHalf = new MyPatch(
+            scene,
+            this.slices + 1,
+            this.stacks + 1,
+            this.slices,
+            this.stacks,
+            controlVertexes2
+        );
     };
 
     /**
      * Displays the cylinder without covers.
      */
-    display() {
+    display() 
+    {
         this.scene.pushMatrix();
-        this.half.display();
-            this.scene.pushMatrix();
-                this.scene.rotate(Math.PI,0,0,1);
-                this.half.display();
-            this.scene.popMatrix();
+        this.scene.rotate(-Math.PI/2,0,0,1);
+        this.firstHalf.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.translate(0,0,this.height);
+        this.scene.rotate(Math.PI,1,0,0);
+        this.scene.rotate(Math.PI/2,0,0,1);
+        this.secondHalf.display();
         this.scene.popMatrix();
     };
 }

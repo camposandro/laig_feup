@@ -974,7 +974,7 @@ class MySceneGraph {
                         if (npartsV == null || isNaN(npartsV))
                             return "[parsePrimitives]: no npartsV defined for plane";
 
-                        this.primitives[id] = new MyPlane(this.scene, npartsU, npartsV);
+                        this.primitives[id] = new Plane(this.scene, npartsU, npartsV);
                         break;
 
                     case 'patch':
@@ -1002,7 +1002,11 @@ class MySceneGraph {
                         for (var i = 0; i < npointsU; i++) {
 
                             var uControlVertices = new Array();
-                            for (var j = i * npointsU; j < npointsV * (i + 1); j++) {
+
+                            var initIndex = i * npointsV;
+                            var finalIndex = initIndex + npointsV;
+
+                            for (var j = initIndex; j < finalIndex; j++) {
 
                                 x = this.reader.getFloat(grandGrandChildren[j], 'xx');
                                 if (x == null || isNaN(x))
@@ -1021,6 +1025,7 @@ class MySceneGraph {
 
                             cPoints.push(uControlVertices);
                         }
+                        console.log(cPoints);
 
                         this.primitives[id] = new MyPatch(this.scene, npointsU, npointsV, npartsU, npartsV, cPoints);
                         break;

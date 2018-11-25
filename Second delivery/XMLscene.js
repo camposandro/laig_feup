@@ -118,7 +118,7 @@ class XMLscene extends CGFscene {
     */
     update(time) {
         var factor1 = (Math.sin(time % 3141 * 0.002) + 1.0) * .5;
-        var factor2 = time % 4000 * 0.0002;
+        var factor2 = time % 4000 * 0.0001;
 	    this.shaders[1].setUniformsValues({ wavingFactor: factor1, runningFactor: factor2 });
     }
 

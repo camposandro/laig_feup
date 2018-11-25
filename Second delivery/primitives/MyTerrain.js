@@ -2,7 +2,7 @@
  * MyTerrain
  * @constructor
  */
-class MyTerrain extends MyPlane {
+class MyTerrain extends Plane {
 
     /**
      * @constructor
