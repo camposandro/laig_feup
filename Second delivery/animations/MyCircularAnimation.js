@@ -49,12 +49,9 @@ class MyCircularAnimation extends MyAnimation {
         if (this.finished)
             return true;
 
-        var time;
-        if (this.lastCurrTime > 0) {
+        var time = 0;
+        if (this.lastCurrTime > 0)
             time = currTime - this.lastCurrTime;
-        }
-        else
-            time = 0;
 
         this.lastCurrTime = currTime;
         this.totalTime += time;
@@ -89,6 +86,7 @@ class MyCircularAnimation extends MyAnimation {
                 mat4.translate(transMatrix, transMatrix, [this.centerX - this.radius, this.centerY, this.centerZ]);
                 this.firstTranslation = false;
             }
+
             mat4.translate(transMatrix, transMatrix, this.position);
 
             mat4.rotate(transMatrix, transMatrix, this.transAngle, [0, 1, 0]);

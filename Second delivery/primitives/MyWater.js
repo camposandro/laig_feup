@@ -47,12 +47,8 @@ class MyWater extends Plane {
 
         // Sets terrain shader active
         this.scene.setActiveShader(this.scene.shaders[1]);
-
-        this.scene.pushMatrix();
-            this.scene.translate(0, 1, 0);
-            this.scene.scale(15, 1, 15);
-            super.display();
-        this.scene.popMatrix();
+            
+        super.display();
 
         // Sets default shader
         this.scene.setActiveShader(this.scene.defaultShader);

@@ -47,10 +47,7 @@ class MyTerrain extends Plane {
         // Sets terrain shader active
         this.scene.setActiveShader(this.scene.shaders[0]);
 
-        this.scene.pushMatrix();
-            this.scene.scale(10, 1, 10);
-            super.display();
-        this.scene.popMatrix();
+        super.display();
 
         // Sets default shader
         this.scene.setActiveShader(this.scene.defaultShader);
