@@ -23,20 +23,14 @@ class MyCircularAnimation extends MyAnimation {
         this.centerX = parseInt(splitString[0]);
         this.centerY = parseInt(splitString[1]);
         this.centerZ = parseInt(splitString[2]);
-        this.first = true;
-
+        
         this.radius = radius;
         this.startang = startang;
         this.rotang = rotang;
         this.finished = false;
         this.totalTime = 0;
-        this.lastAngle = 0;
-        this.firstTranslation = true;
-
         this.position;
         this.angle = startang;
-        this.lastIteration = false;
-
         this.angleVelocity = this.rotang / this.span;
     };
 
@@ -46,30 +40,30 @@ class MyCircularAnimation extends MyAnimation {
      * @param {currTime} currTime Time
      */
     update(currTime) {
-        if (this.finished)
+        if(this.finished)
             return true;
-
-        var time = 0;
-        if (this.lastCurrTime > 0)
+            
+        var time;
+        if(this.lastCurrTime > 0) {
             time = currTime - this.lastCurrTime;
+        }
+        else 
+            time = 0;
 
         this.lastCurrTime = currTime;
         this.totalTime += time;
-        if (this.totalTime > this.span) {
+        if(this.totalTime > this.span){
             this.finished = true;
-            this.lastIteration = true;
             this.totalTime = this.span;
         }
-
+        
         this.angle = this.startang + this.angleVelocity * this.totalTime;
-        this.transAngle = this.angle - this.lastAngle;
-        this.lastAngle = this.angle;
-
-        var posX = this.radius * Math.cos(this.transAngle);
-        var posZ = this.radius * Math.sin(this.transAngle);
-
+        var posX = this.radius * Math.cos(this.angle);
+        var posZ = this.radius * Math.sin(this.angle);
+    
         this.position = [posX, 0, posZ];
-        this.invertposition = [-posX, 0, -posZ];
+        
+        return false;
     }
 
     /**
@@ -77,25 +71,13 @@ class MyCircularAnimation extends MyAnimation {
      * the object afected by a circular animation, during its motion.
      */
     apply() {
-        if (!this.finished || this.lastIteration) {
+        var transMatrix = mat4.create();
+        mat4.identity(transMatrix);
 
-            var transMatrix = mat4.create();
-            mat4.identity(transMatrix);
+        mat4.translate(transMatrix, transMatrix, [this.centerX,this.centerY,this.centerZ]);
+        mat4.translate(transMatrix, transMatrix, this.position);
+        mat4.rotate(transMatrix, transMatrix, this.angle, [0,1,0]);
 
-            if (this.firstTranslation) {
-                mat4.translate(transMatrix, transMatrix, [this.centerX - this.radius, this.centerY, this.centerZ]);
-                this.firstTranslation = false;
-            }
-
-            mat4.translate(transMatrix, transMatrix, this.position);
-
-            mat4.rotate(transMatrix, transMatrix, this.transAngle, [0, 1, 0]);
-
-            mat4.translate(transMatrix, transMatrix, this.invertposition);
-
-            this.lastIteration = false;
-
-            return transMatrix;
-        }
+        return transMatrix;
     }
 }
