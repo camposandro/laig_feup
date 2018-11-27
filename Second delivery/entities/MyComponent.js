@@ -23,6 +23,7 @@ class MyComponent {
         this.texture = null;
         this.animations = [];
         this.currentAnimationIndex = 0;
+	this.animationsDone = false;
     }
 
     /**
@@ -107,7 +108,10 @@ class MyComponent {
     changeAnimation() {
         if (this.currentAnimationIndex < this.animations.length - 1)
             this.currentAnimationIndex++;
+        else
+            this.animationsDone = true;
     }
+
 
     /**
      * Updates every frame the animation for the component.
@@ -116,14 +120,16 @@ class MyComponent {
         var d = new Date();
         var n = d.getTime();
 
-        if (!this.animations[this.currentAnimationIndex][1].update(n / 1000)) {
+        if (this.animations[this.currentAnimationIndex][1].update(n / 1000)) {
             var animationMatrix = this.animations[this.currentAnimationIndex][1].apply();
+            this.scene.multMatrix(animationMatrix);
             mat4.multiply(this.transformationsMatrix, this.transformationsMatrix, animationMatrix);
+            this.changeAnimation();
             return;
         }
-        this.changeAnimation();
+        var animationMatrix = this.animations[this.currentAnimationIndex][1].apply();
+        this.scene.multMatrix(animationMatrix);
     }
-
     /**
      * Adds a texture to the component.
      * @param {id} id Texture id
@@ -171,13 +177,13 @@ class MyComponent {
             this.texture[1].bind();
             tex = this.texture;
         }
-
+	    
+        // apply transformations
+        this.scene.multMatrix(this.transformationsMatrix);
+	   
         // apply animations
         if (this.animations.length > 0)
             this.updateAnimation();
-
-        // apply transformations
-        this.scene.multMatrix(this.transformationsMatrix);
 
         // process children nodes
         for (let child of this.children)
