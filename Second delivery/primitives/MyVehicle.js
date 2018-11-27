@@ -42,7 +42,7 @@ class MyVehicle extends CGFobject {
     display() {
 
         this.scene.pushMatrix();
-
+        this.scene.translate(-6.5,0,-2.5);
         // zeppelin body
         this.scene.pushMatrix();
             this.backCone.display();
