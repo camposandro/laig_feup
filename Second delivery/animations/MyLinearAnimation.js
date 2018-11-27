@@ -11,17 +11,14 @@ class MyLinearAnimation extends MyAnimation {
      * @param {controlPoints} controlPoints LinearAnimation control points
      */
     constructor(id, span) {
-        super(id, span);
+        super(id,span);
         this.controlPoints = new Array();
-        this.anteriorPoint = [0, 0, 0];
         this.finished = false;
-        this.hipotenuse = 0;
+
         this.totalTime = 0;
         this.lastCurrTime = -1;
         this.point = 1;
-        this.angle = 0;
-        this.lastAngle = 0;
-        this.rotateFrame = true;
+        this.position;
     };
 
     /**
@@ -40,30 +37,24 @@ class MyLinearAnimation extends MyAnimation {
      * @param {currTime} currTime Time
      */
     update(currTime) {
-        if (this.finished)
+        if(this.finished)
             return true;
-
-        if (this.controlPoints.length < 2)
-            return false;
 
         var time;
-        if (this.lastCurrTime > 0)
+        if(this.lastCurrTime > 0) {
             time = currTime - this.lastCurrTime;
-        else
+        }
+        else 
             time = 0;
-
         this.lastCurrTime = currTime;
         this.totalTime += time;
-        if ((this.totalTime > this.span)) {
+        if((this.totalTime >= this.span)){
             this.finished = true;
-            return true;
+            this.totalTime = this.span;
         }
-
         var secondsPerPoint = this.span / (this.controlPoints.length - 1);
-        if ((secondsPerPoint * this.point) < this.totalTime) {
+        if((secondsPerPoint * this.point) < this.totalTime) {
             this.point++;
-            this.lastAngle = this.angle * -1;
-            this.rotateFrame = true;
         }
 
         var difX = (this.controlPoints[this.point]['x'] - this.controlPoints[this.point - 1]['x']);
@@ -87,43 +78,35 @@ class MyLinearAnimation extends MyAnimation {
 
         if (difZ < 0 && difX < 0)
             this.angle += Math.PI;
-
-        if (difZ > 0 && difX < 0)
+        else if (difZ > 0 && difX < 0)
             this.angle = Math.PI - this.angle;
-
-        if (difZ < 0 && difX > 0)
+        else if (difZ < 0 && difX > 0)
             this.angle *= -1;
 
         var velocityX = difX / secondsPerPoint;
         var velocityY = difY / secondsPerPoint;
         var velocityZ = difZ / secondsPerPoint;
 
-        var desX = velocityX * time;
-        this.desY = velocityY * time;
-        var desZ = velocityZ * time;
+        var posX = (velocityX * this.totalTime);
+        this.posY = (velocityY * this.totalTime);
+        var posZ = (velocityZ * this.totalTime);
 
-        this.hipotenuse = Math.sqrt(desX * desX + desZ * desZ);
+        this.hipotenuse = Math.sqrt(posX * posX + posZ * posZ);
+
+        return this.finished;
     }
-
     /**
      * Calculates and returns the transformation matrices for
      * the object afected by a linear animation, during its motion.
      */
-    apply() {
-        if (!this.finished) {
-            var transMatrix = mat4.create();
+apply() {
+        var transMatrix = mat4.create();
+        mat4.identity(transMatrix);
 
-            mat4.identity(transMatrix);
-
-            if (this.rotateFrame) {
-                mat4.rotate(transMatrix, transMatrix, this.lastAngle, [0, 1, 0]);
-                mat4.rotate(transMatrix, transMatrix, this.angle, [0, 1, 0]);
-                this.rotateFrame = false;
-            }
-
-            mat4.translate(transMatrix, transMatrix, [0, this.desY, this.hipotenuse]);
-
-            return transMatrix;
-        }
+        mat4.rotate(transMatrix, transMatrix, this.angle,[0,1,0]);
+        mat4.translate(transMatrix, transMatrix, [0,this.posY,this.hipotenuse]);
+        
+        return transMatrix;
+        
     }
 }
