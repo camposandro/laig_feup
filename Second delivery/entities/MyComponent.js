@@ -182,7 +182,7 @@ class MyComponent {
         this.scene.multMatrix(this.transformationsMatrix);
 	   
         // apply animations
-        if (this.animations.length > 0)
+        if (this.animations.length > 0 && !this.animationsDone)
             this.updateAnimation();
 
         // process children nodes
