@@ -10,6 +10,11 @@
             <to x="0.0" y="0.0" z="0.0"/>
         </perspective>
 
+        <ortho id="Ortho_HorizonView" near="0.1" far="70" left="-10" right="10" top="3" bottom="-4">
+            <from x="15.0" y="5.0" z="15.0"/>
+            <to x="0.0" y="4.0" z="0.0"/>
+        </ortho>
+
         <ortho id="Ortho_TopView" near="0.1" far="70" left="-10" right="10" top="5" bottom="-5">
             <from x="0.0" y="20.0" z="0.0"/>
             <to x="0.0" y="0.0" z="0.0"/>
@@ -30,11 +35,34 @@
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
             <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
         </omni>
+        <omni id="light2" enabled="1">
+            <location x="0.0" y="4.0" z="4.0" w="1.0"/>
+            <ambient r="0.0" g="0.0" b="0.0" a="0.0"/>
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+        </omni>
+        <omni id="light3" enabled="1">
+            <location x="0.0" y="4.0" z="-4.0" w="1.0"/>
+            <ambient r="0.0" g="0.0" b="0.0" a="0.0"/>
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+        </omni>
+        <omni id="light4" enabled="1">
+            <location x="-4.0" y="6.0" z="0.0" w="1.0"/>
+            <ambient r="0.0" g="0.0" b="0.0" a="0.0"/>
+            <diffuse r="0.7" g="0.7" b="0.1" a="1.0"/>
+            <specular r="1.0" g="1.0" b="0.0" a="1.0"/>
+        </omni>
     </lights>
 
     <!-- Textures -->
     <textures>
-        <!--<texture id="terrainTexture" file="textures/terrainTexture.png"/>-->
+        <texture id="redCell" file="textures/redCell.png"/>
+        <texture id="blackCell" file="textures/blackCell.png"/>
+        <texture id="redPiece" file="textures/redPiece.png"/>
+        <texture id="red" file="textures/red.png"/>
+        <texture id="blackPiece" file="textures/blackPiece.png"/>
+        <texture id="black" file="textures/black.png"/>
     </textures>
 
     <!-- Materials -->
@@ -44,6 +72,18 @@
             <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
             <diffuse r="0.2" g="0.2" b="0.2" a="1.0"/>
             <specular r="0.1" g="0.1" b="0.1" a="1.0"/>   
+        </material>
+        <material id="terrainMaterial" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.4" g="0.4" b="0.4" a="1.0"/>
+            <specular r="0.1" g="0.1" b="0.1" a="1.0"/>   
+        </material>
+        <material id="waterMaterial" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
+            <specular r="0.5" g="0.5" b="0.5" a="1.0"/>   
         </material>
     </materials>
 
@@ -60,6 +100,11 @@
         </linear>
 
         <circular id="loop" span="5" center="00 00 00" radius="2" startang="0" rotang="180"/>
+
+        <linear id="landing" span="5">
+            <controlpoint xx="0" yy="5" zz="0"/>
+            <controlpoint xx="12" yy="-1" zz="0"/>
+        </linear>
     </animations>
 
     <!-- Primitive objects -->
@@ -76,6 +121,9 @@
             <cylinder base="1" top="1" height="1" slices="30" stacks="30"/>
         </primitive>
 
+        <primitive id="circle">
+            <circle slices="30" radius="1"/>
+        </primitive>
         <primitive id="sphere">
             <sphere radius="1" slices="50" stacks="30"/>
         </primitive>
@@ -90,6 +138,10 @@
 
         <primitive id="cylinder2">
             <cylinder2 base="4" top="2" height="4" slices="10" stacks="10"/>
+        </primitive>
+
+        <primitive id="semiCylinder">
+            <semiCylinder base="1" top="1" height="1" slices="10" stacks="10"/>
         </primitive>
 
         <primitive id="patch">
@@ -110,6 +162,8 @@
                 <controlpoint xx="1.5" yy="1.5" zz="0.0"/>
             </patch>
         </primitive>
+       
+
     </primitives>
 
     <!-- Composed objects -->
@@ -130,9 +184,699 @@
             <texture id="none"/>
 
             <children>
+                <componentref id="redPiece"/>
+                <componentref id="blackPiece"/>
+                <componentref id="myBoard"/>
+                <componentref id="myBox"/>
+            </children>
+        </component>
+        <component id="redPiece">
+            <transformation>
+                <translate x="0" y="0.65" z="0.5"/>
+                <scale x="0.3" y="0.3" z="0.3"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="topRedPiece"/>
+                <componentref id="bodyRedPiece"/>
+                
             </children>
         </component>
 
+
+        <component id="bodyRedPiece">
+            <transformation>
+                <rotate axis="x" angle="90"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="red" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="cylinder"/>
+            </children>
+        </component>
+        <component id="topRedPiece">
+            <transformation>
+                <translate x="0" y="0.51" z="0"/>
+                <rotate axis="x" angle="-90"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="redPiece" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="circle"/>
+            </children>
+        </component>
+        <component id="blackPiece">
+            <transformation>
+                <translate x="2" y="0.65" z="0.5"/>
+                <scale x="0.3" y="0.3" z="0.3"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="topBlackPiece"/>
+                <componentref id="bodyBlackPiece"/>
+                
+            </children>
+        </component>
+
+
+        <component id="bodyBlackPiece">
+            <transformation>
+                <rotate axis="x" angle="90"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="black" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="cylinder"/>
+            </children>
+        </component>
+        <component id="topBlackPiece">
+            <transformation>
+                <translate x="0" y="0.51" z="0"/>
+                <rotate axis="x" angle="-90"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="blackPiece" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="circle"/>
+            </children>
+        </component>
+
+        <component id="myBoard">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="cell11"/>
+                <componentref id="cell12"/>
+                <componentref id="cell13"/>
+                <componentref id="cell14"/>
+                <componentref id="cell15"/>
+                <componentref id="cell21"/>
+                <componentref id="cell22"/>
+                <componentref id="cell23"/>
+                <componentref id="cell24"/>
+                <componentref id="cell25"/>
+                <componentref id="cell31"/>
+                <componentref id="cell32"/>
+                <componentref id="cell33"/>
+                <componentref id="cell34"/>
+                <componentref id="cell35"/>
+                <componentref id="cell41"/>
+                <componentref id="cell42"/>
+                <componentref id="cell43"/>
+                <componentref id="cell44"/>
+                <componentref id="cell45"/>
+                <componentref id="cell51"/>
+                <componentref id="cell52"/>
+                <componentref id="cell53"/>
+                <componentref id="cell54"/>
+                <componentref id="cell55"/>
+            </children>
+        </component>
+        <!-- Tabuleiro -->
+        <component id="cell11">
+            <transformation>
+                <translate x="0" y="0" z="0.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell12">
+            <transformation>
+                <translate x="0" y="0" z="1.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell13">
+            <transformation>
+                <translate x="0" y="0" z="2.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell14">
+            <transformation>
+                <translate x="0" y="0" z="3.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell15">
+            <transformation>
+                <translate x="0" y="0" z="4.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell21">
+            <transformation>
+                <translate x="1" y="0" z="0.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell22">
+            <transformation>
+                <translate x="1" y="0" z="1.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell23">
+            <transformation>
+                <translate x="1" y="0" z="2.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell24">
+            <transformation>
+                <translate x="1" y="0" z="3.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell25">
+            <transformation>
+                <translate x="1" y="0" z="4.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell31">
+            <transformation>
+                <translate x="2" y="0" z="0.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell32">
+            <transformation>
+                <translate x="2" y="0" z="1.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell33">
+            <transformation>
+                <translate x="2" y="0" z="2.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell34">
+            <transformation>
+                <translate x="2" y="0" z="3.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell35">
+            <transformation>
+                <translate x="2" y="0" z="4.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell41">
+            <transformation>
+                <translate x="3" y="0" z="0.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell42">
+            <transformation>
+                <translate x="3" y="0" z="1.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell43">
+            <transformation>
+                <translate x="3" y="0" z="2.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell44">
+            <transformation>
+                <translate x="3" y="0" z="3.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell45">
+            <transformation>
+                <translate x="3" y="0" z="4.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell51">
+            <transformation>
+                <translate x="4" y="0" z="0.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell52">
+            <transformation>
+                <translate x="4" y="0" z="1.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell53">
+            <transformation>
+                <translate x="4" y="0" z="2.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell54">
+            <transformation>
+                <translate x="4" y="0" z="3.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="blackCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="cell55">
+            <transformation>
+                <translate x="4" y="0" z="4.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="redCell" length_s = "1" length_t= "1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+        <component id="myCube">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <componentref id="face1"/>
+                <componentref id="face2"/>
+                <componentref id="face3"/>
+                <componentref id="face4"/>
+                <componentref id="face5"/>
+                <componentref id="face6"/>
+            </children>
+        </component>
+        <!-- Cube -->
+        <component id="face1">
+            <transformation>
+                <translate x="0" y="0" z="0.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+        <component id="face2">
+            <transformation>
+                <translate x="0" y="0" z="-0.5"/>
+                <rotate axis="y" angle="180"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+        <component id="face3">
+            <transformation>
+                <translate x="0" y="-0.5" z="0"/>
+                <rotate axis="x" angle="90"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+        <component id="face4">
+            <transformation>
+                <translate x="0" y="0.5" z="0"/>
+                <rotate axis="x" angle="-90"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+        <component id="face5">
+            <transformation>
+                <translate x="-0.5" y="0" z="0"/>
+                <rotate axis="y" angle="-90"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+           
+           <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+        <component id="face6">
+            <transformation>
+                <translate x="0.5" y="0" z="0"/>
+                <rotate axis="y" angle="90"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+
+        <component id="myBox">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <componentref id="myBoxTop"/>
+                <componentref id="myBoxBody"/>
+            </children>
+        </component>        
+        <component id="myBoxBody">
+            <transformation>
+                <scale x="1" y="1" z="5"/>
+                <translate x="-1.5" y="0.65" z="0.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <componentref id="face1"/>
+                <componentref id="face2"/>
+                <componentref id="face3"/>
+                <componentref id="face5"/>
+                <componentref id="face6"/>
+            </children>
+        </component>        
+        <component id="myBoxTop">
+            <transformation>
+                <scale x="1" y="1" z="5"/>
+                <rotate axis="z" angle="90"/>
+                <translate x="2" y="2" z="0"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="semiCylinder"/>
+            </children>
+        </component>
+        
+        
     </components>
 
 </yas>
