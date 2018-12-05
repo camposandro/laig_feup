@@ -103,7 +103,7 @@
 
         <linear id="landing" span="5">
             <controlpoint xx="0" yy="5" zz="0"/>
-            <controlpoint xx="12" yy="-1" zz="0"/>
+            <controlpoint xx="16" yy="-1" zz="0"/>
         </linear>
     </animations>
 

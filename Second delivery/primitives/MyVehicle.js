@@ -25,7 +25,6 @@ class MyVehicle extends CGFobject {
         this.frontBodyCone = new MyCylinder2(this.scene,this.surfaceId++,2,1,2,15,15);
         this.frontCone = new MyCylinder2(this.scene,this.surfaceId++,1,0,1,15,15);
         this.cabinPatch = new Plane(this.scene,this.surfaceId++,5,5);
-      
     };
 
     /**
@@ -42,7 +41,9 @@ class MyVehicle extends CGFobject {
     display() {
 
         this.scene.pushMatrix();
-        this.scene.translate(-6.5,0,-2.5);
+
+        this.scene.translate(-6,0.0,-5.5);
+
         // zeppelin body
         this.scene.pushMatrix();
             this.backCone.display();
