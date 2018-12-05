@@ -10,8 +10,9 @@ class MyCircle extends CGFobject {
      * @param {slices} slices Number of circle slices
      * @param {radius} radius Circle radius
      */
-    constructor(scene, slices, radius) {
+    constructor(scene,id, slices, radius) {
         super(scene);
+        this.id = id;
         this.slices = slices;
         this.radius = radius;
 
