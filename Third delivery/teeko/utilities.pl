@@ -1,4 +1,30 @@
 /**
+* Parses game board 
+* parseBoard(+Matrix,-ParsedMatrix)
+*/
+parseBoard([],[]).
+parseBoard([Row | OtherRows],[NewRow | NewOtherRows]) :-
+    parseRow(Row,NewRow),
+    parseBoard(OtherRows,NewOtherRows).
+
+/**
+* Parses game row
+* parseRow(+Row,-ParsedRow)
+*/
+parseRow([],[]).
+parseRow([Cell | OtherCells],[NewCell | NewOtherCells]) :-
+    cellToString(Cell,NewCell),
+    parseRow(OtherCells,NewOtherCells).
+
+/**
+* Parses cell atom to string
+* cellToString(+Cell,-CellString)
+*/
+cellToString(empty,'empty').
+cellToString(black,'black').
+cellToString(red,'red').
+
+/**
 * Returns list length
 * listLength(+List,-Length)
 */

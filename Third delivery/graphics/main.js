@@ -39,6 +39,10 @@ serialInclude(['lib/CGF.js',
 'animations/MyAnimation.js',
 'animations/MyLinearAnimation.js',
 'animations/MyCircularAnimation.js',
+'game/Client.js',
+'game/MyMove.js',
+'game/MyPiece.js',
+'game/MyPlayer.js',
 
 main=function()
 {

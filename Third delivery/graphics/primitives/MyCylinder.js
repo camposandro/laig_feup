@@ -8,16 +8,16 @@ var DEGREE_TO_RAD = Math.PI / 180;
  */
 class MyCylinder extends CGFobject {
 
-	 /**
-     * @constructor
-     * @param {XMLScene} scene Scene
-     * @param {*} id Cylinder id
-     * @param {base} base Base radius
-     * @param {top} top Top radius
-     * @param {height} height Cylinder height
-     * @param {slices} slices Cylinder number of slices
-     * @param {stacks} stacks Cylinder number of stacks
-     */
+    /**
+    * @constructor
+    * @param {XMLScene} scene Scene
+    * @param {*} id Cylinder id
+    * @param {base} base Base radius
+    * @param {top} top Top radius
+    * @param {height} height Cylinder height
+    * @param {slices} slices Cylinder number of slices
+    * @param {stacks} stacks Cylinder number of stacks
+    */
     constructor(scene, id, base, top, height, slices, stacks) {
         super(scene);
 
@@ -51,7 +51,7 @@ class MyCylinder extends CGFobject {
 
                 this.vertices.push(
                     Math.cos(i * angle) * (this.base + variation * j),
-                    Math.sin(i * angle)* (this.base + variation * j),
+                    Math.sin(i * angle) * (this.base + variation * j),
                     j * this.height / this.stacks
                 );
 
@@ -85,16 +85,13 @@ class MyCylinder extends CGFobject {
      * Displays the cylinder, with covers.
      */
     display() {
+        CGFobject.prototype.display.call(this);
         this.scene.pushMatrix();
-            this.scene.translate(10,0,0);
-            CGFobject.prototype.display.call(this);
-            this.scene.pushMatrix();
-                this.scene.translate(0, 0, this.height);
-                this.circleTop.display();
-                this.scene.translate(0, 0, -this.height);
-                this.scene.rotate(180 * DEGREE_TO_RAD, 1, 0, 0);
-                this.circleBase.display();
-            this.scene.popMatrix();
+        this.scene.translate(0, 0, this.height);
+        this.circleTop.display();
+        this.scene.translate(0, 0, -this.height);
+        this.scene.rotate(180 * DEGREE_TO_RAD, 1, 0, 0);
+        this.circleBase.display();
         this.scene.popMatrix();
     };
 }
