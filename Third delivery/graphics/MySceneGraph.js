@@ -1057,6 +1057,30 @@ class MySceneGraph {
 
                         this.primitives[id] = new MyCylinder2(this.scene, id, base, top, height, slices, stacks);
                         break;
+                    case 'semiCylinder':
+                            base = this.reader.getFloat(grandChild, 'base');
+                            if (base == null || isNaN(base))
+                                return "[parsePrimitives]: no base defined for semiCylinder";
+    
+                            top = this.reader.getFloat(grandChild, 'top');
+                            if (top == null || isNaN(top))
+                                return "[parsePrimitives]: no top defined for semiCylinder";
+    
+                            height = this.reader.getFloat(grandChild, 'height');
+                            if (height == null || isNaN(height))
+                                return "[parsePrimitives]: no height defined for semiCylinder";
+    
+                            slices = this.reader.getFloat(grandChild, 'slices');
+                            if (slices == null || isNaN(slices))
+                                return "[parsePrimitives]: no slices defined for semiCylinder";
+    
+                            stacks = this.reader.getFloat(grandChild, 'stacks');
+                            if (stacks == null || isNaN(stacks))
+                                return "[parsePrimitives]: no stacks defined for semiCylinder";
+    
+                            this.primitives[id] = new MySemiCylinder(this.scene, id, base, top, height, slices, stacks);
+                            break;
+    
 
                     case 'terrain':
                         idtexture = this.reader.getString(grandChild, 'idtexture');
@@ -1210,6 +1234,17 @@ class MySceneGraph {
                             return "[parsePrimitives]: no stacks defined for sphere";
 
                         this.primitives[id] = new MySphere(this.scene, id, radius, slices, stacks);
+                        break;
+                    case 'circle':
+                        radius = this.reader.getFloat(grandChild, 'radius');
+                        if (radius == null || isNaN(radius))
+                            return "[parsePrimitives]: no radius defined for circle";
+
+                        slices = this.reader.getFloat(grandChild, 'slices');
+                        if (slices == null || isNaN(slices))
+                            return "[parsePrimitives]: no slices defined for circle";
+
+                        this.primitives[id] = new MyCircle(this.scene, id, slices, radius);
                         break;
 
                     case 'torus':
