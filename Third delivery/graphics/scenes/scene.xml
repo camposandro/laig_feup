@@ -63,6 +63,7 @@
         <texture id="red" file="textures/red.png"/>
         <texture id="blackPiece" file="textures/blackPiece.png"/>
         <texture id="black" file="textures/black.png"/>
+        <!-- <texture id="tableAppearance" file="textures/marble.png"/> -->
     </textures>
 
     <!-- Materials -->
@@ -85,11 +86,25 @@
             <diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
             <specular r="0.5" g="0.5" b="0.5" a="1.0"/>   
         </material>
+        <material id="tableLegsMaterial1" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.40" g="0.26" b="0.13" a="1.0"/>
+            <specular r="0.0" g="0.0" b="0.0" a="1.0"/>   
+        </material>
+        <material id="tableLegsMaterial2" shininess="1">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.0" g="0.0" b="0.4" a="1.0"/>
+            <specular r="0.0" g="0.0" b="0.0" a="1.0"/>   
+        </material>
     </materials>
 
     <!-- Transformations -->
     <transformations>
-       
+       	<transformation id="trfTable">
+            <translate x="7.5" y="0.0" z="7.5"/>
+        </transformation>
     </transformations>
 
     <!-- Animations -->
@@ -184,15 +199,100 @@
             <texture id="none"/>
 
             <children>
-                <componentref id="redPiece"/>
-                <componentref id="blackPiece"/>
+                <componentref id="redPieces"/>
+                <componentref id="blackPieces"/>
                 <componentref id="myBoard"/>
                 <componentref id="myBox"/>
+                <componentref id="myBox2"/>
+            </children>
+        </component>
+        <component id="redPieces">
+            <transformation>
+                <translate x="-1.05" y="0.5" z="1.3"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="redPiece1"/>
+                <componentref id="redPiece2"/>
+                <componentref id="redPiece3"/>
+                <componentref id="redPiece4"/>
+            </children>
+        </component>
+        <component id="redPiece1" selectable = "true">
+            <transformation>
+                <rotate axis="x" angle="90"/>
+                <translate x="0" y="0.5" z="0"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="redPiece"/>
+            </children>
+        </component>    
+        <component id="redPiece2" selectable = "true">
+            <transformation>
+                <rotate axis="x" angle="90"/>
+                <translate x="0" y="1" z="0"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="redPiece"/>
+                
+            </children>
+        </component>   
+        <component id="redPiece3" selectable = "true">
+            <transformation>
+                <rotate axis="x" angle="90"/>
+                <translate x="0" y="1.5" z="0"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="redPiece"/>
+                
+            </children>
+        </component>
+        <component id="redPiece4" selectable = "true">
+            <transformation>
+                <rotate axis="x" angle="90"/>
+                <translate x="0" y="2" z="0"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="redPiece"/>
+                
             </children>
         </component>
         <component id="redPiece">
             <transformation>
-                <translate x="0" y="0.65" z="0.5"/>
                 <scale x="0.3" y="0.3" z="0.3"/>
             </transformation>
             
@@ -208,10 +308,9 @@
                 
             </children>
         </component>
-
-
         <component id="bodyRedPiece">
             <transformation>
+                <translate x="0" y="0.51" z="0"/>
                 <rotate axis="x" angle="90"/>
             </transformation>
             
@@ -241,9 +340,93 @@
                 <primitiveref id="circle"/>
             </children>
         </component>
+        <component id="blackPieces">
+            <transformation>
+                <translate x="5.2" y="0.5" z="1.3"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="blackPiece1"/>
+                <componentref id="blackPiece2"/>
+                <componentref id="blackPiece3"/>
+                <componentref id="blackPiece4"/>
+            </children>
+        </component>
+        <component id="blackPiece1" selectable = "true">
+            <transformation>
+                <rotate axis="x" angle="90"/>
+                <translate x="0" y="0.5" z="0"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="blackPiece"/>
+            </children>
+        </component>    
+        <component id="blackPiece2" selectable = "true">
+            <transformation>
+                <rotate axis="x" angle="90"/>
+                <translate x="0" y="1" z="0"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="blackPiece"/>
+                
+            </children>
+        </component>   
+        <component id="blackPiece3" selectable = "true">
+            <transformation>
+                <rotate axis="x" angle="90"/>
+                <translate x="0" y="1.5" z="0"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="blackPiece"/>
+                
+            </children>
+        </component>
+        <component id="blackPiece4" selectable = "true">
+            <transformation>
+                <rotate axis="x" angle="90"/>
+                <translate x="0" y="2" z="0"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="blackPiece"/>
+                
+            </children>
+        </component>
         <component id="blackPiece">
             <transformation>
-                <translate x="2" y="0.65" z="0.5"/>
                 <scale x="0.3" y="0.3" z="0.3"/>
             </transformation>
             
@@ -259,10 +442,9 @@
                 
             </children>
         </component>
-
-
         <component id="bodyBlackPiece">
             <transformation>
+                <translate x="0" y="0.51" z="0"/>
                 <rotate axis="x" angle="90"/>
             </transformation>
             
@@ -332,7 +514,7 @@
             </children>
         </component>
         <!-- Tabuleiro -->
-        <component id="cell11">
+        <component id="cell11" selectable = "true">
             <transformation>
                 <translate x="0" y="0" z="0.5"/>
             </transformation>
@@ -347,7 +529,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell12">
+        <component id="cell12" selectable = "true">
             <transformation>
                 <translate x="0" y="0" z="1.5"/>
             </transformation>
@@ -362,7 +544,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell13">
+        <component id="cell13" selectable = "true">
             <transformation>
                 <translate x="0" y="0" z="2.5"/>
             </transformation>
@@ -377,7 +559,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell14">
+        <component id="cell14" selectable = "true">
             <transformation>
                 <translate x="0" y="0" z="3.5"/>
             </transformation>
@@ -392,7 +574,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell15">
+        <component id="cell15" selectable = "true">
             <transformation>
                 <translate x="0" y="0" z="4.5"/>
             </transformation>
@@ -407,7 +589,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell21">
+        <component id="cell21" selectable = "true">
             <transformation>
                 <translate x="1" y="0" z="0.5"/>
             </transformation>
@@ -422,7 +604,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell22">
+        <component id="cell22" selectable = "true">
             <transformation>
                 <translate x="1" y="0" z="1.5"/>
             </transformation>
@@ -437,7 +619,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell23">
+        <component id="cell23" selectable = "true">
             <transformation>
                 <translate x="1" y="0" z="2.5"/>
             </transformation>
@@ -452,7 +634,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell24">
+        <component id="cell24" selectable = "true">
             <transformation>
                 <translate x="1" y="0" z="3.5"/>
             </transformation>
@@ -467,7 +649,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell25">
+        <component id="cell25" selectable = "true">
             <transformation>
                 <translate x="1" y="0" z="4.5"/>
             </transformation>
@@ -482,7 +664,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell31">
+        <component id="cell31" selectable = "true">
             <transformation>
                 <translate x="2" y="0" z="0.5"/>
             </transformation>
@@ -497,7 +679,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell32">
+        <component id="cell32" selectable = "true">
             <transformation>
                 <translate x="2" y="0" z="1.5"/>
             </transformation>
@@ -512,7 +694,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell33">
+        <component id="cell33" selectable = "true">
             <transformation>
                 <translate x="2" y="0" z="2.5"/>
             </transformation>
@@ -527,7 +709,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell34">
+        <component id="cell34" selectable = "true">
             <transformation>
                 <translate x="2" y="0" z="3.5"/>
             </transformation>
@@ -542,7 +724,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell35">
+        <component id="cell35" selectable = "true">
             <transformation>
                 <translate x="2" y="0" z="4.5"/>
             </transformation>
@@ -557,7 +739,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell41">
+        <component id="cell41" selectable = "true">
             <transformation>
                 <translate x="3" y="0" z="0.5"/>
             </transformation>
@@ -572,7 +754,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell42">
+        <component id="cell42" selectable = "true">
             <transformation>
                 <translate x="3" y="0" z="1.5"/>
             </transformation>
@@ -587,7 +769,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell43">
+        <component id="cell43" selectable = "true">
             <transformation>
                 <translate x="3" y="0" z="2.5"/>
             </transformation>
@@ -602,7 +784,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell44">
+        <component id="cell44" selectable = "true">
             <transformation>
                 <translate x="3" y="0" z="3.5"/>
             </transformation>
@@ -617,7 +799,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell45">
+        <component id="cell45" selectable = "true">
             <transformation>
                 <translate x="3" y="0" z="4.5"/>
             </transformation>
@@ -632,7 +814,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell51">
+        <component id="cell51" selectable = "true">
             <transformation>
                 <translate x="4" y="0" z="0.5"/>
             </transformation>
@@ -647,7 +829,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell52">
+        <component id="cell52" selectable = "true">
             <transformation>
                 <translate x="4" y="0" z="1.5"/>
             </transformation>
@@ -662,7 +844,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell53">
+        <component id="cell53" selectable = "true">
             <transformation>
                 <translate x="4" y="0" z="2.5"/>
             </transformation>
@@ -677,7 +859,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell54">
+        <component id="cell54" selectable = "true">
             <transformation>
                 <translate x="4" y="0" z="3.5"/>
             </transformation>
@@ -692,7 +874,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="cell55">
+        <component id="cell55" selectable = "true">
             <transformation>
                 <translate x="4" y="0" z="4.5"/>
             </transformation>
@@ -822,9 +1004,59 @@
                 <primitiveref id="rectangle"/>
             </children>
         </component>
+        <component id="face7">
+            <transformation>
+                <translate x="0" y="0" z="-0.5"/>
+                <rotate axis="z" angle="90"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
 
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+        <component id="face8">
+            <transformation>
+                <translate x="0" y="0" z="0.5"/>
+                <rotate axis="y" angle="180"/>
+            </transformation>
+            
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+        <component id="myBox2">
+            <transformation>
+                <translate x="6.2" y="-0.67" z="1"/>
+                <scale x="0.7" y="1" z="0.5"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <componentref id="myBoxTop"/>
+                <componentref id="myBoxBody"/>
+            </children>
+        </component>        
         <component id="myBox">
             <transformation>
+                <translate x="0" y="-0.67" z="1"/>
+                <scale x="0.7" y="1" z="0.5"/>
             </transformation>
 
             <materials>
@@ -840,8 +1072,8 @@
         </component>        
         <component id="myBoxBody">
             <transformation>
-                <scale x="1" y="1" z="5"/>
-                <translate x="-1.5" y="0.65" z="0.5"/>
+                <scale x="1" y="0.5" z="4"/>
+                <translate x="-1.5" y="1.8" z="0.75"/>
             </transformation>
 
             <materials>
@@ -856,13 +1088,15 @@
                 <componentref id="face3"/>
                 <componentref id="face5"/>
                 <componentref id="face6"/>
+                <componentref id="face7"/>
+                <componentref id="face8"/>
             </children>
         </component>        
         <component id="myBoxTop">
             <transformation>
-                <scale x="1" y="1" z="5"/>
                 <rotate axis="z" angle="90"/>
-                <translate x="2" y="2" z="0"/>
+                <scale x="0.5" y="0.5" z="5.015"/>
+                <translate x="2.3" y="3" z="-0.005"/>
             </transformation>
 
             <materials>
@@ -875,8 +1109,7 @@
                 <primitiveref id="semiCylinder"/>
             </children>
         </component>
-        
-        
+
     </components>
 
 </yas>
