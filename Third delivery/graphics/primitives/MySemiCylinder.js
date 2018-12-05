@@ -4,23 +4,24 @@
 var DEGREE_TO_RAD = Math.PI / 180;
 
 /**
- * MyCylinder class, representing a cylinder.
+ * MyCylinder2 class, representing a cylinder made of nurbs.
  */
-class MyCylinder extends CGFobject {
+class MySemiCylinder extends CGFobject {
 
-	 /**
-     * @constructor
-     * @param {XMLScene} scene Scene
-     * @param {*} id Cylinder id
-     * @param {base} base Base radius
-     * @param {top} top Top radius
-     * @param {height} height Cylinder height
-     * @param {slices} slices Cylinder number of slices
-     * @param {stacks} stacks Cylinder number of stacks
-     */
+    /**
+    * @constructor
+    * @param {XMLScene} scene Scene
+    * @param {*} id Cylinder id
+    * @param {base} base Base radius
+    * @param {top} top Top radius
+    * @param {height} height Cylinder height
+    * @param {slices} slices Cylinder number of slices
+    * @param {stacks} stacks Cylinder number of stacks
+    */
     constructor(scene, id, base, top, height, slices, stacks) {
         super(scene);
 
+        this.scene = scene;
         this.id = id;
         this.base = base;
         this.top = top;
@@ -28,73 +29,62 @@ class MyCylinder extends CGFobject {
         this.slices = slices;
         this.stacks = stacks;
 
-        this.circleBase = new MyCircle(scene,-1, slices, base);
-        this.circleTop = new MyCircle(scene, -1,slices, top);
-
-        this.initBuffers();
+        this.initNurbs();
     };
 
     /**
-     * Initializes vertices, normals and texCoords buffers.
+     * Initializes cylinder two-halves surfaces.
      */
-    initBuffers() {
-        this.vertices = new Array();
-        this.indices = new Array();
-        this.normals = new Array();
-        this.texCoords = new Array();
-
+    initNurbs() {
         var variation = (this.top - this.base) / this.stacks;
-        var angle = (2 * Math.PI) / this.slices;
+        var angle = Math.PI / this.slices;
 
-        for (var j = 0; j <= this.stacks; j++) {
-            for (var i = 0; i <= this.slices; i++) {
+        var controlVertexes = new Array();
+        for (var i = 0; i <= this.stacks; i++) {
 
-                this.vertices.push(
-                    Math.cos(i * angle) * (this.base + variation * j),
-                    Math.sin(i * angle)* (this.base + variation * j),
-                    j * this.height / this.stacks
-                );
+            var controlVertexesV = new Array();
+            for (var j = 0; j <= this.slices; j++) {
 
-                this.normals.push(
-                    Math.cos(i * angle), Math.sin(i * angle), 0
-                );
-
-                this.texCoords.push(
-                    i * 1 / this.slices, j * 1 / this.stacks
+                controlVertexesV.push(
+                    [
+                        Math.cos(j * angle) * (this.base + variation * i),
+                        -Math.sin(j * angle) * (this.base + variation * i),
+                        i * this.height / this.stacks,
+                        1
+                    ]
                 );
             }
+            controlVertexes.push(controlVertexesV);
+            controlVertexes.reverse();
         }
 
-        for (var j = 0; j < this.stacks; j++) {
-            for (var i = 0; i < this.slices; i++) {
-                this.indices.push(
-                    i + j * (this.slices + 1), (i + 1) + j * (this.slices + 1),
-                    (i + this.slices + 1) + j * (this.slices + 1),
-                    (i + 1) + j * (this.slices + 1),
-                    (i + this.slices + 2) + j * (this.slices + 1),
-                    (i + this.slices + 1) + j * (this.slices + 1)
-                );
-            }
-        }
+        this.firstHalf = new MyPatch(
+            this.scene,
+            this.slices + 1,
+            this.stacks + 1,
+            this.slices,
+            this.stacks,
+            controlVertexes
+        );
 
-        this.primitiveType = this.scene.gl.TRIANGLES;
-        this.initGLBuffers();
+
     };
 
     /**
-     * Displays the cylinder, with covers.
+     * Displays the cylinder without covers.
      */
-    display() {
+    display() 
+    {
         this.scene.pushMatrix();
-            this.scene.translate(0,0,-0.5);
-            CGFobject.prototype.display.call(this);
-            this.scene.pushMatrix();
-                this.scene.translate(0, 0, this.height);
-                this.circleTop.display();
-                this.scene.translate(0, 0, -this.height);
-                this.scene.rotate(180 * DEGREE_TO_RAD, 1, 0, 0);
-                this.circleBase.display();
-            this.scene.popMatrix();
+        this.scene.rotate(-Math.PI/2,0,0,1);
+        this.firstHalf.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.translate(0,0,this.height);
+        this.scene.rotate(Math.PI,1,0,0);
+        this.scene.rotate(Math.PI/2,0,0,1);
+        //this.secondHalf.display();
         this.scene.popMatrix();
     };
 }
