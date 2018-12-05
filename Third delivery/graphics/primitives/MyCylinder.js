@@ -28,8 +28,8 @@ class MyCylinder extends CGFobject {
         this.slices = slices;
         this.stacks = stacks;
 
-        this.circleBase = new MyCircle(scene, slices, base);
-        this.circleTop = new MyCircle(scene, slices, top);
+        this.circleBase = new MyCircle(scene, -1,slices, base);
+        this.circleTop = new MyCircle(scene, -1,slices, top);
 
         this.initBuffers();
     };
@@ -91,7 +91,7 @@ class MyCylinder extends CGFobject {
         this.circleTop.display();
         this.scene.translate(0, 0, -this.height);
         this.scene.rotate(180 * DEGREE_TO_RAD, 1, 0, 0);
-        this.circleBase.display();
+        //this.circleBase.display();
         this.scene.popMatrix();
     };
 }
