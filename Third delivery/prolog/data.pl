@@ -1,0 +1,1299 @@
+% Initial game's empty board
+initialBoard([
+    [empty,empty,empty,empty,empty],
+    [empty,empty,empty,empty,empty],
+    [empty,empty,empty,empty,empty],
+    [empty,empty,empty,empty,empty],
+    [empty,empty,empty,empty,empty]
+]).
+
+% Pieces definition
+piece(empty,P) :- 
+    P = ' '.
+piece(black,P) :-
+    char_code(P,9399).
+piece(red,P) :- 
+    char_code(P,9415).
+
+/**
+* Verifies pieces winning state by row
+* winRow(+Board,+Piece)
+*/
+winRow(Board,Piece) :-
+   member([Piece,Piece,Piece,Piece,_],Board);
+   member([_,Piece,Piece,Piece,Piece],Board).
+
+/**
+* Verifies winning state by column
+* winCol(+Board,+Piece)
+*/
+winCol(Board,Piece) :-
+    NCols is 5,
+    getAllCols(Board,NCols,ColsList),
+    (
+        member([Piece,Piece,Piece,Piece,_],ColsList);
+        member([_,Piece,Piece,Piece,Piece],ColsList)
+    ).
+
+/**
+* Verifies winning state diagonally
+* winDiag(+Board,+Piece)
+*/
+winDiag(
+    [
+        [Piece,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winDiag(
+    [
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,Piece]
+    ], 
+    Piece
+).
+winDiag(
+    [
+        [_,_,_,_,_],
+        [Piece,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_]
+    ], 
+    Piece
+).
+winDiag(
+    [
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,Piece],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winDiag(
+    [
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winDiag(
+    [
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [Piece,_,_,_,_]
+    ], 
+    Piece
+).
+winDiag(
+    [
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [Piece,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winDiag(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_]
+    ], 
+    Piece
+).
+
+/**
+* Verifies winning state of the square
+* winSquare(+Board,+Piece)
+*/
+winSquare(
+    [
+        [Piece,Piece,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,Piece,Piece,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,Piece,Piece,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,Piece,Piece],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [Piece,Piece,_,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,Piece,Piece,_,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,Piece,Piece,_]
+    ], 
+    Piece
+).
+winSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,Piece,Piece]
+    ], 
+    Piece
+).
+
+/**
+* Evaluates the board on sequences of pieces
+* value(+Board,+Piece,-Val)
+*/
+value(Board,Piece,Val):-
+    NCols is 5,
+    valRows(Board,Piece,Values),
+    getMaxList(Values,Val1),
+    getAllCols(Board,NCols,ColsList),
+    valRows(ColsList,Piece,Values2),
+    valDiag(Board,Piece,Val3),
+    valSquare(Board,Piece,Val4),
+    getMaxList(Values2,Val2), !,
+    getMax(Val1,Val2,Val5),
+    getMax(Val5,Val3,Val6),
+    getMax(Val6,Val4,Val).
+
+/**
+* Evaluates the existence of row sequences on the board
+* valRows(+Board,+Piece,-Values)
+*/
+valRows([],_,[]).
+valRows([H|T],Piece,[Val|Values]):-
+    valRow(H,Piece,Val),
+    valRows(T,Piece,Values).
+
+/**
+* Evaluates a row/col sequence
+* valRow(+Row/+Col,+Piece,-Value)
+*/
+valRow([Piece,Piece,Piece,_,_],Piece,3).
+valRow([_,Piece,Piece,Piece,_],Piece,3).
+valRow([_,_,Piece,Piece,Piece],Piece,3).
+
+valRow([Piece,Piece,_,_,_],Piece,2).
+valRow([_,Piece,Piece,_,_],Piece,2).
+valRow([_,_,Piece,Piece,_],Piece,2).
+valRow([_,_,_,Piece,Piece],Piece,2).
+
+valRow([Piece,_,_,_,_],Piece,1).
+valRow([_,Piece,_,_,_],Piece,1).
+valRow([_,_,Piece,_,_],Piece,1).
+valRow([_,_,_,Piece,_],Piece,1).
+valRow([_,_,_,_,Piece],Piece,1).
+
+valRow(_,_,0).
+
+/**
+* Evaluates a diagonal sequence
+* valDiag(+Board,+Piece,-Value)
+*/
+valDiag([
+        [Piece,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,3).
+valDiag([
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,3).    
+valDiag([
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,3).     
+valDiag([
+        [_,_,_,_,_],
+        [Piece,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_]],Piece,3).            
+valDiag([
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_]],Piece,3).    
+valDiag([
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,Piece],
+        [_,_,_,_,_]],Piece,3).   
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,Piece,_]],Piece,3).            
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_]
+        ],Piece,3).    
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,Piece]],Piece,3).  
+valDiag([
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ],Piece,3).
+valDiag([
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ],Piece,3).
+valDiag([
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [Piece,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ],Piece,3).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_]
+    ],Piece,3).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_]
+    ],Piece,3).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [Piece,_,_,_,_],
+        [_,_,_,_,_]
+    ],Piece,3).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_]
+    ],Piece,3).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_]
+    ],Piece,3).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [Piece,_,_,_,_]
+    ],Piece,3).
+valDiag([
+        [Piece,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,Piece]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [Piece,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_]
+        ],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_]
+        ],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,_,_,_,_],
+        [_,Piece,_,_,_]
+        ],Piece,2).
+valDiag([
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [Piece,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_]
+        ],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_]
+        ],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,_]
+        ],Piece,2).
+valDiag([
+        [_,Piece,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,Piece],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,Piece,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+        ],Piece,2).
+valDiag([
+        [_,_,_,Piece,_],
+        [_,_,_,_,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+        ],Piece,2).
+valDiag([
+        [_,_,_,Piece,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [Piece,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,Piece,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [Piece,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag([
+        [_,Piece,_,_,_],
+        [Piece,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]],Piece,2).
+valDiag(_,_,0).
+
+valSquare(
+    [
+        [_,Piece,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [Piece,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [Piece,Piece,_,_,_],
+        [Piece,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [Piece,Piece,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,Piece,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,Piece,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,Piece,Piece,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,Piece,Piece,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,Piece,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,Piece,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,Piece,Piece,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,Piece,Piece,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,Piece,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,Piece,Piece],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [Piece,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [Piece,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,Piece],
+        [_,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [Piece,_,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,Piece,_,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,Piece,_,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,Piece,_],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,Piece],
+        [_,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [Piece,Piece,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,_,_,_,_],
+        [Piece,Piece,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [Piece,_,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [Piece,Piece,_,_,_],
+        [_,Piece,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,Piece,Piece,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,_,_,_],
+        [_,Piece,Piece,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,Piece,_,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,Piece,Piece,_,_],
+        [_,_,Piece,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,Piece,Piece,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,_,_],
+        [_,_,Piece,Piece,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,Piece,_,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,Piece,Piece,_],
+        [_,_,_,Piece,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,Piece],
+        [_,_,_,Piece,Piece]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,_],
+        [_,_,_,Piece,Piece]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,Piece,_]
+    ], 
+    Piece,3
+).
+valSquare(
+    [
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,_,_],
+        [_,_,_,Piece,Piece],
+        [_,_,_,_,Piece]
+    ], 
+    Piece,3
+).
+valSquare(_,_,0).
