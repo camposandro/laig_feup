@@ -185,7 +185,7 @@
     <components>
 
         <!-- Root element -->
-        <component id="root">
+        <component id="root" selectable = "false">
             <transformation>
             </transformation>
 
@@ -206,7 +206,7 @@
                 <componentref id="myBox2"/>
             </children>
         </component>
-        <component id="redPieces">
+        <component id="redPieces" selectable = "false">
             <transformation>
                 <translate x="-1.05" y="0.4" z="1.3"/>
             </transformation>
@@ -291,7 +291,7 @@
                 
             </children>
         </component>
-        <component id="redPiece">
+        <component id="redPiece" selectable = "false">
             <transformation>
                 <scale x="0.3" y="0.3" z="0.3"/>
             </transformation>
@@ -308,7 +308,7 @@
                 
             </children>
         </component>
-        <component id="bodyRedPiece">
+        <component id="bodyRedPiece" selectable = "false">
             <transformation>
                 <translate x="0" y="0.51" z="0"/>
                 <rotate axis="x" angle="90"/>
@@ -324,7 +324,7 @@
                 <primitiveref id="cylinder"/>
             </children>
         </component>
-        <component id="topRedPiece">
+        <component id="topRedPiece" selectable = "false">
             <transformation>
                 <translate x="0" y="0.51" z="0"/>
                 <rotate axis="x" angle="-90"/>
@@ -340,7 +340,7 @@
                 <primitiveref id="circle"/>
             </children>
         </component>
-        <component id="blackPieces">
+        <component id="blackPieces" selectable = "false">
             <transformation>
                 <translate x="5.2" y="0.4" z="1.3"/>
             </transformation>
@@ -425,7 +425,7 @@
                 
             </children>
         </component>
-        <component id="blackPiece">
+        <component id="blackPiece" selectable = "false">
             <transformation>
                 <scale x="0.3" y="0.3" z="0.3"/>
             </transformation>
@@ -442,7 +442,7 @@
                 
             </children>
         </component>
-        <component id="bodyBlackPiece">
+        <component id="bodyBlackPiece" selectable = "false">
             <transformation>
                 <translate x="0" y="0.51" z="0"/>
                 <rotate axis="x" angle="90"/>
@@ -458,7 +458,7 @@
                 <primitiveref id="cylinder"/>
             </children>
         </component>
-        <component id="topBlackPiece">
+        <component id="topBlackPiece" selectable = "false">
             <transformation>
                 <translate x="0" y="0.51" z="0"/>
                 <rotate axis="x" angle="-90"/>
@@ -475,7 +475,7 @@
             </children>
         </component>
 
-        <component id="myBoard">
+        <component id="myBoard" selectable = "false">
             <transformation>
             </transformation>
 
@@ -889,7 +889,7 @@
                 <componentref id="myCube"/>
             </children>
         </component>
-        <component id="myCube">
+        <component id="myCube" selectable = "false">
             <transformation>
             </transformation>
 
@@ -909,7 +909,7 @@
             </children>
         </component>
         <!-- Cube -->
-        <component id="face1">
+        <component id="face1" selectable = "false">
             <transformation>
                 <translate x="0" y="0" z="0.5"/>
             </transformation>
@@ -924,7 +924,7 @@
                 <primitiveref id="rectangle"/>
             </children>
         </component>
-        <component id="face2">
+        <component id="face2" selectable = "false">
             <transformation>
                 <translate x="0" y="0" z="-0.5"/>
                 <rotate axis="y" angle="180"/>
@@ -940,7 +940,7 @@
                 <primitiveref id="rectangle"/>
             </children>
         </component>
-        <component id="face3">
+        <component id="face3" selectable = "false">
             <transformation>
                 <translate x="0" y="-0.5" z="0"/>
                 <rotate axis="x" angle="90"/>
@@ -956,7 +956,7 @@
                 <primitiveref id="rectangle"/>
             </children>
         </component>
-        <component id="face4">
+        <component id="face4" selectable = "false">
             <transformation>
                 <translate x="0" y="0.5" z="0"/>
                 <rotate axis="x" angle="-90"/>
@@ -972,7 +972,7 @@
                 <primitiveref id="rectangle"/>
             </children>
         </component>
-        <component id="face5">
+        <component id="face5" selectable = "false">
             <transformation>
                 <translate x="-0.5" y="0" z="0"/>
                 <rotate axis="y" angle="-90"/>
@@ -988,7 +988,7 @@
                 <primitiveref id="rectangle"/>
             </children>
         </component>
-        <component id="face6">
+        <component id="face6" selectable = "false">
             <transformation>
                 <translate x="0.5" y="0" z="0"/>
                 <rotate axis="y" angle="90"/>
@@ -1004,7 +1004,7 @@
                 <primitiveref id="rectangle"/>
             </children>
         </component>
-        <component id="face7">
+        <component id="face7" selectable = "false">
             <transformation>
                 <translate x="0" y="0" z="-0.5"/>
                 <rotate axis="z" angle="90"/>
@@ -1020,7 +1020,7 @@
                 <primitiveref id="rectangle"/>
             </children>
         </component>
-        <component id="face8">
+        <component id="face8" selectable = "false">
             <transformation>
                 <translate x="0" y="0" z="0.5"/>
                 <rotate axis="y" angle="180"/>
@@ -1036,7 +1036,7 @@
                 <primitiveref id="rectangle"/>
             </children>
         </component>
-        <component id="myBox2">
+        <component id="myBox2" selectable = "false">
             <transformation>
                 <translate x="6.2" y="-0.67" z="1"/>
                 <scale x="0.7" y="1" z="0.5"/>
@@ -1053,7 +1053,7 @@
                 <componentref id="myBoxBody"/>
             </children>
         </component>        
-        <component id="myBox">
+        <component id="myBox" selectable = "false">
             <transformation>
                 <translate x="0" y="-0.67" z="1"/>
                 <scale x="0.7" y="1" z="0.5"/>
@@ -1070,7 +1070,7 @@
                 <componentref id="myBoxBody"/>
             </children>
         </component>        
-        <component id="myBoxBody">
+        <component id="myBoxBody" selectable = "false">
             <transformation>
                 <scale x="1" y="0.5" z="4"/>
                 <translate x="-1.5" y="1.8" z="0.75"/>
@@ -1092,7 +1092,7 @@
                 <componentref id="face8"/>
             </children>
         </component>        
-        <component id="myBoxTop">
+        <component id="myBoxTop" selectable = "false">
             <transformation>
                 <rotate axis="z" angle="90"/>
                 <scale x="0.5" y="0.5" z="5.015"/>
