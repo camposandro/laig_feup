@@ -28,6 +28,8 @@ class XMLscene extends CGFscene {
     init(application) {
         super.init(application);
 
+
+        this.setPickEnabled(true);
         this.sceneInited = false;
 
         this.initCameras();
@@ -232,6 +234,22 @@ class XMLscene extends CGFscene {
             if (this.graph.components.hasOwnProperty(key)) {
                 this.graph.components[key].updateMaterial();
             }
+        }
+    }
+
+    logPicking() {
+        if (this.pickMode == false) {
+            if (this.pickResults != null && this.pickResults.length > 0) {
+                for (var i=0; i< this.pickResults.length; i++) {
+                    var obj = this.pickResults[i][0];
+                    if (obj)
+                    {
+                        var customId = this.pickResults[i][1];				
+                        console.log("Picked object: " + obj + ", with pick id " + customId);
+                    }
+                }
+                this.pickResults.splice(0,this.pickResults.length);
+            }		
         }
     }
 }
