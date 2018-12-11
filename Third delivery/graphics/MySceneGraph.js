@@ -33,7 +33,7 @@ class MySceneGraph {
         // Establish bidirectional references between scene and graph.
         this.scene = scene;
         scene.graph = this;
-
+        
         // Axis
         this.axisCoords = new Array();
         this.axisCoords['x'] = [1, 0, 0];
@@ -53,7 +53,7 @@ class MySceneGraph {
         this.animations = new Array();
         this.primitives = new Array();
         this.components = new Array();
-
+        this.selectable = new Array();
         // File reading 
         this.reader = new CGFXMLreader();
 
@@ -1305,6 +1305,10 @@ class MySceneGraph {
 
             var comp = new MyComponent(this.scene, id);
 
+            // parse component 'selectable'
+            if( this.reader.getString(child, 'selectable') == 'true')
+                this.selectable.push(id);
+
             // parse component transformations, materials, textures and children components/primitives
             var id2, length_s, length_t;
 
@@ -1553,10 +1557,17 @@ class MySceneGraph {
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
+        this.scene.logPicking();
+        this.scene.clearPickRegistration();
+
+        for (i = 0; i < this.selectable.length; i++) {
+            this.scene.registerForPick(i+1, this.components[this.selectable[i]]);
+            //console.log(this.components[this.selectable[i]]);
+        }
+        //console.log(this.scene.pickResults);
         var root = this.components[this.root];
         if (root == null)
             return "[displayScene]: root node does not exist!";
-
         // display scene graph starting at the root component
         root.display(root.materials[root.currentMaterialIndex][1], root.texture);
     }
