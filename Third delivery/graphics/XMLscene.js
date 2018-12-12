@@ -84,7 +84,10 @@ class XMLscene extends CGFscene {
                 this.lights[i].setAmbient(light.ambient[0], light.ambient[1], light.ambient[2], light.ambient[3]);
                 this.lights[i].setDiffuse(light.diffuse[0], light.diffuse[1], light.diffuse[2], light.diffuse[3]);
                 this.lights[i].setSpecular(light.specular[0], light.specular[1], light.specular[2], light.specular[3]);
+                
+                this.clearPickRegistration();
                 this.lights[i].setVisible(true);
+                this.clearPickRegistration();
 
                 if (light instanceof MySpotlight) {
                     this.lights[i].setSpotCutOff(light.angle);
@@ -133,8 +136,11 @@ class XMLscene extends CGFscene {
         // reads lights 'enabled' status
         for (var key in this.lightValues) {
             if (this.lightValues.hasOwnProperty(key)) {
-                if (this.lightValues[key]) {
+                if (this.lightValues[key]) 
+                {
+                this.clearPickRegistration();
                     this.lights[i].setVisible(true);
+
                     this.lights[i].enable();
                 }
                 else {
@@ -215,7 +221,9 @@ class XMLscene extends CGFscene {
             this.updateLights();
 
             // displays the scene
+            this.clearPickRegistration();
             this.graph.displayScene();
+            this.clearPickRegistration();
         }
         else {
             // draw axis
@@ -246,10 +254,13 @@ class XMLscene extends CGFscene {
                     {
                         var customId = this.pickResults[i][1];				
                         console.log("Picked object: " + obj + ", with pick id " + customId);
+                        this.graph.picked(obj)
                     }
                 }
                 this.pickResults.splice(0,this.pickResults.length);
             }		
         }
     }
+
+
 }
