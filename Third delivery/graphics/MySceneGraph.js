@@ -54,6 +54,7 @@ class MySceneGraph {
         this.primitives = new Array();
         this.components = new Array();
         this.selectable = new Array();
+        this.pickIndex = 0;
         // File reading 
         this.reader = new CGFXMLreader();
 
@@ -1303,11 +1304,23 @@ class MySceneGraph {
             if (this.components[id] != null)
                 return "[parseComponents]: ID must be unique for each component (conflict: ID = " + id + ")";
 
-            var comp = new MyComponent(this.scene, id);
+            var pieceRegExp = new RegExp('[a-z]Piece[1-9]');
+            var comp;
+            if(pieceRegExp.test(id))
+                comp = new MyPieceComp(this.scene, id);
+            else
+                comp = new MyComponent(this.scene, id);
+           
 
             // parse component 'selectable'
-            if( this.reader.getString(child, 'selectable') == 'true')
-                this.selectable.push(id);
+            var selectable = this.reader.getBoolean(child, 'selectable');
+            
+            if( selectable != null)
+                if(selectable){
+                    comp.setSelectable(true);
+                    comp.setPickIndex(this.pickIndex++);
+                }
+                    
 
             // parse component transformations, materials, textures and children components/primitives
             var id2, length_s, length_t;
@@ -1559,16 +1572,24 @@ class MySceneGraph {
     displayScene() {
         this.scene.logPicking();
         this.scene.clearPickRegistration();
-
-        for (i = 0; i < this.selectable.length; i++) {
-            this.scene.registerForPick(i+1, this.components[this.selectable[i]]);
-            //console.log(this.components[this.selectable[i]]);
-        }
         //console.log(this.scene.pickResults);
         var root = this.components[this.root];
         if (root == null)
             return "[displayScene]: root node does not exist!";
         // display scene graph starting at the root component
         root.display(root.materials[root.currentMaterialIndex][1], root.texture);
+        
+        this.scene.clearPickRegistration();
+    
+    }
+
+    registerPicking(idComp, index) {
+        this.scene.clearPickRegistration();
+        this.scene.registerForPick(index, idComp);
+    }
+    
+    picked(obj) {
+        if(this.components[obj] instanceof MyPieceComp)
+            this.components[obj].updateState('Picked');
     }
 }
