@@ -1304,10 +1304,14 @@ class MySceneGraph {
             if (this.components[id] != null)
                 return "[parseComponents]: ID must be unique for each component (conflict: ID = " + id + ")";
 
-            var pieceRegExp = new RegExp('[a-z]Piece[1-9]');
+            var redPieceRegExp = new RegExp('redPiece[1-9]');
+            var blacKPieceRegExp = new RegExp('blackPiece[1-9]');
+            
             var comp;
-            if(pieceRegExp.test(id))
-                comp = new MyPieceComp(this.scene, id);
+            if(redPieceRegExp.test(id))
+                comp = new MyRedPieceComp(this.scene, id);
+            else if(blacKPieceRegExp.test(id))
+                comp = new MyBlackPieceComp(this.scene, id);
             else
                 comp = new MyComponent(this.scene, id);
            
@@ -1590,6 +1594,6 @@ class MySceneGraph {
     
     picked(obj) {
         if(this.components[obj] instanceof MyPieceComp)
-            this.components[obj].updateState('Picked');
+            this.components[obj].updateState('nextState',[1,2]);
     }
 }
