@@ -14,7 +14,7 @@ class MyPieceComp extends MyComponent{
         
         var idLength = id.length; // this will be 16
         var nPiece = id.charAt(idLength - 1); // this will be the string "."
-
+        this.pickedLength = 0.8;
         this.xPosition = 0.5*nPiece;
         this.zPosition = -1;
         this.states = new Array('Initial State','On Board','Picked','Moving');
@@ -55,8 +55,8 @@ class MyPieceComp extends MyComponent{
                     this.state = nextState;
                 }
                 else if(nextState == 'Moving'){
-                    this.moveAnimation(move);
-                    nextState = this.state;
+                    this.moveAnimation([3,4]);
+                    this.state = 'On Board';
                 }
                 else if(nextState == this.state)
                     return 0;
@@ -98,7 +98,7 @@ class MyPieceComp extends MyComponent{
     pickAnimation() {
         var anim = new MyLinearAnimation(this.animIndex++,0.3);
         anim.addControlPoint(0,0,0);
-        anim.addControlPoint(0,0.5,0);
+        anim.addControlPoint(0,this.pickedLength,0);
 
         this.addAnimation(this.animIndex,anim);
         
@@ -110,5 +110,21 @@ class MyPieceComp extends MyComponent{
 
     moveAnimation(move) {
 
+        var anim = new MyLinearAnimation(this.animIndex++,1);
+        anim.addControlPoint(this.xPosition,0,this.zPosition);
+        anim.addControlPoint(move[1],0,move[0]);
+        anim.addControlPoint(move[1],-this.pickedLength,move[0]);
+
+        
+        this.xPosition = move[1];
+        this.zPosition = move[0];
+
+        this.addAnimation(this.animIndex,anim);
+        
+        if(this.animationsDone){
+            this.currentAnimationIndex++;
+            this.animationsDone = false;
+        }
     }
+
 }

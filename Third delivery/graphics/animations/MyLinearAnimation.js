@@ -14,10 +14,14 @@ class MyLinearAnimation extends MyAnimation {
         this.controlPoints = new Array();
         this.finished = false;
 
+        this.totalTotalTime = 0;
         this.totalTime = 0;
         this.lastCurrTime = -1;
         this.point = 1;
         this.position;
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
     };
 
     /**
@@ -44,51 +48,33 @@ class MyLinearAnimation extends MyAnimation {
             time = currTime - this.lastCurrTime;
 
         this.lastCurrTime = currTime;
+        this.totalTotalTime += time;
         this.totalTime += time;
-        if ((this.totalTime >= this.span)) {
+        if ((this.totalTotalTime >= this.span)) {
             this.finished = true;
-            this.totalTime = this.span;
+            this.totalTotalTime = this.span;
         }
         var secondsPerPoint = this.span / (this.controlPoints.length - 1);
-        if ((secondsPerPoint * this.point) < this.totalTime) {
+        if ((secondsPerPoint * this.point) < this.totalTotalTime) {
+            this.totalTime = 0;
             this.point++;
+            this.x = this.posX;
+            this.y = this.posY;
+            this.z = this.posZ;
         }
 
         var difX = (this.controlPoints[this.point]['x'] - this.controlPoints[this.point - 1]['x']);
         var difY = (this.controlPoints[this.point]['y'] - this.controlPoints[this.point - 1]['y']);
         var difZ = (this.controlPoints[this.point]['z'] - this.controlPoints[this.point - 1]['z']);
 
-        if (difX == 0 && difZ == 0)
-            this.angle = 0;
-        else if (difX == 0)
-            if (difZ > 0)
-                this.angle = Math.PI / 2;
-            else
-                this.angle = -Math.PI / 2;
-        else if (difZ == 0)
-            if (difX > 0)
-                this.angle = 0;
-            else
-                this.angle = -Math.PI;
-        else
-            this.angle = Math.atan(difZ / difX);
-
-        if (difZ < 0 && difX < 0)
-            this.angle += Math.PI;
-        else if (difZ > 0 && difX < 0)
-            this.angle = Math.PI - this.angle;
-        else if (difZ < 0 && difX > 0)
-            this.angle *= -1;
-
         var velocityX = difX / secondsPerPoint;
         var velocityY = difY / secondsPerPoint;
         var velocityZ = difZ / secondsPerPoint;
 
-        var posX = (velocityX * this.totalTime);
-        this.posY = (velocityY * this.totalTime);
-        var posZ = (velocityZ * this.totalTime);
+        this.posX = this.x + (velocityX * this.totalTime);
+        this.posY = this.y + (velocityY * this.totalTime);
+        this.posZ = this.z + (velocityZ * this.totalTime);
 
-        this.hipotenuse = Math.sqrt(posX * posX + posZ * posZ);
 
         return this.finished;
     }
@@ -100,8 +86,8 @@ class MyLinearAnimation extends MyAnimation {
         var transMatrix = mat4.create();
         mat4.identity(transMatrix);
 
-        mat4.rotate(transMatrix, transMatrix, this.angle, [0, 1, 0]);
-        mat4.translate(transMatrix, transMatrix, [0, this.posY, this.hipotenuse]);
+        mat4.translate(transMatrix, transMatrix, [this.posX, this.posY, this.posZ]);
+        console.log(this.posX);
 
         return transMatrix;
     }
