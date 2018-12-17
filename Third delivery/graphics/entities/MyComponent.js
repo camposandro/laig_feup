@@ -21,11 +21,22 @@ class MyComponent {
         this.materials = [];
         this.currentMaterialIndex = 0;
         this.texture = null;
+        this.selectable = false;
+        this.pickIndex = -1;
 
         // Animations characteristics
         this.animations = [];
         this.currentAnimationIndex = 0;
 	    this.animationsDone = false;
+    }
+
+
+    setSelectable(selectable) {
+        this.selectable = selectable;
+    }
+
+    setPickIndex(pickIndex) {
+        this.pickIndex = pickIndex;
     }
 
     /**
@@ -185,6 +196,9 @@ class MyComponent {
         // apply animations
         if (this.animations.length > 0 && !this.animationsDone)
             this.updateAnimation();
+        
+        if(this.selectable)
+            this.scene.graph.registerPicking(this.id, this.pickIndex);
 
         // process children nodes
         for (let child of this.children)
