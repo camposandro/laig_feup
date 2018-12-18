@@ -12,8 +12,8 @@ class MyPieceComp extends MyComponent{
         this.state = 'Initial State';
         this.animIndex = 0;
         
-        var idLength = id.length; // this will be 16
-        var nPiece = id.charAt(idLength - 1); // this will be the string "."
+        var idLength = id.length; 
+        var nPiece = id.charAt(idLength - 1); 
         this.pickedLength = 0.8;
         this.xPosition = 0.5*nPiece;
         this.zPosition = -1;
