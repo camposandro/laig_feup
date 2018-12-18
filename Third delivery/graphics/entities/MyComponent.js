@@ -167,6 +167,7 @@ class MyComponent {
      * @param {array} tex Array containing the texture and its parameters
      */
     display(mat, tex) {
+
         this.scene.pushMatrix();
 
         // apply material
