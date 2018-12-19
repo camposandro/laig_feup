@@ -1,4 +1,4 @@
-ifdef GL_ES
+#ifdef GL_ES
 precision highp float;
 #endif
 
@@ -114,7 +114,7 @@ void main()
     vec3 E = normalize(eyeVec);
 
     vec4 color = texture2D(uSampler, vTextureCoord);
-    vec4 finalColor = vec4(1,color.g,color.b,color.a);
+    vec4 finalColor = vec4(1.0,1.0,1.0,1.0);
 
 	gl_FragColor = finalColor * lighting(vertex,E,N);
 }

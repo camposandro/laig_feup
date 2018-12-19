@@ -1305,17 +1305,20 @@ class MySceneGraph {
                 return "[parseComponents]: ID must be unique for each component (conflict: ID = " + id + ")";
 
             var redPieceRegExp = new RegExp('redPiece[1-9]');
-            var blacKPieceRegExp = new RegExp('blackPiece[1-9]');
+            var blackPieceRegExp = new RegExp('blackPiece[1-9]');
+            var cellRegExp = new RegExp('cell');
             
             var comp;
             if(redPieceRegExp.test(id))
                 comp = new MyRedPieceComp(this.scene, id);
-            else if(blacKPieceRegExp.test(id))
+            else if(blackPieceRegExp.test(id))
                 comp = new MyBlackPieceComp(this.scene, id);
-            else
-                comp = new MyComponent(this.scene, id);
-           
-
+            else if(cellRegExp.test(id)) {
+                comp = new MyCell(this.scene, id);
+            } else {
+                comp = new MyComponent(this.scene, id)
+            }
+                
             // parse component 'selectable'
             var selectable = this.reader.getBoolean(child, 'selectable');
             

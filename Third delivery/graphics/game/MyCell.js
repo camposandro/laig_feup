@@ -3,22 +3,28 @@
  */
 class MyCell extends MyComponent {
 
-  constructor(scene, x, y) {
-    super(scene)
-    this.x = x
-    this.y = y
-    this.highlighted = false;
+  constructor(scene, id) {
+    super(scene, id)
+    this.getCoordinates()
+    this.highlighted = false
   }
 
-  display() {
-    // Sets highlighting shader active
-    if (this.highlighted)
-      this.scene.setActiveShader(this.scene.shaders[0]);
+  getCoordinates() {
+    let values = parseInt(this.id.replace(/\D/g, ''))
+    this.row = Math.floor(values / 10)
+    this.col = values % 10
+    console.log(this.row,this.col)
+  }
 
-    super.display();
+  display(mat,tex) {
+    // Sets highlighting shader active
+    //if (this.highlighted);
+      //this.scene.setActiveShader(this.scene.shaders[0]);
+
+    super.display(mat,tex);
 
     // Sets default shader
-    if (this.highlighted)
-      this.scene.setActiveShader(this.scene.defaultShader);
+    //if (this.highlighted);
+      //this.scene.setActiveShader(this.scene.defaultShader);
   }
 }

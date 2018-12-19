@@ -45,7 +45,7 @@ class XMLscene extends CGFscene {
 
         this.setUpdatePeriod(20);
 
-        //this.initShaders();
+        this.initShaders();
 
         this.game = new Teeko(this);
     }
@@ -116,7 +116,7 @@ class XMLscene extends CGFscene {
     initShaders() {
         this.shaders = [
             // highlighting cells shader
-            //new CGFshader(this.gl, "shaders/shader.vert", "shaders/shader.frag"),
+            new CGFshader(this.gl, "shaders/shader.vert", "shaders/shader.frag")
         ];
     }
 

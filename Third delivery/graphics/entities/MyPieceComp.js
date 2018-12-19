@@ -88,11 +88,11 @@ class MyPieceComp extends MyComponent{
     }
 
     setOnCell(move) {
-        var distX = move[1] - this.xPosition;
-        var distZ = move[0] - this.zPosition;
+        var distX = move[0] - this.xPosition;
+        var distZ = move[1] - this.zPosition;
         this.addTranslation(new MyTranslation(distX,0,distZ));
         this.xPosition += distX;
-        this.zPosition += distZ; 
+        this.zPosition += distZ;
     }
 
     pickAnimation() {

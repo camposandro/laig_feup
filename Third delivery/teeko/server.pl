@@ -121,6 +121,9 @@ parse_input(initialBoard,Board) :-
 	parseBoard(BoardAux,Board),
 	write(Board).
 
+parse_input(freeCell(Board,Row,Col),FreeCell) :-
+	freeCell(Board,Row,Col), FreeCell = 1.
+
 parse_input(validMoves(Board,Row,Col),ValidMoves) :-
 	validMoves(Board,Row,Col,ValidMoves),
 	write(ValidMoves).

@@ -900,12 +900,8 @@
             <texture id="inherit" length_s="1" length_t="1"/>
 
             <children>
-                <componentref id="face1"/>
-                <componentref id="face2"/>
-                <componentref id="face3"/>
+
                 <componentref id="face4"/>
-                <componentref id="face5"/>
-                <componentref id="face6"/>
             </children>
         </component>
         <!-- Cube -->
