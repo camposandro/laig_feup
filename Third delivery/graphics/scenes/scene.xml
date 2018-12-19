@@ -58,7 +58,7 @@
     <!-- Textures -->
     <textures>
         <texture id="redCell" file="textures/redCell.png"/>
-        <texture id="blackCell" file="textures/blackCell.png"/>
+        <texture id="blackCell" file="textures/marble.jpg "/>
         <texture id="redPiece" file="textures/redPiece.png"/>
         <texture id="red" file="textures/red.png"/>
         <texture id="blackPiece" file="textures/blackPiece.png"/>
