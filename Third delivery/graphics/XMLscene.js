@@ -257,12 +257,14 @@ class XMLscene extends CGFscene {
                     {
                         var customId = this.pickResults[i][1];				
                         console.log("Picked object: " + obj + ", with pick id " + customId);
-                        this.graph.picked(obj)
-
-                        let values = parseInt(obj.replace(/\D/g,''))
-                        let row = Math.floor(values / 10)
-                        let col = values % 10
-                        this.game.pickingHandler(row,col)
+                
+                        let cellexp = new RegExp('cell')
+                        if (cellexp.test(obj)) {
+                            let values = parseInt(obj.replace(/\D/g,''))
+                            let row = Math.floor(values / 10)
+                            let col = values % 10
+                            this.game.pickingHandler(row,col)
+                        }
                     }
                 }
                 this.pickResults.splice(0,this.pickResults.length);

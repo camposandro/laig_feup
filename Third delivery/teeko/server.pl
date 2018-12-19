@@ -118,19 +118,19 @@ parse_input(quit, goodbye).
 
 parse_input(initialBoard,Board) :-
 	initialBoard(BoardAux),
-	parseBoard(BoardAux,Board),
-	write(Board).
+	parseBoard(BoardAux,Board).
 
 parse_input(freeCell(Board,Row,Col),FreeCell) :-
 	freeCell(Board,Row,Col), FreeCell = 1.
 
 parse_input(validMoves(Board,Row,Col),ValidMoves) :-
-	validMoves(Board,Row,Col,ValidMoves),
-	write(ValidMoves).
+	validMoves(Board,Row,Col,ValidMoves).
 
 parse_input(placePiece(Board,Row,Col,Piece),NextBoard) :-
-	replaceBoardVal(Board,Row,Col,Piece,NextBoard),
-	write(NextBoard).
+	replaceBoardVal(Board,Row,Col,Piece,NextBoard).
+
+parse_input(movePiece(Board,Row,Col,FinalRow,FinalCol),FinalBoard) :-
+	moveBoardPiece(Board,Row,Col,FinalRow,FinalCol,FinalBoard).
 
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
