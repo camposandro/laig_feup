@@ -17,6 +17,7 @@ class Teeko {
         this.moveStack = new Array()
 
         this.NUM_PIECES = 8
+        this.currPlayer = 'black'
 
         this.state = {
             GAME_START: 0,
@@ -34,55 +35,102 @@ class Teeko {
         this.nextState()
     };
 
-    pickingHandler(row,col) {
-        if (this.currState == this.state.WAIT_FOR_FREE_CELL) {
-            this.isFreeCell(row,col)
-        } else if (this.currState == this.state.WAIT_FOR_PIECE) {
-            this.isPlayerCell(row,col)
-        } else if (this.currState == this.state.WAIT_FOR_VALID_CELL) {
+    cellPickingHandler(cell) {
+        let row = cell.row
+        let col = cell.col
 
+        switch(this.currState) {
+            case this.state.WAIT_FOR_FREE_CELL:
+                this.isFreeCell(row,col)
+                break;
+            case this.state.WAIT_FOR_VALID_CELL:
+                this.isValidMove(row,col)
+                break;
+            default:
+                break;
+        }
+    }
+
+    piecePickingHandler(piece) {
+       
+        /*if (this.selectedPiece != null) {
+            this.selectedPiece.updateState("On Board",null)
+        }*/
+
+        this.selectedPiece = piece
+        console.log(this.selectedPiece)
+
+
+        let row = piece.xPosition
+        let col = piece.zPosition
+
+        switch(this.currState) {
+            case this.state.WAIT_FOR_PIECE:
+                this.isPlayerCell(row,col)
+                break;
+            default:
+                break;
         }
     }
 
     nextState() {
         let row,col,finalRow,finalCol
-        switch (this.currState) {
+
+        switch (this.currState) 
+        {
             case this.state.GAME_START:
                 this.getInitialBoard()
                 this.piecesPlaced = 0
                 this.CURR_PIECE_NUM = 1
                 this.currState = this.state.WAIT_FOR_FREE_CELL
                 break;
+
             case this.state.WAIT_FOR_FREE_CELL:
                 if (this.piecesPlaced == this.NUM_PIECES)
-                    this.currState = this.state.MOVING_PIECES
+                    this.currState = this.state.WAIT_FOR_PIECE
                 else if (this.placedValues != undefined)
                     this.currState = this.state.PLACE_PIECES
+
                 console.log('wait for free cell')
                 break;
+
             case this.state.PLACE_PIECES:
                 row = this.placeValues[0]
                 col = this.placeValues[1]
                 this.setPieceCell(row,col)
+
                 console.log('place pieces')
                 break;
+
             case this.state.WAIT_FOR_PIECE:
-                row = this.moveFromValues[0]
-                col = this.moveFromValues[1]
-                this.currState = this.state.WAIT_FOR_VALID_CELL
+                if (this.moveFromValues != undefined)
+                    this.currState = this.state.WAIT_FOR_VALID_CELL
+
+                console.log('wait for piece')
                 break;
-            case this.state.WAIT_VALID_CELL:
-                finalRow = this.moveToValues[0]
-                finalCol = this.moveToValues[1]
-                this.currState = this.state.MOVING_PIECES
+
+            case this.state.WAIT_FOR_VALID_CELL:
+                if (this.moveToValues != undefined)
+                    this.currState = this.state.MOVING_PIECES
+
+                console.log('wait for valid cell')
                 break;
+
             case this.state.MOVING_PIECES:
                 if (this.END_OF_GAME) 
                     this.currState = this.state.GAME_END
+
+                row = this.moveFromValues[0]
+                col = this.moveFromValues[1]
+                finalRow = this.moveToValues[0]
+                finalCol = this.moveToValues[1]
+
+                console.log("MOVE FROM [" + row + "," + col + "]" + "to [" + finalRow + "," + finalCol + "]")
                 this.movePiece(row,col,finalRow,finalCol)
-                this.currState = this.state.WAIT_FOR_PIECE
-                console.log('move pieces')
+    
+                console.log('moving pieces')
                 break;
+
             case this.state.GAME_END:
                 console.log('end of game')
                 break;
@@ -91,23 +139,50 @@ class Teeko {
         }
     }
 
+    updatePlayerTurn() {
+        if (this.currPlayer == 'black') 
+            this.currPlayer = 'red'
+        else if (this.currPlayer == 'red')
+            this.currPlayer = 'black'
+    }
+
     setPieceCell(row, col) {
-        if (this.piecesPlaced % 2) {
-            // red pieces turn
-            this.placePiece(row,col,'red')
+        if (this.currPlayer == 'red') {
             let compId = 'redPiece' + this.CURR_PIECE_NUM
             this.scene.graph.components[compId].updateState('nextState', [row, col])
             this.CURR_PIECE_NUM++
-        }
-        else {
-            // black pieces turn
+        } else if (this.currPlayer == 'black') {
             this.placePiece(row,col,'black')
             let compId = 'blackPiece' + this.CURR_PIECE_NUM
             this.scene.graph.components[compId].updateState('nextState', [row, col])
         }
+
         this.piecesPlaced++
+        this.placePiece(row,col,this.currPlayer)
+        this.updatePlayerTurn()
+    
         this.currState = this.state.WAIT_FOR_FREE_CELL
         this.nextState()
+    }
+
+    isValidMove(finalRow,finalCol) {
+        console.log("POSIBBLE MOVES: " + this.possibleMoves)
+        console.log(finalRow,finalCol)
+
+        if (this.possibleMoves.includes([finalRow,finalCol])) {
+            this.moveToValues = [finalRow,finalCol]
+            this.currState = this.state.MOVING_PIECES
+            this.nextState()
+            console.log("VALID MOVE")
+        } else {
+            this.moveToValues = undefined
+            console.log("NOT VALID MOVE")
+        }
+    }
+
+    updatePieceCell(row, col) {
+        this.selectedPiece.updateState('nextState', [row, col])
+        //this.nextState()
     }
 
     getInitialBoard() {
@@ -152,6 +227,31 @@ class Teeko {
         )
     }
 
+    isPlayerCell(row,col) {
+        var game = this
+        let request = this.parseRequestToStr('playerCell', [this.board, row, col, this.currPlayer])
+
+        this.client.getPrologRequest(
+            request,
+            (data) => {
+                let playerCell = data.target.response
+                if (playerCell == 1) {
+                    console.log("PLAYER " + this.currPlayer + " CELL SELECTED")
+                    game.moveFromValues = [row,col]
+                    game.updatePieceCell()
+                    game.getValidMoves(row,col)
+                }
+                else {
+                    console.log("NOT PLAYER " + this.currPlayer + " CELL")
+                    game.moveFromValues = undefined
+                }
+            },
+            (data) => {
+                console.log('# No received answer!\n')
+            }
+        )
+    }
+
     getValidMoves(row, col) {
         var game = this
         let request = this.parseRequestToStr('validMoves', [this.board, row, col])
@@ -161,7 +261,7 @@ class Teeko {
             (data) => {
                 console.log(data.target.response)
                 game.possibleMoves = data.target.response
-                game.nextState()
+                game.currState = this.state.WAIT_FOR_VALID_CELL
             },
             (data) => {
                 console.log('# No received answer!\n')
@@ -194,6 +294,11 @@ class Teeko {
                 game.board = data.target.response
                 //checkWin()
                 console.log(game.board)
+
+                game.updatePieceCell(finalRow, finalCol)
+                this.updatePlayerTurn()
+                
+                this.currState = this.state.WAIT_FOR_PIECE     
             },
             (data) => {
                 console.log("# No received answer!\n")

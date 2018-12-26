@@ -121,7 +121,12 @@ parse_input(initialBoard,Board) :-
 	parseBoard(BoardAux,Board).
 
 parse_input(freeCell(Board,Row,Col),FreeCell) :-
-	freeCell(Board,Row,Col), FreeCell = 1.
+	(freeCell(Board,Row,Col), FreeCell = 1);
+	FreeCell = 0.
+
+parse_input(playerCell(Board,Row,Col,Piece),PlayerCell) :-
+	(checkPieceCell(Board,Piece,Row,Col), PlayerCell = 1); 
+	PlayerCell = 0.
 
 parse_input(validMoves(Board,Row,Col),ValidMoves) :-
 	validMoves(Board,Row,Col,ValidMoves).

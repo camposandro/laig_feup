@@ -1322,7 +1322,7 @@ class MySceneGraph {
             // parse component 'selectable'
             var selectable = this.reader.getBoolean(child, 'selectable');
             
-            if( selectable != null)
+            if(selectable != null)
                 if(selectable){
                     comp.setSelectable(true);
                     comp.setPickIndex(this.pickIndex++);

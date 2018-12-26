@@ -17,11 +17,12 @@ class MyPieceComp extends MyComponent{
         this.pickedLength = 0.8;
         this.xPosition = 0.5*nPiece;
         this.zPosition = -1;
+        
         this.states = new Array('Initial State','On Board','Picked','Moving');
     }
 
     updateState(nextState, move) {
-        if(nextState = 'nextState') {
+        if(nextState == 'nextState') {
             var id = this.states.indexOf(this.state) + 1;
             if(id != 4)
                 nextState = this.states[id];
@@ -36,32 +37,25 @@ class MyPieceComp extends MyComponent{
                     this.setOnCell(move);
                     this.state = nextState;
                 }
-                else
-                    return -1;
                 break;
 
             case 'On Board':
                 if(nextState == 'Picked'){
-                    this.pickAnimation();
+                    this.pickAnimation(0);
                     this.state = nextState;
                 }
-                else
-                    return -1;
                 break;
 
             case 'Picked':
                 if(nextState == 'On Board') {
-                    this.pickAnimation(move)
+                    this.pickAnimation(1)
                     this.state = nextState;
                 }
-                else if(nextState == 'Moving'){
-                    this.moveAnimation([3,4]);
+                else if(nextState == 'Moving') {
+                    this.moveAnimation(move);
                     this.state = 'On Board';
                 }
-                else if(nextState == this.state)
-                    return 0;
-                else
-                    return -1;
+               
                 break;
 
             case 'Moving':
@@ -69,10 +63,7 @@ class MyPieceComp extends MyComponent{
                     this.pickAnimation();
                     this.state = nextState;
                 }
-                else if(nextState == 'Picked')
-                    return 0;
-                else
-                    return -1;
+               
                 break;
         }   
     }   
@@ -95,10 +86,14 @@ class MyPieceComp extends MyComponent{
         this.zPosition += distZ;
     }
 
-    pickAnimation() {
+    pickAnimation(inverse) {
         var anim = new MyLinearAnimation(this.animIndex++,0.3);
         anim.addControlPoint(0,0,0);
-        anim.addControlPoint(0,this.pickedLength,0);
+
+        if (inverse)
+            anim.addControlPoint(0,-this.pickedLength,0);
+        else
+            anim.addControlPoint(0,this.pickedLength,0);
 
         this.addAnimation(this.animIndex,anim);
         
@@ -112,12 +107,11 @@ class MyPieceComp extends MyComponent{
 
         var anim = new MyLinearAnimation(this.animIndex++,1);
         anim.addControlPoint(this.xPosition,0,this.zPosition);
-        anim.addControlPoint(move[1],0,move[0]);
-        anim.addControlPoint(move[1],-this.pickedLength,move[0]);
+        anim.addControlPoint(move[0],0,move[1]);
+        anim.addControlPoint(move[0],-this.pickedLength,move[1]);
 
-        
-        this.xPosition = move[1];
-        this.zPosition = move[0];
+        this.xPosition = move[0];
+        this.zPosition = move[1];
 
         this.addAnimation(this.animIndex,anim);
         

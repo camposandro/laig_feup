@@ -258,12 +258,16 @@ class XMLscene extends CGFscene {
                         var customId = this.pickResults[i][1];				
                         console.log("Picked object: " + obj + ", with pick id " + customId);
                 
-                        let cellexp = new RegExp('cell')
-                        if (cellexp.test(obj)) {
-                            let values = parseInt(obj.replace(/\D/g,''))
-                            let row = Math.floor(values / 10)
-                            let col = values % 10
-                            this.game.pickingHandler(row,col)
+                        let cellExp = new RegExp('cell')
+                        let pieceExp = new RegExp('Piece')
+
+                        if (cellExp.test(obj)) {
+                            let cell = this.graph.components[obj]
+                            this.game.cellPickingHandler(cell)
+                        }
+                        else if (pieceExp.test(obj)) {
+                            let piece = this.graph.components[obj]
+                            this.game.piecePickingHandler(piece)
                         }
                     }
                 }
