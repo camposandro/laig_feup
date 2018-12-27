@@ -39,31 +39,26 @@ class MyInterface extends CGFinterface {
         }
     }
 
-    /**
-     * Adds a folder containing the IDs of the views passed as parameter.
-     * @param {array} viewsValues
-     */
-    addViewsGroup(viewsValues) {
+    addSettingsGroup(teeko) {
+        
+        var group = this.gui.addFolder('Settings')
+        group.open()
 
-        var group = this.gui.addFolder("Views");
-        group.open();
-
-        this.gui.add(this.scene, 'currentViewIndex', viewsValues).name("Selected view:");
+        group.add(this.scene,'gameMode',['Player VS Player', 'Player VS Bot', 'Bot VS Bot']).name('Game mode')
+        group.add(this.scene,'gameLevel',['Random','Best-play']).name('Game level')
+        
+        var controller = group.add(this.scene,'cameraRotation').name('Camera rotation')
+        controller.onChange(() => teeko.setCamera())
     }
 
-    /**
-     * Processes keyboard events.
-     * Triggers a material change on the scene when the 'm' key is pressed.
-     * @param {event}
-     */
-    processKeyboard(event) {
-        CGFinterface.prototype.processKeyboard.call(this, event);
-        switch (event.code) {
-            case 'KeyM':
-                this.scene.changeMaterials();
-                break;
-            default:
-                break;
-        }
+    addOptionsGroup() {
+        
+        var group = this.gui.addFolder('Options')
+        group.open()
+
+        group.add(this.scene,'startGame').name('Start game')
+        group.add(this.scene,'undo').name('Undo')
+        group.add(this.scene,'movie').name('Movie')
+        group.add(this.scene,'quitGame').name('Quit game')
     }
 }

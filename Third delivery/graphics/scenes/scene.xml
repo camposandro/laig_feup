@@ -4,21 +4,16 @@
     <scene root="root" axis_length="5"/>
 
     <!-- Views specification -->
-    <views default="Perspective">
-        <perspective id="Perspective" near="0.1" far="500" angle="20">
-            <from x="25.0" y="20.0" z="25.0"/>
-            <to x="0.0" y="0.0" z="0.0"/>
+    <views default="DefaultCamera">
+        <perspective id="DefaultCamera" near="0.1" far="500" angle="15">
+            <from x="25.0" y="20.0" z="2.0"/>
+            <to x="0.0" y="-1.0" z="2.0"/>
         </perspective>
 
-        <ortho id="Ortho_HorizonView" near="0.1" far="70" left="-10" right="10" top="3" bottom="-4">
-            <from x="15.0" y="5.0" z="15.0"/>
-            <to x="0.0" y="4.0" z="0.0"/>
-        </ortho>
-
-        <ortho id="Ortho_TopView" near="0.1" far="70" left="-10" right="10" top="5" bottom="-5">
-            <from x="0.0" y="20.0" z="0.0"/>
-            <to x="0.0" y="0.0" z="0.0"/>
-        </ortho>
+        <perspective id="InverseCamera" near="0.1" far="500" angle="15">
+            <from x="-25.0" y="20.0" z="2.0"/>
+            <to x="0.0" y="-1.0" z="2.0"/>
+        </perspective>
     </views>
 
     <!-- Ilumination parameters -->

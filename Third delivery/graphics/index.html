@@ -1,26 +1,57 @@
 <!DOCTYPE html>
 <html>
+
 <head lang="en">
     <meta charset="UTF-8">
     <title>LAIG - Teeko - Third delivery</title>
 
-<style>
-body, html {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-}
+    <style>
+        body,
+        html {
+            border: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
 
-canvas {
-    width: 100%;
-    height: 100%;
-}
-</style>
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        #infoPanel {
+            font-family: Courier, Arial, sans-serif;
+            text-align: center;
+            padding: 2em;
+            position: absolute;
+            margin-top: 10em;
+            color: crimson;
+            width: 20%;
+            min-width: 20%;
+        }
+
+        #infoPanel h1 {
+            font-size: 2em;
+            padding-bottom: 1em;
+        }
+
+        #infoPanel #player, #score, #time {
+            font-size: 1em;
+        }
+    </style>
 </head>
+
 <body>
 
-<script src="main.js"></script>
+    <script src="main.js"></script>
+
+    <div id="infoPanel">
+        <h1>Teeko</h1>
+        <span id="player"></span>
+        <span id="score"></span>
+        <span id="time"></span>
+    </div>
 
 </body>
+
 </html>

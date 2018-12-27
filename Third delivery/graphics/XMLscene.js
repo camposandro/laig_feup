@@ -19,6 +19,11 @@ class XMLscene extends CGFscene {
         this.lightValues = [];
         this.viewsValues = [];
         this.currentViewIndex = null;
+
+        this.gameMode = 'Player VS Player'
+        this.gameLevel = 'Random'
+        this.cameraRotation = false
+        this.activeRotation = false
     }
 
     /**
@@ -58,15 +63,6 @@ class XMLscene extends CGFscene {
     }
 
     /**
-    * Initializes the scene views with the values read from the XML file.
-    */
-    initViews() {
-        for (var key in this.graph.views) {
-            this.viewsValues.push(key);
-        }
-    }
-
-    /**
      * Initializes the scene lights with the values read from the XML file.
      */
     initLights() {
@@ -86,7 +82,7 @@ class XMLscene extends CGFscene {
                 this.lights[i].setAmbient(light.ambient[0], light.ambient[1], light.ambient[2], light.ambient[3]);
                 this.lights[i].setDiffuse(light.diffuse[0], light.diffuse[1], light.diffuse[2], light.diffuse[3]);
                 this.lights[i].setSpecular(light.specular[0], light.specular[1], light.specular[2], light.specular[3]);
-                
+
                 this.clearPickRegistration();
                 this.lights[i].setVisible(true);
                 this.clearPickRegistration();
@@ -139,9 +135,8 @@ class XMLscene extends CGFscene {
         // reads lights 'enabled' status
         for (var key in this.lightValues) {
             if (this.lightValues.hasOwnProperty(key)) {
-                if (this.lightValues[key]) 
-                {
-                this.clearPickRegistration();
+                if (this.lightValues[key]) {
+                    this.clearPickRegistration();
                     this.lights[i].setVisible(true);
 
                     this.lights[i].enable();
@@ -154,6 +149,29 @@ class XMLscene extends CGFscene {
                 this.lights[i].update();
 
                 i++;
+            }
+        }
+    }
+
+    update(currTime) {
+
+        if (this.lastTime == null)
+            this.lastTime = 0
+
+        let deltaTime = (currTime - this.lastTime) / 1000
+        
+        this.lastTime = currTime
+
+        if (this.activeRotation) {
+
+            let currAng = Math.PI * deltaTime
+            this.cameraRotationAngle -= currAng
+
+            if (this.cameraRotationAngle < 0) {
+                this.activeRotation = false
+                this.game.setCamera()
+            } else {
+                this.camera.orbit(vec3.fromValues(0, 1, 0), currAng)
             }
         }
     }
@@ -183,13 +201,10 @@ class XMLscene extends CGFscene {
 
         this.initLights();
 
-        this.initViews();
-
-        // adds lights group
+        // adds interface settings groups
+        this.interface.addSettingsGroup(this.game)
+        this.interface.addOptionsGroup()
         this.interface.addLightsGroup(this.lightValues);
-
-        // adds views group
-        this.interface.addViewsGroup(this.viewsValues);
 
         this.sceneInited = true;
     }
@@ -199,6 +214,9 @@ class XMLscene extends CGFscene {
      */
     display() {
         // ---- BEGIN background, camera and axis setup
+
+        // update teeko info panel
+        this.updatePanel()
 
         // clear image and depth buffer everytime we update the scene
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -237,27 +255,15 @@ class XMLscene extends CGFscene {
         // ---- END background, camera and axis setup
     }
 
-    /**
-    * Handles material changes after M is pressed.
-    */
-    changeMaterials() {
-        for (var key in this.graph.components) {
-            if (this.graph.components.hasOwnProperty(key)) {
-                this.graph.components[key].updateMaterial();
-            }
-        }
-    }
-
     logPicking() {
         if (this.pickMode == false) {
             if (this.pickResults != null && this.pickResults.length > 0) {
-                for (var i=0; i< this.pickResults.length; i++) {
+                for (var i = 0; i < this.pickResults.length; i++) {
                     var obj = this.pickResults[i][0];
-                    if (obj)
-                    {
-                        var customId = this.pickResults[i][1];				
+                    if (obj) {
+                        var customId = this.pickResults[i][1];
                         //console.log("Picked object: " + obj + ", with pick id " + customId);
-                
+
                         let cellExp = new RegExp('cell')
                         let pieceExp = new RegExp('Piece')
 
@@ -271,8 +277,22 @@ class XMLscene extends CGFscene {
                         }
                     }
                 }
-                this.pickResults.splice(0,this.pickResults.length);
-            }		
+                this.pickResults.splice(0, this.pickResults.length);
+            }
         }
     }
+
+    updatePanel() {
+        document.getElementById('player').innerText = 'Player: ' + this.game.currPlayer + '\n\n';
+        document.getElementById('score').innerText = 'Score: ' + 1 + '\n\n';
+        document.getElementById('time').innerText = 'Time: ' + 3 + ' s\n\n';
+    }
+
+    startGame() { }
+
+    quitGame() { }
+
+    undo() { }
+
+    movie() { }
 }
