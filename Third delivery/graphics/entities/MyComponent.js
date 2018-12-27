@@ -203,7 +203,7 @@ class MyComponent {
 
         // process children nodes
         for (let child of this.children)
-            child.display(mat, tex);
+            child.display(mat, tex); 
 
         this.scene.popMatrix();
     }

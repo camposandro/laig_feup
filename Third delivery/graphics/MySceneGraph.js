@@ -1026,7 +1026,6 @@ class MySceneGraph {
 
                             cPoints.push(uControlVertices);
                         }
-                        console.log(cPoints);
 
                         this.primitives[id] = new MyPatch(this.scene, npointsU, npointsV, npartsU, npartsV, cPoints);
                         break;

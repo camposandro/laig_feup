@@ -87,7 +87,6 @@ class MyLinearAnimation extends MyAnimation {
         mat4.identity(transMatrix);
 
         mat4.translate(transMatrix, transMatrix, [this.posX, this.posY, this.posZ]);
-        console.log(this.posX);
 
         return transMatrix;
     }

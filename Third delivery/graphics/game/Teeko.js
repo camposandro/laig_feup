@@ -39,13 +39,19 @@ class Teeko {
         let row = cell.row
         let col = cell.col
 
-        switch(this.currState) {
+        switch(this.currState) 
+        {
             case this.state.WAIT_FOR_FREE_CELL:
-                this.isFreeCell(row,col)
+                if (this.piecesPlaced == this.NUM_PIECES)
+                    this.currState = this.state.WAIT_FOR_PIECE
+                else
+                    this.isFreeCell(row,col)
                 break;
+
             case this.state.WAIT_FOR_VALID_CELL:
                 this.isValidMove(row,col)
                 break;
+
             default:
                 break;
         }
@@ -53,21 +59,25 @@ class Teeko {
 
     piecePickingHandler(piece) {
        
-        /*if (this.selectedPiece != null) {
-            this.selectedPiece.updateState("On Board",null)
-        }*/
+        if (this.selectedPiece != null) {
+            this.selectedPiece.updateState('On Board')
+        }
 
         this.selectedPiece = piece
-        console.log(this.selectedPiece)
-
 
         let row = piece.xPosition
         let col = piece.zPosition
 
-        switch(this.currState) {
-            case this.state.WAIT_FOR_PIECE:
+        switch(this.currState) 
+        {
+            case this.state.WAIT_FOR_PIECE: 
                 this.isPlayerCell(row,col)
                 break;
+
+            case this.state.WAIT_FOR_VALID_CELL:
+                this.isPlayerCell(row,col)
+                break;
+                
             default:
                 break;
         }
@@ -88,52 +98,32 @@ class Teeko {
             case this.state.WAIT_FOR_FREE_CELL:
                 if (this.piecesPlaced == this.NUM_PIECES)
                     this.currState = this.state.WAIT_FOR_PIECE
-                else if (this.placedValues != undefined)
-                    this.currState = this.state.PLACE_PIECES
-
-                console.log('wait for free cell')
                 break;
 
             case this.state.PLACE_PIECES:
                 row = this.placeValues[0]
                 col = this.placeValues[1]
                 this.setPieceCell(row,col)
-
-                console.log('place pieces')
-                break;
-
-            case this.state.WAIT_FOR_PIECE:
-                if (this.moveFromValues != undefined)
-                    this.currState = this.state.WAIT_FOR_VALID_CELL
-
-                console.log('wait for piece')
-                break;
-
-            case this.state.WAIT_FOR_VALID_CELL:
-                if (this.moveToValues != undefined)
-                    this.currState = this.state.MOVING_PIECES
-
-                console.log('wait for valid cell')
                 break;
 
             case this.state.MOVING_PIECES:
-                if (this.END_OF_GAME) 
-                    this.currState = this.state.GAME_END
+                console.log(this.moveFromValues)
+                console.log(this.moveToValues)
 
-                row = this.moveFromValues[0]
-                col = this.moveFromValues[1]
-                finalRow = this.moveToValues[0]
-                finalCol = this.moveToValues[1]
+                if (this.moveFromValues != undefined && this.moveToValues != undefined) {
+                    row = this.moveFromValues[0]
+                    col = this.moveFromValues[1]
+                    finalRow = this.moveToValues[0]
+                    finalCol = this.moveToValues[1]
 
-                console.log("MOVE FROM [" + row + "," + col + "]" + "to [" + finalRow + "," + finalCol + "]")
-                this.movePiece(row,col,finalRow,finalCol)
-    
-                console.log('moving pieces')
+                    this.movePiece(row,col,finalRow,finalCol)
+                }
                 break;
 
             case this.state.GAME_END:
-                console.log('end of game')
+                console.log("END OF GAME!")
                 break;
+                
             default:
                 break;
         }
@@ -152,37 +142,28 @@ class Teeko {
             this.scene.graph.components[compId].updateState('nextState', [row, col])
             this.CURR_PIECE_NUM++
         } else if (this.currPlayer == 'black') {
-            this.placePiece(row,col,'black')
             let compId = 'blackPiece' + this.CURR_PIECE_NUM
             this.scene.graph.components[compId].updateState('nextState', [row, col])
         }
 
         this.piecesPlaced++
         this.placePiece(row,col,this.currPlayer)
-        this.updatePlayerTurn()
-    
-        this.currState = this.state.WAIT_FOR_FREE_CELL
-        this.nextState()
     }
 
     isValidMove(finalRow,finalCol) {
-        console.log("POSIBBLE MOVES: " + this.possibleMoves)
-        console.log(finalRow,finalCol)
+        let move = [finalRow, finalCol]
 
-        if (this.possibleMoves.includes([finalRow,finalCol])) {
+        if (this.possibleMoves.includes(move)) {
             this.moveToValues = [finalRow,finalCol]
             this.currState = this.state.MOVING_PIECES
             this.nextState()
-            console.log("VALID MOVE")
         } else {
             this.moveToValues = undefined
-            console.log("NOT VALID MOVE")
         }
     }
 
     updatePieceCell(row, col) {
         this.selectedPiece.updateState('nextState', [row, col])
-        //this.nextState()
     }
 
     getInitialBoard() {
@@ -195,7 +176,32 @@ class Teeko {
                 game.board = data.target.response
                 game.nextState()
             },
+            () => {
+                console.log('# No received answer!\n')
+            }
+        )
+    }
+
+    checkWin() {
+        var game = this
+        let request = this.parseRequestToStr('checkWin', [game.board])
+
+        this.client.getPrologRequest(
+            request,
             (data) => {
+                let win = data.target.response
+
+                if (win != 0) {
+                    if (win == 'black')
+                        console.log("BLACK PIECES WON!")
+                    else if (win == 'red')
+                        console.log("RED PIECES WON!")
+
+                    game.currState = game.state.GAME_END
+                    game.nextState()
+                }
+            },
+            () => {
                 console.log('# No received answer!\n')
             }
         )
@@ -209,19 +215,18 @@ class Teeko {
             request,
             (data) => {
                 let freeCell = data.target.response
+                
                 if (freeCell == 1) {
-                    console.log("FREE CELL")
                     game.placeValues = [row,col]
                     game.currState = game.state.PLACE_PIECES
                 }
                 else {
-                    console.log("NOT FREE CELL")
                     game.placeValues = undefined
                 }
                                 
                 game.nextState()
             },
-            (data) => {
+            () => {
                 console.log('# No received answer!\n')
             }
         )
@@ -235,18 +240,17 @@ class Teeko {
             request,
             (data) => {
                 let playerCell = data.target.response
+
                 if (playerCell == 1) {
-                    console.log("PLAYER " + this.currPlayer + " CELL SELECTED")
                     game.moveFromValues = [row,col]
-                    game.updatePieceCell()
+                    game.updatePieceCell() 
                     game.getValidMoves(row,col)
                 }
                 else {
-                    console.log("NOT PLAYER " + this.currPlayer + " CELL")
-                    game.moveFromValues = undefined
+                   // game.moveFromValues = undefined
                 }
             },
-            (data) => {
+            () => {
                 console.log('# No received answer!\n')
             }
         )
@@ -259,11 +263,10 @@ class Teeko {
         this.client.getPrologRequest(
             request,
             (data) => {
-                console.log(data.target.response)
                 game.possibleMoves = data.target.response
                 game.currState = this.state.WAIT_FOR_VALID_CELL
             },
-            (data) => {
+            () => {
                 console.log('# No received answer!\n')
             }
         )
@@ -276,10 +279,14 @@ class Teeko {
         this.client.getPrologRequest(request,
             (data) => {
                 game.board = data.target.response
-                // checkWin()
-                console.log(game.board)
+
+                game.currState = this.state.WAIT_FOR_FREE_CELL
+                game.updatePlayerTurn()
+                game.checkWin()
+
+                game.nextState()
             },
-            (data) => {
+            () => {
                 console.log("# No received answer!\n")
             }
         );
@@ -292,15 +299,15 @@ class Teeko {
         this.client.getPrologRequest(request,
             (data) => {
                 game.board = data.target.response
-                //checkWin()
-                console.log(game.board)
 
+                game.currState = this.state.WAIT_FOR_PIECE
                 game.updatePieceCell(finalRow, finalCol)
-                this.updatePlayerTurn()
-                
-                this.currState = this.state.WAIT_FOR_PIECE     
+                game.updatePlayerTurn()
+                game.checkWin()
+
+                game.nextState()
             },
-            (data) => {
+            () => {
                 console.log("# No received answer!\n")
             }
         );

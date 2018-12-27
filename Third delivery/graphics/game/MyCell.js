@@ -13,7 +13,6 @@ class MyCell extends MyComponent {
     let values = parseInt(this.id.replace(/\D/g, ''))
     this.row = Math.floor(values / 10)
     this.col = values % 10
-    console.log(this.row,this.col)
   }
 
   display(mat,tex) {

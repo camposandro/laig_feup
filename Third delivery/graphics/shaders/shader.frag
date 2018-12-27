@@ -114,7 +114,7 @@ void main()
     vec3 E = normalize(eyeVec);
 
     vec4 color = texture2D(uSampler, vTextureCoord);
-    vec4 finalColor = vec4(1.0,1.0,1.0,1.0);
+    vec4 finalColor = vec4(0.0,1.0,0.0,1.0);
 
-	gl_FragColor = finalColor * lighting(vertex,E,N);
+	gl_FragColor = color * lighting(vertex,E,N);
 }

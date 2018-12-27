@@ -120,6 +120,11 @@ parse_input(initialBoard,Board) :-
 	initialBoard(BoardAux),
 	parseBoard(BoardAux,Board).
 
+parse_input(checkWin(Board),Win) :-
+	(checkWin(Board,'black'), Win = 'black');
+	(checkWin(Board,'red'), Win = 'red');
+	Win = 0.
+
 parse_input(freeCell(Board,Row,Col),FreeCell) :-
 	(freeCell(Board,Row,Col), FreeCell = 1);
 	FreeCell = 0.
