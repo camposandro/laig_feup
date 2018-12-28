@@ -33,12 +33,10 @@ class XMLscene extends CGFscene {
     init(application) {
         super.init(application);
 
-
-        this.setPickEnabled(true);
         this.sceneInited = false;
 
-        this.initCameras();
-
+        this.setPickEnabled(true);
+    
         this.enableTextures(true);
 
         this.gl.clearDepth(100.0);
@@ -54,14 +52,7 @@ class XMLscene extends CGFscene {
 
         this.game = new Teeko(this);
     }
-
-    /**
-     * Initializes the first scene camera.
-     */
-    initCameras() {
-        this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-    }
-
+    
     /**
      * Initializes the scene lights with the values read from the XML file.
      */
@@ -163,8 +154,8 @@ class XMLscene extends CGFscene {
         this.lastTime = currTime
 
         if (this.activeRotation) {
-
             let currAng = Math.PI * deltaTime
+            
             this.cameraRotationAngle -= currAng
 
             if (this.cameraRotationAngle < 0) {
@@ -183,7 +174,7 @@ class XMLscene extends CGFscene {
     onGraphLoaded() {
 
         // set parsed default camera
-        this.updateView();
+        //this.updateView();
 
         // change axis reference length according to parsed graph
         this.axis = new CGFaxis(this, this.graph.axis_length);
@@ -215,6 +206,9 @@ class XMLscene extends CGFscene {
     display() {
         // ---- BEGIN background, camera and axis setup
 
+        this.logPicking();
+        this.clearPickRegistration();
+
         // update teeko info panel
         this.updatePanel()
 
@@ -232,9 +226,6 @@ class XMLscene extends CGFscene {
         this.pushMatrix();
 
         if (this.sceneInited) {
-            // update camera
-            this.updateView();
-
             // draw axis
             this.axis.display();
 
@@ -242,9 +233,7 @@ class XMLscene extends CGFscene {
             this.updateLights();
 
             // displays the scene
-            this.clearPickRegistration();
             this.graph.displayScene();
-            this.clearPickRegistration();
         }
         else {
             // draw axis
@@ -283,9 +272,14 @@ class XMLscene extends CGFscene {
     }
 
     updatePanel() {
-        document.getElementById('player').innerText = 'Player: ' + this.game.currPlayer + '\n\n';
-        document.getElementById('score').innerText = 'Score: ' + 1 + '\n\n';
-        document.getElementById('time').innerText = 'Time: ' + 3 + ' s\n\n';
+        document.getElementById('player').innerText = 'Player: ' + this.game.currPlayer.id + '\n\n'
+        document.getElementById('score').innerText = 'Score: ' + this.game.currPlayer.score + '\n\n'
+        document.getElementById('time').innerText = 'Time: ' + this.game.currPlayer.time + ' s\n\n'
+
+        let winnerStr = '-'
+        if (this.game.winner != undefined) 
+            winnerStr = this.game.winner
+        document.getElementById('winner').innerText = 'Winner: ' + winnerStr + '\n\n'
     }
 
     startGame() { }

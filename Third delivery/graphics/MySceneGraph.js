@@ -1576,17 +1576,12 @@ class MySceneGraph {
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
-        this.scene.logPicking();
-        this.scene.clearPickRegistration();
-        //console.log(this.scene.pickResults);
         var root = this.components[this.root];
         if (root == null)
             return "[displayScene]: root node does not exist!";
+
         // display scene graph starting at the root component
         root.display(root.materials[root.currentMaterialIndex][1], root.texture);
-        
-        this.scene.clearPickRegistration();
-    
     }
 
     registerPicking(idComp, index) {

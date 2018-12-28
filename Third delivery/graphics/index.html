@@ -28,6 +28,11 @@
             color: crimson;
             width: 20%;
             min-width: 20%;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
         }
 
         #infoPanel h1 {
@@ -35,7 +40,10 @@
             padding-bottom: 1em;
         }
 
-        #infoPanel #player, #score, #time {
+        #infoPanel #player,
+        #score,
+        #time
+        #winner {
             font-size: 1em;
         }
     </style>
@@ -50,6 +58,7 @@
         <span id="player"></span>
         <span id="score"></span>
         <span id="time"></span>
+        <span id="winner"></span>
     </div>
 
 </body>

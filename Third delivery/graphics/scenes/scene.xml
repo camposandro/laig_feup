@@ -472,6 +472,7 @@
 
         <component id="myBoard" selectable = "false">
             <transformation>
+    
             </transformation>
 
             <materials>
