@@ -32,7 +32,6 @@ class MyInterface extends CGFinterface {
     addLightsGroup(lightValues) {
 
         var group = this.gui.addFolder("Lights");
-        group.open();
 
         for (var key in lightValues) {
             group.add(lightValues, key);
@@ -56,9 +55,9 @@ class MyInterface extends CGFinterface {
         var group = this.gui.addFolder('Options')
         group.open()
 
-        group.add(this.scene,'startGame').name('Start game')
-        group.add(this.scene,'undo').name('Undo')
-        group.add(this.scene,'movie').name('Movie')
-        group.add(this.scene,'quitGame').name('Quit game')
+        group.add(this.scene.game,'startGame').name('Start game')
+        group.add(this.scene.game,'undo').name('Undo')
+        group.add(this.scene.game,'movie').name('Movie')
+        group.add(this.scene.game,'quitGame').name('Quit game')
     }
 }

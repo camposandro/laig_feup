@@ -11,8 +11,10 @@ class MyPlayer {
     constructor(id,game) {
         this.id = id
         this.game = game
-        this.time = 5       // 5s per turn
+        this.time = 10      // 10s per turn
         this.score = 0      // number of won games
+
+        this.moveStack = new Array()
 
         this.setView()
     }
@@ -45,7 +47,7 @@ class MyPlayer {
     }
 
     resetTimer() {
-        this.time = 5
+        this.time = 10
     }
 
     updateScore() {

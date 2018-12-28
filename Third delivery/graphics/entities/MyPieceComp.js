@@ -4,7 +4,7 @@
 
 var DEGREE_TO_RAD = Math.PI / 180;
 
-class MyPieceComp extends MyComponent{ 
+class MyPieceComp extends MyComponent { 
 
 
     constructor(scene, id) {
@@ -40,7 +40,6 @@ class MyPieceComp extends MyComponent{
                 break;
 
             case 'On Board':
-                console.log("ON BOARD")
                 if(nextState == 'Picked'){
                     this.pickAnimation(0);
                     this.state = nextState;
@@ -48,7 +47,6 @@ class MyPieceComp extends MyComponent{
                 break;
 
             case 'Picked':
-                console.log("PICKED")
                 if(nextState == 'On Board') {
                     this.pickAnimation(1)
                     this.state = nextState;

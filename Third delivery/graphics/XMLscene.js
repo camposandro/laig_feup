@@ -272,21 +272,20 @@ class XMLscene extends CGFscene {
     }
 
     updatePanel() {
-        document.getElementById('player').innerText = 'Player: ' + this.game.currPlayer.id + '\n\n'
-        document.getElementById('score').innerText = 'Score: ' + this.game.currPlayer.score + '\n\n'
-        document.getElementById('time').innerText = 'Time: ' + this.game.currPlayer.time + ' s\n\n'
+
+        let playerStr = '-', scoreStr = '-', timeStr = '-'
+        if (this.game.currPlayer != undefined) {
+            playerStr = this.game.currPlayer.id
+            scoreStr = this.game.currPlayer.score
+            timeStr = this.game.currPlayer.time
+        }
+        document.getElementById('player').innerText = 'Player: ' + playerStr+ '\n\n'
+        document.getElementById('score').innerText = 'Score: ' + scoreStr + '\n\n'
+        document.getElementById('time').innerText = 'Time: ' + timeStr + ' s\n\n'
 
         let winnerStr = '-'
         if (this.game.winner != undefined) 
             winnerStr = this.game.winner
         document.getElementById('winner').innerText = 'Winner: ' + winnerStr + '\n\n'
-    }
-
-    startGame() { }
-
-    quitGame() { }
-
-    undo() { }
-
-    movie() { }
+    }  
 }

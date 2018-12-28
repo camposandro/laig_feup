@@ -15,10 +15,10 @@ class MyMove {
         this.initCell = initCell;
         this.finalCell = finalCell;
         this.span = 1; // predefined move span of 1 second
-        this.initAnimation();
+        //this.initAnimation();
     };
 
-    initAnimation() {
+    /*initAnimation() {
         switch(this.type) {
             case 'linear':
                 this.animation = new MyLinearAnimation(0,1);
@@ -37,5 +37,5 @@ class MyMove {
                 console.log('[MyMove]: undefined animation type');
                 return;
         }
-    }
+    }*/
 }
