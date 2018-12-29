@@ -48,6 +48,14 @@
             <diffuse r="0.7" g="0.7" b="0.1" a="1.0"/>
             <specular r="1.0" g="1.0" b="0.0" a="1.0"/>
         </omni>
+    
+        <spot id="light7" enabled="1" angle="1.0" exponent="1.0">
+            <location x="7.5" y="7.0" z="7.5" w="1.0"/>
+            <target x="7.5" y="4.0" z="7.5"/>
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0"/>
+            <diffuse r="0.9" g="0.3" b="0.2" a="1.0"/>
+            <specular r="0.9" g="0.9" b="0.4" a="1.0"/>
+        </spot>
     </lights>
 
     <!-- Textures -->
@@ -57,8 +65,13 @@
         <texture id="redPiece" file="textures/redPiece.png"/>
         <texture id="red" file="textures/red.png"/>
         <texture id="blackPiece" file="textures/blackPiece.png"/>
-        <texture id="black" file="textures/black.png"/>
-        <!-- <texture id="tableAppearance" file="textures/marble.png"/> -->
+        <texture id="black" file="textures/black.png"/>        
+        <texture id="floorAppearance" file="textures/floor.png"/>
+        <texture id="windowAppearance" file="textures/window.png"/>
+        <texture id="paintingAppearance" file="textures/painting.png"/>
+        <texture id="carpetAppearance" file="textures/carpet.png"/>
+        <texture id="tableAppearance" file="textures/marble.png"/>
+        <texture id="roofAppearance" file="textures/roof.png"/>
     </textures>
 
     <!-- Materials -->
@@ -93,13 +106,85 @@
             <diffuse r="0.0" g="0.0" b="0.4" a="1.0"/>
             <specular r="0.0" g="0.0" b="0.0" a="1.0"/>   
         </material>
+        <material id="wallMaterial1" shininess="1">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.2" g="0.2" b="0.2" a="1.0"/>
+            <specular r="0.1" g="0.1" b="0.1" a="1.0"/>   
+        </material>
+        <material id="wallMaterial2" shininess="1">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0"/>  
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0"/>   
+            <diffuse r="0.2" g="1.0" b="0.3" a="1.0"/>
+            <specular r="0.1" g="0.1" b="0.1" a="1.0"/>   
+        </material>
     </materials>
 
     <!-- Transformations -->
     <transformations>
        	<transformation id="trfTable">
+            <scale x="1" y="1" z="1"/>
             <translate x="7.5" y="0.0" z="7.5"/>
         </transformation>
+        
+        <transformation id="trfLeftWall">
+            <translate x="0.0" y="4.0" z="7.5"/>
+            <rotate axis="y" angle="90"/>
+            <scale x="15.0" y="8.0" z="0.2"/>
+        </transformation>
+
+        <transformation id="trfWindowFrame">
+            <translate x="0.1" y="4.5" z="7.5"/>
+            <rotate axis="y" angle="90"/>
+            <scale x="4.0" y="4.0" z="0.2"/>
+        </transformation>
+
+        <transformation id="trfRightWall">
+            <translate x="7.5" y="4.0" z="0.0"/>
+            <scale x="15.0" y="8.0" z="0.2"/>
+        </transformation>
+
+        <transformation id="trfPaintingFrame">
+            <translate x="7.5" y="4.0" z="0.1"/>
+            <scale x="10.0" y="5.0" z="0.2"/>
+        </transformation>
+
+        <transformation id="trfFloor">
+            <translate x="7.5" y="0.0" z="7.5"/>
+            <rotate axis="x" angle="-90"/>
+            <scale x="15.0" y="15.0" z="0.2"/>
+        </transformation>
+
+        <transformation id="trfCarpet">
+            <translate x="7.5" y="0.1" z="7.5"/>
+            <rotate axis="x" angle="-90"/>
+            <scale x="8.0" y="6.0" z="1.0"/>
+        </transformation>
+	
+	    <transformation id="trfLamp">
+	    <translate x="5.8" y="3.7" z="7.5"/>
+	    </transformation>
+
+        <transformation id="trfBox">
+            <translate x="9.0" y="4.15" z="7.5"/>
+        </transformation>
+
+	    <transformation id="trfPyramid">
+            <translate x="9.0" y="4.65" z="7.5"/>
+        </transformation>
+
+        <transformation id="trfSphere">
+            <translate x="7.3" y="4.15" z="7.5"/>
+            <scale x="0.5" y="0.5" z="0.5"/>
+            <rotate axis="y" angle="180"/>
+            <rotate axis="x" angle="90"/>
+        </transformation>
+        
+       	<transformation id="trfBoard">
+            <scale x="2" y="2" z="2"/>
+            <translate x="-6.5" y="-3.7" z="-6.3"/>
+        </transformation>
+
     </transformations>
 
     <!-- Animations -->
@@ -178,6 +263,291 @@
 
     <!-- Composed objects -->
     <components>
+
+        <component id="myCube" selectable = "false">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="inherit" length_s="1" length_t="1"/>
+
+            <children>
+                <componentref id="face1"/>
+                <componentref id="face2"/>
+                <componentref id="face3"/>
+                <componentref id="face4"/>
+                <componentref id="face5"/>
+                <componentref id="face6"/>
+            </children>
+        </component>
+
+        <!-- Table -->
+        <component id="tableTop" selectable = "false">
+            <transformation>
+                <translate x="0.0" y="3.5" z="0.0"/>
+                <scale x="5.0" y="0.3" z="3.0"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+           
+            <texture id="tableAppearance" length_s="1" length_t="1"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+
+        <component id="tableLeg1" selectable = "false">
+            <transformation>
+                <translate x="-2.3" y="1.7" z="1.3"/>
+                <scale x="0.3" y="3.5" z="0.3"/>
+            </transformation>
+
+            <materials>
+                <material id="tableLegsMaterial1"/>
+                <material id="tableLegsMaterial2"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+
+         <component id="tableLeg2" selectable = "false">
+            <transformation>
+                <translate x="2.3" y="1.7" z="1.3"/>
+                <scale x="0.3" y="3.5" z="0.3"/>
+            </transformation>
+
+            <materials>
+                <material id="tableLegsMaterial1"/>
+                <material id="tableLegsMaterial2"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+
+        <component id="tableLeg3" selectable = "false">
+            <transformation>
+                <translate x="2.3" y="1.7" z="-1.3"/>
+                <scale x="0.3" y="3.5" z="0.3"/>
+            </transformation>
+
+            <materials>
+                <material id="tableLegsMaterial1"/>
+                <material id="tableLegsMaterial2"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+
+         <component id="tableLeg4" selectable = "false">
+            <transformation>
+                <translate x="-2.3" y="1.7" z="-1.3"/>
+                <scale x="0.3" y="3.5" z="0.3"/>
+            </transformation>
+
+            <materials>
+                <material id="tableLegsMaterial1"/>
+                <material id="tableLegsMaterial2"/>
+            </materials>
+           
+            <texture id="none"/>
+
+            <children>
+                <componentref id="myCube"/>
+            </children>
+        </component>
+
+        <component id="myTable" selectable = "false">
+            <transformation>
+                <transformationref id="trfTable"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="tableTop"/>
+                <componentref id="tableLeg1"/>
+                <componentref id="tableLeg2"/>
+                <componentref id="tableLeg3"/>
+                <componentref id="tableLeg4"/>
+            </children>
+        </component>
+
+        <!-- Carpet -->
+        <component id="myCarpet" selectable = "false">
+            <transformation>
+                <transformationref id="trfCarpet"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="carpetAppearance" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+
+        <!-- Floor -->
+        <component id="myFloor" selectable = "false">
+            <transformation>
+                <transformationref id="trfFloor"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="floorAppearance" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+
+        <!-- Right wall -->
+        <component id="paintingFrame" selectable = "false">
+            <transformation>
+                <transformationref id="trfPaintingFrame"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="paintingAppearance" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+
+        <component id="rightWall" selectable = "false">
+            <transformation>
+                <transformationref id="trfRightWall"/>
+            </transformation>
+
+            <materials>
+                <material id="wallMaterial1"/>
+                <material id="wallMaterial2"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+
+        <component id="myRightWall" selectable = "false">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="rightWall"/>
+                <componentref id="paintingFrame"/>
+            </children>
+        </component>
+
+        <!-- Left wall -->
+        <component id="windowFrame" selectable = "false">
+            <transformation>
+                <transformationref id="trfWindowFrame"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="windowAppearance" length_s="1" length_t="1"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+
+        <component id="leftWall" selectable = "false">
+            <transformation>
+                <transformationref id="trfLeftWall"/>
+            </transformation>
+
+            <materials>
+                <material id="wallMaterial1"/>
+                <material id="wallMaterial2"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <primitiveref id="rectangle"/>
+            </children>
+        </component>
+
+        <component id="myLeftWall" selectable = "false">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="inherit"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="leftWall"/>
+                <componentref id="windowFrame"/>
+            </children>
+        </component>
+
+        <!-- Living Room element -->
+        <component id="Living Room" selectable = "false">
+            <transformation>
+                <transformationref id="trfBoard"/>
+            </transformation>
+
+            <materials>
+                <material id="default"/>
+            </materials>
+
+            <texture id="none"/>
+
+            <children>
+                <componentref id="myLeftWall"/>
+                <componentref id="myRightWall"/>
+                <componentref id="myFloor"/>
+                <componentref id="myCarpet"/>
+                <componentref id="myTable"/>
+            </children>
+        </component>
 
         <!-- Root element -->
         <component id="root" selectable = "false">
@@ -522,7 +892,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell12" selectable = "true">
@@ -537,7 +907,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell13" selectable = "true">
@@ -552,7 +922,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell14" selectable = "true">
@@ -567,7 +937,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell15" selectable = "true">
@@ -582,7 +952,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell21" selectable = "true">
@@ -597,7 +967,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell22" selectable = "true">
@@ -612,7 +982,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell23" selectable = "true">
@@ -627,7 +997,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell24" selectable = "true">
@@ -642,7 +1012,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell25" selectable = "true">
@@ -657,7 +1027,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell31" selectable = "true">
@@ -672,7 +1042,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell32" selectable = "true">
@@ -687,7 +1057,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell33" selectable = "true">
@@ -702,7 +1072,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell34" selectable = "true">
@@ -717,7 +1087,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell35" selectable = "true">
@@ -732,7 +1102,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell41" selectable = "true">
@@ -747,7 +1117,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell42" selectable = "true">
@@ -762,7 +1132,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell43" selectable = "true">
@@ -777,7 +1147,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell44" selectable = "true">
@@ -792,7 +1162,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell45" selectable = "true">
@@ -807,7 +1177,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell51" selectable = "true">
@@ -822,7 +1192,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell52" selectable = "true">
@@ -837,7 +1207,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell53" selectable = "true">
@@ -852,7 +1222,7 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell54" selectable = "true">
@@ -867,7 +1237,7 @@
             <texture id="blackCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
         <component id="cell55" selectable = "true">
@@ -882,10 +1252,10 @@
             <texture id="redCell" length_s = "1" length_t= "1"/>
 
             <children>
-                <componentref id="myCube"/>
+                <componentref id="myBoardFace"/>
             </children>
         </component>
-        <component id="myCube" selectable = "false">
+        <component id="myBoardFace" selectable = "false">
             <transformation>
             </transformation>
 

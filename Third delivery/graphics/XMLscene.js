@@ -22,6 +22,7 @@ class XMLscene extends CGFscene {
 
         this.gameMode = 'Player VS Player'
         this.gameLevel = 'Random'
+        this.gameBackGround = 'Living Room'
         this.cameraRotation = false
         this.activeRotation = false
     }

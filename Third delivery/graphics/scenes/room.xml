@@ -592,7 +592,7 @@
         </component>
 
         <!-- Root element -->
-        <component id="root" selectable = "false">
+        <component id="livingRoom" selectable = "false">
             <transformation>
             </transformation>
 
