@@ -15,8 +15,8 @@ class MyPieceComp extends MyComponent {
         var idLength = id.length; 
         var nPiece = id.charAt(idLength - 1); 
         this.pickedLength = 0.8;
-        this.xPosition = 0.5*nPiece;
-        this.zPosition = -1;
+        this.zPosition = 0.5*nPiece + 1.8;
+        this.xPosition = 0;
         
         this.states = new Array('Initial State','On Board','Picked','Moving');
     }
@@ -69,18 +69,37 @@ class MyPieceComp extends MyComponent {
     }   
 
     setOnBoard() {
-        this.addTranslation(new MyTranslation(0,-this.xPosition,0));
-        this.addRotation(new MyRotation('x',-90 * DEGREE_TO_RAD));
-        this.addTranslation(new MyTranslation(1.05,-0.4,-1.3));
-        this.addTranslation(new MyTranslation(0,0.7,0.5));
-        this.xPosition = 1;
-        this.zPosition = 1;
+
+        var anim = new MyLinearAnimation(this.animIndex++,0.3);
+        anim.addControlPoint(0,0,0);
+        anim.addControlPoint(0,0,-this.pickedLength - 0.2);
+        this.addAnimation(this.animIndex,anim);
+
+        var anim2 = new MyCircularAnimation(this.animIndex++,0.5,"0 0 0",0,0,-Math.PI/2);
+        anim2.changeAxis('x');
+        this.addAnimation(this.animIndex,anim2);
+
+       
+        if(this.animationsDone){
+           this.currentAnimationIndex++;
+           this.animationsDone = false;
+        }
+
     }
 
     setOnCell(move) {
         var distX = move[0] - this.xPosition;
         var distZ = move[1] - this.zPosition;
-        this.addTranslation(new MyTranslation(distX,0,distZ));
+        console.log('xPosition: ' + this.xPosition);
+        console.log('move[0]: ' + move[0]);
+        //this.addTranslation(new MyTranslation(distX,0,distZ));
+
+        var anim = new MyLinearAnimation(this.animIndex++,1);
+        anim.addControlPoint(0,0,0);
+        anim.addControlPoint(distX,0,distZ);
+        anim.addControlPoint(distX,-this.pickedLength,distZ);
+        this.addAnimation(this.animIndex,anim);
+
         this.xPosition += distX;
         this.zPosition += distZ;
     }

@@ -1582,6 +1582,9 @@ class MySceneGraph {
 
         // display scene graph starting at the root component
         root.display(root.materials[root.currentMaterialIndex][1], root.texture);
+        var obj = this.components[this.scene.gameBackGround];
+        //console.log(this.scene.gameBackGround);
+        obj.display(obj.materials[obj.currentMaterialIndex][1], obj.texture)
     }
 
     registerPicking(idComp, index) {
