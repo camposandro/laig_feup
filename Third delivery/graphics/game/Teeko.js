@@ -21,9 +21,9 @@ class Teeko {
 
         this.client = new Client()
 
-        this.boardStack = new Array()
-        this.blackMoveStack = new Array()
-        this.redMoveStack = new Array()
+        this.board = null
+
+        this.moveId = 1
 
         this.blackPlayer = new MyPlayer('black', this)
         this.redPlayer = new MyPlayer('red', this)
@@ -50,7 +50,13 @@ class Teeko {
         this.currPlayer = this.blackPlayer
         this.currPlayer.startTimer()
         this.playerTime = this.currPlayer.time
-        this.nextState()
+
+        this.piecesPlaced = 0
+        this.CURR_BLACK_NUM = 1
+        this.CURR_RED_NUM = 1
+
+        if (this.currState != this.state.MOVIE)
+            this.nextState()
     }
 
     undo() {
@@ -64,43 +70,84 @@ class Teeko {
             if (moveStack.length > 0) {
 
                 // retrieve last move and corresponding piece
-                let lastMove = this.dequeue(moveStack)
-                let piece = this.getBoardPiece(lastMove.finalCell)
+                let lastMove = null
+                while (moveStack.length > 0) {
+                    let move = this.dequeue(moveStack)
+                    if (move.type == 'move') {
+                        lastMove = move
+                        break
+                    }
+                }
 
-                // if initial cell of the last move is free
-                if (this.getBoardPiece(lastMove.initCell) == null) {
-                    // pick piece
-                    piece.updateState('Picked')
-                    // update latest board
-                    this.movePiece(lastMove.finalCell,lastMove.initCell)
-                } 
+                if (lastMove != null) {
+                    let piece = this.getBoardPiece(lastMove.finalCell)
+
+                    // if initial cell of the last move is free
+                    if (this.getBoardPiece(lastMove.initCell) == null) {
+                        // pick piece
+                        piece.updateState('Picked')
+                        // update latest board
+                        this.movePiece('undo', lastMove.finalCell, lastMove.initCell)
+                    }
+                }
+            } 
+        }
+
+        this.currState = prevState
+    }
+
+    movie() {
+        let prevState = this.currState
+        this.currState = this.state.MOVIE
+
+        // restore initial board
+        this.board = this.initBoard
+
+        // retrieve all moves, sorted by asc order
+        let moves = this.getSortedMoves()
+
+        if (this.currState != this.state.GAME_START && this.currState != this.state.UNDO) {
+
+            this.startGame()
+
+            let index = 0
+            while (index < moves.length) {
+                let currMove = moves[index]
+
+                let initCell = currMove.initCell
+                let finalCell = currMove.finalCell
+
+                console.log(currMove)
+
+                switch(currMove.type) {
+                    case 'place':
+                        this.setPieceCell(initCell)
+                        break;
+                    case 'move':
+                        this.movePiece('move', initCell, finalCell)
+                        break;
+                    case 'undo':
+                        this.movePiece('undo', initCell, finalCell)
+                        break;
+                    default:
+                        break;
+                }
+
+                index++
             }
         }
 
         this.currState = prevState
     }
 
-    getBoardPiece(cell) {
-        let row = cell[0], col = cell[1]
-
-        let components = this.scene.graph.components
-
-        for (let key in components) {
-            let component = components[key]
-            if (component instanceof MyPieceComp
-                && component.xPosition == row
-                && component.zPosition == col)
-                return component
-        }
-
-        return null
+    getSortedMoves() {
+        let result = [...this.blackPlayer.moveStack, ...this.redPlayer.moveStack]
+        return result.sort((move1,move2) => move1.id - move2.id)
     }
 
     quitGame() {
         /* TODO: dar reset à board e à maq. estados enquanto se metem peças nas caixas */
     }
-
-    movie() { }
 
     /** SCENERY */
 
@@ -147,7 +194,7 @@ class Teeko {
     /** LOGIC */
 
     cellPickingHandler(cell) {
-        let cellVal = [cell.row,cell.col]
+        let cellVal = [cell.row, cell.col]
 
         switch (this.currState) {
             case this.state.WAIT_FOR_FREE_CELL:
@@ -173,7 +220,7 @@ class Teeko {
 
         this.selectedPiece = piece
 
-        let cellVal = [piece.xPosition,piece.zPosition]
+        let cellVal = [piece.xPosition, piece.zPosition]
 
         switch (this.currState) {
             case this.state.WAIT_FOR_PIECE:
@@ -195,10 +242,6 @@ class Teeko {
         switch (this.currState) {
             case this.state.GAME_START:
                 this.getInitialBoard()
-                this.piecesPlaced = 0
-                this.CURR_BLACK_NUM = 1
-                this.CURR_RED_NUM = 1
-                this.currState = this.state.WAIT_FOR_FREE_CELL
                 break;
 
             case this.state.WAIT_FOR_FREE_CELL:
@@ -207,14 +250,14 @@ class Teeko {
                 break;
 
             case this.state.PLACE_PIECES:
-                initCell = [this.placeValues[0],this.placeValues[1]]
+                initCell = [this.placeValues[0], this.placeValues[1]]
                 this.setPieceCell(initCell)
                 break;
 
             case this.state.MOVING_PIECES:
-                initCell = [this.moveFromValues[0],this.moveFromValues[1]]
-                finalCell = [this.moveToValues[0],this.moveToValues[1]]                
-                this.movePiece(initCell, finalCell)
+                initCell = [this.moveFromValues[0], this.moveFromValues[1]]
+                finalCell = [this.moveToValues[0], this.moveToValues[1]]
+                this.movePiece('move', initCell, finalCell)
                 break;
 
             case this.state.GAME_END:
@@ -234,19 +277,41 @@ class Teeko {
         }
     }
 
+    getBoardPiece(cell) {
+        let row = cell[0], col = cell[1]
+
+        let components = this.scene.graph.components
+
+        for (let key in components) {
+            let component = components[key]
+            if (component instanceof MyPieceComp
+                && component.xPosition == row
+                && component.zPosition == col)
+                return component
+        }
+
+        return null
+    }
+
     setPieceCell(cell) {
         if (this.currPlayer == this.redPlayer) {
             let compId = 'redPiece' + this.CURR_RED_NUM
+            console.log(compId)
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_RED_NUM++
         } else if (this.currPlayer == this.blackPlayer) {
             let compId = 'blackPiece' + this.CURR_BLACK_NUM
+            console.log(compId)
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_BLACK_NUM++
         }
 
         this.placePiece(cell, this.currPlayer.id)
         this.piecesPlaced++
+    }
+
+    updatePieceCell(piece, cell) {
+        piece.updateState('nextState', cell)
     }
 
     isValidMove(finalCell) {
@@ -259,10 +324,6 @@ class Teeko {
         }
     }
 
-    updatePieceCell(piece,cell) {
-        piece.updateState('nextState', cell)
-    }
-
     getInitialBoard() {
         var game = this
         let request = this.parseRequestToStr('initialBoard')
@@ -270,7 +331,11 @@ class Teeko {
         this.client.getPrologRequest(
             request,
             (data) => {
-                game.boardStack.push(data.target.response)
+                game.board = data.target.response
+                game.initBoard = game.board
+
+                game.currState = this.state.WAIT_FOR_FREE_CELL
+                
                 game.nextState()
             },
             () => {
@@ -281,7 +346,7 @@ class Teeko {
 
     checkWin() {
         var game = this
-        let request = this.parseRequestToStr('checkWin', [this.lastElement(this.boardStack)])
+        let request = this.parseRequestToStr('checkWin', [this.board])
 
         this.client.getPrologRequest(
             request,
@@ -305,7 +370,7 @@ class Teeko {
 
         let row = cell[0], col = cell[1]
 
-        let request = this.parseRequestToStr('freeCell', [this.lastElement(this.boardStack), row, col])
+        let request = this.parseRequestToStr('freeCell', [this.board, row, col])
 
         this.client.getPrologRequest(
             request,
@@ -334,7 +399,7 @@ class Teeko {
         let row = cell[0], col = cell[1]
         let piece = this.getBoardPiece(cell)
 
-        let request = this.parseRequestToStr('playerCell', [this.lastElement(this.boardStack), row, col, this.currPlayer.id])
+        let request = this.parseRequestToStr('playerCell', [this.board, row, col, this.currPlayer.id])
 
         this.client.getPrologRequest(
             request,
@@ -361,7 +426,7 @@ class Teeko {
 
         let row = cell[0], col = cell[1]
 
-        let request = this.parseRequestToStr('validMoves', [this.lastElement(this.boardStack), row, col])
+        let request = this.parseRequestToStr('validMoves', [this.board, row, col])
 
         this.client.getPrologRequest(
             request,
@@ -380,11 +445,12 @@ class Teeko {
 
         let row = cell[0], col = cell[1]
 
-        let request = this.parseRequestToStr('placePiece', [this.lastElement(this.boardStack), row, col, piece])
+        let request = this.parseRequestToStr('placePiece', [this.board, row, col, piece])
 
         this.client.getPrologRequest(request,
             (data) => {
-                game.boardStack.push(data.target.response)
+                game.board = data.target.response
+                game.currPlayer.moveStack.push(new MyMove(game.moveId++,'place',cell,null))
 
                 game.currState = this.state.WAIT_FOR_FREE_CELL
 
@@ -411,22 +477,22 @@ class Teeko {
         );
     }
 
-    movePiece(initCell, finalCell) {
+    movePiece(type, initCell, finalCell) {
         var game = this
 
         let row = initCell[0], col = initCell[1]
         let finalRow = finalCell[0], finalCol = finalCell[1]
         let piece = this.getBoardPiece(initCell)
 
-        let request = this.parseRequestToStr('movePiece', [this.lastElement(this.boardStack), row, col, finalRow, finalCol])
+        let request = this.parseRequestToStr('movePiece', [this.board, row, col, finalRow, finalCol])
 
         this.client.getPrologRequest(request,
             (data) => {
-                game.boardStack.push(data.target.response)
-                game.currPlayer.moveStack.push(new MyMove("", initCell, finalCell))
+                game.board = data.target.response
+                game.currPlayer.moveStack.push(new MyMove(game.moveId++, type, initCell, finalCell))
 
                 game.currState = this.state.WAIT_FOR_PIECE
-                game.updatePieceCell(piece,finalCell)
+                game.updatePieceCell(piece, finalCell)
                 game.updateTurn()
                 game.checkWin()
 

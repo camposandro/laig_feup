@@ -10,7 +10,8 @@ class MyMove {
      * @param {cell} initCell Move initial cell
      * @param {cell} finalCell Move final cell
      */
-    constructor(type, initCell, finalCell) {
+    constructor(id, type, initCell, finalCell) {
+        this.id = id;
         this.type = type;
         this.initCell = initCell;
         this.finalCell = finalCell;
