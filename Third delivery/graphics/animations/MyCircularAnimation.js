@@ -32,6 +32,7 @@ class MyCircularAnimation extends MyAnimation {
         this.position;
         this.angle = startang;
         this.angleVelocity = this.rotang / this.span;
+        this.axis = 'y';
     };
 
     /**
@@ -63,6 +64,10 @@ class MyCircularAnimation extends MyAnimation {
         return false;
     }
 
+    changeAxis(axis){
+        this.axis = axis;
+    }
+
     /**
      * Calculates and returns the transformation matrices for
      * the object afected by a circular animation, during its motion.
@@ -72,8 +77,14 @@ class MyCircularAnimation extends MyAnimation {
         mat4.identity(transMatrix);
 
         mat4.translate(transMatrix, transMatrix, [this.centerX, this.centerY, this.centerZ]);
+        
         mat4.translate(transMatrix, transMatrix, this.position);
-        mat4.rotate(transMatrix, transMatrix, this.angle, [0, 1, 0]);
+        if(this.axis == 'y')
+            mat4.rotate(transMatrix, transMatrix, this.angle, [0, 1, 0]);
+        else if(this.axis == 'x')
+            mat4.rotate(transMatrix, transMatrix, this.angle, [1, 0, 0]);
+        else if(this.axis == 'z')
+            mat4.rotate(transMatrix, transMatrix, this.angle, [0, 0, 1]);
 
         return transMatrix;
     }
