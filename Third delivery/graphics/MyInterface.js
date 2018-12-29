@@ -48,7 +48,14 @@ class MyInterface extends CGFinterface {
         group.add(this.scene,'gameBackGround',['Living Room','PlaceHolder']).name('Background')
         
         var controller = group.add(this.scene,'cameraRotation').name('Camera rotation')
-        controller.onChange(() => teeko.setCamera())
+        controller.onChange(() => {
+            if (teeko.currState != teeko.state.GAME_START)
+                teeko.setCamera()
+            else {
+                this.scene.info = 'Press \'Start Game\' first!'
+                this.scene['cameraRotation'] = false
+            }
+        })
     }
 
     addOptionsGroup() {

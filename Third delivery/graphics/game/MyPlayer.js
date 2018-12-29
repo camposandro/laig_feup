@@ -29,17 +29,21 @@ class MyPlayer {
     }
 
     startTimer() {
+        var player = this
+
         this.resetTimer()
         this.timeout = setInterval(() => {
-            this.time--
-            this.updateTurnTime()
+            player.time--
+            player.updateTurnTime()
         },
         1000)
     }
 
     updateTurnTime() {
-        if (this.time == 0)
+        if (this.time == 0) {
+            this.game.scene.info = 'Turn\'s over!'
             this.game.updateTurn()
+        }
     }
 
     stopTimer() {

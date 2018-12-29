@@ -19,7 +19,7 @@
             height: 100%;
         }
 
-        #infoPanel {
+        #panel {
             font-family: Courier, Arial, sans-serif;
             text-align: center;
             padding: 2em;
@@ -35,16 +35,29 @@
             user-select: none;
         }
 
-        #infoPanel h1 {
+        #panel h1 {
             font-size: 2em;
             padding-bottom: 1em;
         }
 
-        #infoPanel #player,
+        #panel #player,
         #score,
         #time
         #winner {
             font-size: 1em;
+        }
+
+        #messages {
+            position: fixed;
+            left: 50%;
+            top: 50px;
+            transform: translate(-50%, -50%);
+            margin: 0 auto;
+        }
+
+        #info {
+            color: white;
+            font-size: 1.5em;
         }
     </style>
 </head>
@@ -53,12 +66,16 @@
 
     <script src="main.js"></script>
 
-    <div id="infoPanel">
+    <div id="panel">
         <h1>Teeko</h1>
         <span id="player"></span>
         <span id="score"></span>
         <span id="time"></span>
         <span id="winner"></span>
+    </div>
+
+    <div id="messages">
+        <span id="info"></span>
     </div>
 
 </body>

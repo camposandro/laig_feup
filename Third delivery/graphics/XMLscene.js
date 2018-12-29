@@ -162,6 +162,7 @@ class XMLscene extends CGFscene {
             if (this.cameraRotationAngle < 0) {
                 this.activeRotation = false
                 this.game.setCamera()
+                this.clearInfo()
             } else {
                 this.camera.orbit(vec3.fromValues(0, 1, 0), currAng)
             }
@@ -288,5 +289,15 @@ class XMLscene extends CGFscene {
         if (this.game.winner != undefined) 
             winnerStr = this.game.winner
         document.getElementById('winner').innerText = 'Winner: ' + winnerStr + '\n\n'
-    }  
+
+        if (this.info != undefined)
+            document.getElementById('info').innerText = this.info + '\n\n'
+        else
+            this.clearInfo()
+    }
+
+    clearInfo() {
+        this.info = undefined
+        document.getElementById('info').innerText = '' + '\n\n'
+    }
 }

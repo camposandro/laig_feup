@@ -25,8 +25,8 @@ class Teeko {
 
         this.moveId = 1
 
-        this.blackPlayer = new MyPlayer('black', this)
-        this.redPlayer = new MyPlayer('red', this)
+        this.blackPlayer = new MyPlayer('black',this)
+        this.redPlayer = new MyPlayer('red',this)
 
         this.NUM_PIECES = 8
 
@@ -88,9 +88,13 @@ class Teeko {
                         piece.updateState('Picked')
                         // update latest board
                         this.movePiece('undo', lastMove.finalCell, lastMove.initCell)
+                    } else {
+                        this.scene.info = 'Unable to undo: last cell is occupied!'
                     }
+                } else {
+                    this.scene.info = 'Unable to undo: no moves available!'
                 }
-            } 
+            }
         }
 
         this.currState = prevState
@@ -237,6 +241,9 @@ class Teeko {
     }
 
     nextState() {
+        // clear any prior messages
+        this.scene.clearInfo()
+
         let initCell, finalCell
 
         switch (this.currState) {
@@ -296,12 +303,10 @@ class Teeko {
     setPieceCell(cell) {
         if (this.currPlayer == this.redPlayer) {
             let compId = 'redPiece' + this.CURR_RED_NUM
-            console.log(compId)
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_RED_NUM++
         } else if (this.currPlayer == this.blackPlayer) {
             let compId = 'blackPiece' + this.CURR_BLACK_NUM
-            console.log(compId)
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_BLACK_NUM++
         }
