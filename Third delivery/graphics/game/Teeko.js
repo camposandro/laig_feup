@@ -23,6 +23,8 @@ class Teeko {
 
         this.board = null
 
+        this.pieces = ['redPiece1','redPiece2','redPiece3','redPiece4','blackPiece1','blackPiece2','blackPiece3','blackPiece4'];
+
         this.moveId = 1
 
         this.blackPlayer = new MyPlayer('black',this)
@@ -113,6 +115,9 @@ class Teeko {
         if (this.currState != this.state.GAME_START && this.currState != this.state.UNDO) {
 
             this.startGame()
+
+            for(let piece of this.pieces)
+                this.scene.graph.components[piece].resetAnimation();
 
             let index = 0
             while (index < moves.length) {

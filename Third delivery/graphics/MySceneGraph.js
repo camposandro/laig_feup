@@ -1309,9 +1309,9 @@ class MySceneGraph {
             
             var comp;
             if(redPieceRegExp.test(id))
-                comp = new MyRedPieceComp(this.scene, id);
+                comp = new MyPieceComp(this.scene, id,0);
             else if(blackPieceRegExp.test(id))
-                comp = new MyBlackPieceComp(this.scene, id);
+                comp = new MyPieceComp(this.scene, id,6.2);
             else if(cellRegExp.test(id)) {
                 comp = new MyCell(this.scene, id);
             } else {

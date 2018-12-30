@@ -7,7 +7,7 @@ var DEGREE_TO_RAD = Math.PI / 180;
 class MyPieceComp extends MyComponent { 
 
 
-    constructor(scene, id) {
+    constructor(scene, id,xPosition) {
         super(scene, id);
         this.state = 'Initial State';
         this.animIndex = 0;
@@ -15,8 +15,13 @@ class MyPieceComp extends MyComponent {
         var idLength = id.length; 
         var nPiece = id.charAt(idLength - 1); 
         this.pickedLength = 0.8;
-        this.zPosition = 0.5*nPiece + 1.8;
-        this.xPosition = 0;
+
+        this.initialZPosition = 0.5*nPiece + 1.8;
+        this.initialXPosition = xPosition;
+        
+        this.zPosition = this.initialZPosition;
+        this.xPosition = this.initialXPosition;
+
         
         this.states = new Array('Initial State','On Board','Picked','Moving');
     }
@@ -55,7 +60,6 @@ class MyPieceComp extends MyComponent {
                     this.moveAnimation(move);
                     this.state = 'On Board';
                 }
-               
                 break;
 
             case 'Moving':
@@ -63,7 +67,6 @@ class MyPieceComp extends MyComponent {
                     this.pickAnimation();
                     this.state = nextState;
                 }
-               
                 break;
         }   
     }   
@@ -137,6 +140,33 @@ class MyPieceComp extends MyComponent {
             this.currentAnimationIndex++;
             this.animationsDone = false;
         }
+    }
+
+    resetAnimation() {
+        
+
+        this.pickAnimation(false);
+        this.moveAnimation([this.initialXPosition,this.initialZPosition]);
+
+        var anim2 = new MyLinearAnimation(this.animIndex++,0.3);
+        anim2.addControlPoint(0,0,0);
+        anim2.addControlPoint(0,-0.2,0);
+        this.addAnimation(this.animIndex,anim2);
+
+        var anim = new MyCircularAnimation(this.animIndex++,0.3,"0 0 0",0,0,Math.PI/2);
+        anim.changeAxis('x');
+        this.addAnimation(this.animIndex,anim);
+
+
+        this.xPosition = this.initialXPosition;
+        this.zPosition = this.initialZPosition;
+
+        if(this.animationsDone){
+            this.currentAnimationIndex++;
+            this.animationsDone = false;
+        }
+        this.state = 'Initial State';
+        
     }
 
 }
