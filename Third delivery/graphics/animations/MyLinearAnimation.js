@@ -50,18 +50,16 @@ class MyLinearAnimation extends MyAnimation {
         this.lastCurrTime = currTime;
         this.totalTotalTime += time;
         this.totalTime += time;
+        var secondsPerPoint = this.span / (this.controlPoints.length - 1);
         if ((this.totalTotalTime >= this.span)) {
             this.finished = true;
             this.totalTotalTime = this.span;
+            this.totalTime = secondsPerPoint;
         }
-        var secondsPerPoint = this.span / (this.controlPoints.length - 1);
-        if ((secondsPerPoint * this.point) < this.totalTotalTime) {
-            this.totalTime = 0;
-            this.point++;
-            this.x = this.posX;
-            this.y = this.posY;
-            this.z = this.posZ;
-        }
+        
+
+        if(this.totalTime > secondsPerPoint)
+            this.totalTime = secondsPerPoint;
 
         var difX = (this.controlPoints[this.point]['x'] - this.controlPoints[this.point - 1]['x']);
         var difY = (this.controlPoints[this.point]['y'] - this.controlPoints[this.point - 1]['y']);
@@ -75,6 +73,14 @@ class MyLinearAnimation extends MyAnimation {
         this.posY = this.y + (velocityY * this.totalTime);
         this.posZ = this.z + (velocityZ * this.totalTime);
 
+        if ((secondsPerPoint * this.point) < this.totalTotalTime) {
+            this.totalTime = 0;
+            this.point++;
+            this.x = this.posX;
+            this.y = this.posY;
+            this.z = this.posZ;
+        }
+
 
         return this.finished;
     }
@@ -87,7 +93,7 @@ class MyLinearAnimation extends MyAnimation {
         mat4.identity(transMatrix);
 
         mat4.translate(transMatrix, transMatrix, [this.posX, this.posY, this.posZ]);
-
+        
         return transMatrix;
     }
 }
