@@ -93,8 +93,6 @@ class MyPieceComp extends MyComponent {
     setOnCell(move) {
         var distX = move[0] - this.xPosition;
         var distZ = move[1] - this.zPosition;
-        console.log('xPosition: ' + this.xPosition);
-        console.log('move[0]: ' + move[0]);
         //this.addTranslation(new MyTranslation(distX,0,distZ));
 
         var anim = new MyLinearAnimation(this.animIndex++,1);
