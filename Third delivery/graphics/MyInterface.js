@@ -45,7 +45,7 @@ class MyInterface extends CGFinterface {
 
         group.add(this.scene,'gameMode',['Player VS Player', 'Player VS Bot', 'Bot VS Bot']).name('Game mode')
         group.add(this.scene,'gameLevel',['Random','Best-play']).name('Game level')
-        group.add(this.scene,'gameBackGround',['Living Room','PlaceHolder']).name('Background')
+        group.add(this.scene,'gameBackGround',['Living Room','Space']).name('Background')
         
         var controller = group.add(this.scene,'cameraRotation').name('Camera rotation')
         controller.onChange(() => {
