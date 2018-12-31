@@ -1309,9 +1309,9 @@ class MySceneGraph {
             
             var comp;
             if(redPieceRegExp.test(id))
-                comp = new MyPieceComp(this.scene, id,0);
+                comp = new MyPiece(this.scene, id,0);
             else if(blackPieceRegExp.test(id))
-                comp = new MyPieceComp(this.scene, id,6.2);
+                comp = new MyPiece(this.scene, id,6.2);
             else if(cellRegExp.test(id)) {
                 comp = new MyCell(this.scene, id);
             } else {
@@ -1582,7 +1582,7 @@ class MySceneGraph {
 
         // display scene graph starting at the root component
         root.display(root.materials[root.currentMaterialIndex][1], root.texture);
-        var obj = this.components[this.scene.gameBackGround];
+        var obj = this.components[this.scene.currBackground];
         //console.log(this.scene.gameBackGround);
         obj.display(obj.materials[obj.currentMaterialIndex][1], obj.texture)
     }
@@ -1593,7 +1593,7 @@ class MySceneGraph {
     }
     
     picked(obj) {
-        if(this.components[obj] instanceof MyPieceComp)
+        if(this.components[obj] instanceof MyPiece)
             this.components[obj].updateState('nextState',[1,2]);
     }
 }

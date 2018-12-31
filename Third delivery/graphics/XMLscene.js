@@ -20,9 +20,7 @@ class XMLscene extends CGFscene {
         this.viewsValues = [];
         this.currentViewIndex = null;
 
-        this.gameMode = 'Player VS Player'
-        this.gameLevel = 'Random'
-        this.gameBackGround = 'Living Room'
+        this.currBackground = 'Living Room'
         this.cameraRotation = false
         this.activeRotation = false
     }

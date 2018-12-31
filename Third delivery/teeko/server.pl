@@ -102,13 +102,8 @@ print_header_line(_).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Require your Prolog Files here
-:- consult('bot.pl').
-:- consult('data.pl').
-:- consult('display.pl').
-:- consult('input.pl').
-:- consult('logic.pl').
-:- consult('menus.pl').
-:- consult('utilities.pl').
+:- consult('teeko.pl').
+
 
 parse_input(handshake, handshake).
 parse_input(test(C,N), Res) :- test(C,Res,N).
@@ -141,6 +136,14 @@ parse_input(placePiece(Board,Row,Col,Piece),NextBoard) :-
 
 parse_input(movePiece(Board,Row,Col,FinalRow,FinalCol),FinalBoard) :-
 	moveBoardPiece(Board,Row,Col,FinalRow,FinalCol,FinalBoard).
+
+parse_input(generateBotCell(Board),Cell) :-
+	generateFreeCell(Board,Row,Col),
+	Cell = [Row,Col].
+
+parse_input(generateBotMovement(Board,Piece),Move) :-
+	generateBotMovement(Board,Piece,Row,Col,FinalRow,FinalCol),
+	Move = [Row,Col,FinalRow,FinalCol].
 
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
