@@ -6,13 +6,13 @@
     <!-- Views specification -->
     <views default="DefaultCamera">
         <perspective id="DefaultCamera" near="0.1" far="500" angle="15">
-            <from x="25.0" y="20.0" z="2.0"/>
-            <to x="0.0" y="-1.0" z="2.0"/>
+            <from x="25.0" y="25.0" z="25.0"/>
+            <to x="0.0" y="0.0" z="0.0"/>
         </perspective>
 
         <perspective id="InverseCamera" near="0.1" far="500" angle="15">
-            <from x="-25.0" y="30.0" z="2.0"/>
-            <to x="0.0" y="-1.0" z="2.0"/>
+            <from x="16.0" y="22.0" z="2.5"/>
+            <to x="2.0" y="0.0" z="2.5"/>
         </perspective>
     </views>
 

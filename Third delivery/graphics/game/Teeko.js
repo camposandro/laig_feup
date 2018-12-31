@@ -14,7 +14,7 @@ class Teeko {
 
         this.scene = scene
         this.defCamera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(25, 25, 25), vec3.fromValues(0, 0, 0))
-        this.rotCamera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(-21, 20, 2.5), vec3.fromValues(2, 0, 2.5))
+        this.rotCamera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(16, 22, 2.5), vec3.fromValues(2, 0, 2.5))
         this.scene.camera = this.defCamera
 
         /** LOGIC */
