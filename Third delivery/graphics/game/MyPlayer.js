@@ -21,9 +21,9 @@ class MyPlayer {
 
     setView() {
         if (this.id == 'black')
-            this.position = [25,20,2.5]
+            this.position = [16,22,2.5]
         else if (this.id == 'red')
-            this.position = [-21,20,2.5]
+            this.position = [-12,22,2.5]
 
         this.target = [2,0,2.5]
     }

@@ -13,7 +13,7 @@ class Teeko {
         /** SCENERY */
 
         this.scene = scene
-        this.defCamera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 10, 15), vec3.fromValues(0, 0, 0))
+        this.defCamera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(25, 25, 25), vec3.fromValues(0, 0, 0))
         this.rotCamera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(-21, 20, 2.5), vec3.fromValues(2, 0, 2.5))
         this.scene.camera = this.defCamera
 
@@ -388,7 +388,6 @@ class Teeko {
         if (this.scene.cameraRotation) {
             this.rotCamera.setPosition(this.currPlayer.position)
             this.rotCamera.setTarget(this.currPlayer.target)
-            this.rotCamera.zoom(10)
             this.scene.camera = this.rotCamera
         } else {
             this.scene.camera = this.defCamera

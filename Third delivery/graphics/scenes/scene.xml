@@ -11,7 +11,7 @@
         </perspective>
 
         <perspective id="InverseCamera" near="0.1" far="500" angle="15">
-            <from x="-25.0" y="20.0" z="2.0"/>
+            <from x="-25.0" y="30.0" z="2.0"/>
             <to x="0.0" y="-1.0" z="2.0"/>
         </perspective>
     </views>
@@ -1932,7 +1932,7 @@
         <component id="alien1" selectable = "false">
             <transformation>
                 <rotate axis="y" angle="-90"/>
-                <translate x="2.4" y="-0.7" z="-6"/>
+                <translate x="2.2" y="-0.7" z="-6"/>
                 <scale x="0.75" y="0.75" z="0.75"/>
             </transformation>
 
@@ -1954,7 +1954,7 @@
         <component id="alien2" selectable = "false">
             <transformation>
                 <rotate axis="y" angle="90"/>
-                <translate x="-2.7" y="-0.5" z="-2"/>
+                <translate x="-2.8" y="-0.5" z="-2"/>
                 <scale x="0.75" y="0.75" z="0.75"/>
             </transformation>
 
@@ -1975,7 +1975,9 @@
 
         <component id="earth" selectable = "false">
             <transformation>
-                <translate x="-10" y="-4" z="0"/>
+                <translate x="-15" y="-4" z="0"/>
+                <rotate axis="x" angle="90"/>
+                <rotate axis="z" angle="90"/>
             </transformation>
 
             <materials>
