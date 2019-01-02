@@ -266,14 +266,13 @@ class Teeko {
             let compId = 'redPiece' + this.CURR_RED_NUM
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_RED_NUM++
-            game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null,compId))
+            game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null, compId))
         } else if (this.currPlayer == this.blackPlayer) {
             let compId = 'blackPiece' + this.CURR_BLACK_NUM
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_BLACK_NUM++
-            game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null,compId))
+            game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null, compId))
         }
-        
         
         this.placePiece(cell, this.currPlayer.id)
         this.piecesPlaced++
@@ -352,31 +351,42 @@ class Teeko {
             this.restartGame()
             this.nextState()
 
+            let playTime = 2000 // 1sec per play displayed
+            let numPlay = 1
 
+            // perform movie moves
             for (let key in moves) {
-                let move = moves[key]
-                let pieceId = move.piece;
+                let move = moves[key]  
 
-                let piece = this.scene.graph.components[pieceId];
-                switch (move.type) {
-                    case 'place':
-                        piece.setOnBoard()
-                        piece.setOnCell(move.initCell)
-                        break;
-                    case 'move':
-                        piece.pickAnimation(0)
-                        piece.moveAnimation(move.finalCell)
-                        break;
-                    case 'undo':
-                        piece.pickAnimation(1)
-                        piece.moveAnimation(move.initCell)
-                        break;
-                    default:
-                        break;
-                }
-                
-                this.nextState()
+                setTimeout(function() { 
+                    this.moviePlay(move) 
+                }.bind(this),
+                playTime*numPlay)
+
+                numPlay++
             }
+        }
+    }
+
+    moviePlay(move) {
+        let piece = this.scene.graph.components[move.piece]
+
+        switch (move.type) {
+            case 'place':
+                piece.setOnBoard()
+                piece.setOnCell(move.initCell)
+                break;
+            case 'move':
+                piece.pickAnimation(0)
+                piece.moveAnimation(move.finalCell)
+                break;
+            case 'undo':
+                piece.pickAnimation(1)
+                piece.moveAnimation(move.initCell)
+                break;
+            default:
+                console.log('Undefined movie play!')
+                break;
         }
     }
 
