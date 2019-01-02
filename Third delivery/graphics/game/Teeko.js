@@ -124,8 +124,7 @@ class Teeko {
     cellPickingHandler(cell) {
         let cellVal = [cell.row, cell.col]
 
-        if (this.currMode == this.mode.PLAYERvsPLAYER
-            || (this.currMode == this.mode.PLAYERvsBOT && this.currPlayer == this.blackPlayer)) {
+        if (!this.isBotTurn()) {
 
             switch (this.currState) {
                 case this.state.WAIT_FOR_FREE_CELL:
@@ -148,8 +147,7 @@ class Teeko {
     piecePickingHandler(piece) {
         let cellVal = [piece.xPosition, piece.zPosition]
 
-        if (this.currMode == this.mode.PLAYERvsPLAYER
-            || (this.currMode == this.mode.PLAYERvsBOT && this.currPlayer == this.blackPlayer)) {
+        if (!this.isBotTurn()) {
 
             if (this.selectedPiece != null) {
                 this.selectedPiece.updateState('On Board')
@@ -185,14 +183,13 @@ class Teeko {
             case this.state.WAIT_FOR_FREE_CELL:
                 if (this.piecesPlaced == this.NUM_PIECES) {
                     if (this.currMode == this.mode.BOTvsBOT) {
-                        this.currState = this.state.GENERATE_BOT_MOVE
-                        this.nextState()
+                        this.generateBotMove()
                     }
                     else
                         this.currState = this.state.WAIT_FOR_PIECE
                 } else {
                     if (this.currMode == this.mode.BOTvsBOT) {
-                        this.generateBotCell()
+                       this.generateBotCell()
                     } else if (this.currMode == this.mode.PLAYERvsBOT) {
                         // if it is the bot's turn
                         if (this.currPlayer == this.redPlayer)
@@ -213,8 +210,7 @@ class Teeko {
                 break;
 
             case this.state.GENERATE_BOT_MOVE:
-                if ((this.currMode == this.mode.PLAYERvsBOT && this.currPlayer == this.redPlayer)
-                    || this.currMode == this.mode.BOTvsBOT)
+                if (this.isBotTurn())
                     this.generateBotMove()
                 break;
 
@@ -291,6 +287,11 @@ class Teeko {
         } else {
             this.moveToValues = undefined
         }
+    }
+
+    isBotTurn() {
+        return (this.currMode == this.mode.PLAYERvsBOT && this.currPlayer == this.redPlayer) 
+        || this.currMode == this.mode.BOTvsBOT;
     }
 
     /** OTHER FUNCTIONALITIES */
@@ -372,7 +373,6 @@ class Teeko {
                 }
                 
                 this.nextState()
-                setTimeout(null,1000)
             }
         }
     }
@@ -615,12 +615,10 @@ class Teeko {
                 game.updateTurn()
                 game.checkWin()
 
-                if (game.currMode == game.mode.PLAYERvsPLAYER)
-                    game.currState = game.state.WAIT_FOR_PIECE
-                else if ((game.currMode == game.mode.PLAYERvsBOT && game.currPlayer == game.redPlayer)
-                    || game.currMode == game.mode.BOTvsBOT) {
+                if (this.isBotTurn())
                     game.currState = game.state.GENERATE_BOT_MOVE
-                }
+                else
+                    game.currState = game.state.WAIT_FOR_PIECE      
 
                 game.nextState()
             },
@@ -640,11 +638,16 @@ class Teeko {
             (data) => {
                 let move = game.parseToArray(data.target.response)
 
-                game.moveFromValues = [move[0], move[1]]
-                game.moveToValues = [move[2], move[3]]
+                if (game.winner == undefined) {
+                    game.moveFromValues = [move[0], move[1]]
+                    game.moveToValues = [move[2], move[3]]
 
-                game.currState = game.state.MOVING_PIECES
-                game.nextState()
+                    let piece = this.getBoardPiece(game.moveFromValues)
+                    game.updatePieceCell(piece, game.moveToValues)
+
+                    game.currState = game.state.MOVING_PIECES
+                    game.nextState()
+                }
             },
             () => {
                 console.log('# No received answer!\n')

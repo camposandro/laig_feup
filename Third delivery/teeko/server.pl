@@ -138,10 +138,12 @@ parse_input(movePiece(Board,Row,Col,FinalRow,FinalCol),FinalBoard) :-
 	moveBoardPiece(Board,Row,Col,FinalRow,FinalCol,FinalBoard).
 
 parse_input(generateBotCell(Board),Cell) :-
+	sleep(1),
 	generateFreeCell(Board,Row,Col),
 	Cell = [Row,Col].
 
 parse_input(generateBotMovement(Board,Piece),Move) :-
+	sleep(1),
 	generateBotMovement(Board,Piece,Row,Col,FinalRow,FinalCol),
 	Move = [Row,Col,FinalRow,FinalCol].
 
