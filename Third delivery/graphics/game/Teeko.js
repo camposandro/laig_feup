@@ -26,19 +26,22 @@ class Teeko {
 
         this.blackPlayer = new MyPlayer('black', this)
         this.redPlayer = new MyPlayer('red', this)
-        
+
         this.NUM_PIECES = 8
 
         this.state = {
             GAME_START: 0,
             WAIT_FOR_FREE_CELL: 1,
             PLACE_PIECES: 2,
-            WAIT_FOR_FREE_CELL: 3,
-            WAIT_FOR_VALID_CELL: 4,
-            MOVING_PIECES: 5,
-            GAME_END: 6
+            WAIT_FOR_VALID_CELL: 3,
+            MOVING_PIECES: 4,
+            UNDO: 5,
+            MOVIE: 6,
+            GAME_END: 7,
+            NO_FUNC: 8
         }
         this.currState = this.state.GAME_START
+        this.funcState = this.state.NO_FUNC
 
         this.mode = {
             PLAYERvsPLAYER: 1,
@@ -107,6 +110,7 @@ class Teeko {
         this.currMode = 'Player vs Player'
         this.currLevel = 'Random'
         this.currState = this.state.GAME_START
+        this.funcState = this.state.NO_FUNC
     }
 
     restartGame() {
@@ -121,11 +125,16 @@ class Teeko {
 
     /** LOGIC */
 
+    isHandlerActive() {
+        return (this.currMode == this.mode.PLAYERvsPLAYER
+            || (this.currMode == this.mode.PLAYERvsBOT && this.currPlayer == this.blackPlayer))
+            && this.funcState == this.state.NO_FUNC
+    }
+
     cellPickingHandler(cell) {
         let cellVal = [cell.row, cell.col]
 
-        if (!this.isBotTurn()) {
-
+        if (this.isHandlerActive()) {
             switch (this.currState) {
                 case this.state.WAIT_FOR_FREE_CELL:
                     if (this.piecesPlaced == this.NUM_PIECES)
@@ -147,8 +156,7 @@ class Teeko {
     piecePickingHandler(piece) {
         let cellVal = [piece.xPosition, piece.zPosition]
 
-        if (!this.isBotTurn()) {
-
+        if (this.isHandlerActive()) {
             if (this.selectedPiece != null) {
                 this.selectedPiece.updateState('On Board')
             }
@@ -169,6 +177,11 @@ class Teeko {
         }
     }
 
+    isBotTurn() {
+        return (this.currMode == this.mode.PLAYERvsBOT && this.currPlayer == this.redPlayer)
+            || this.currMode == this.mode.BOTvsBOT;
+    }
+
     nextState() {
         // clear any prior messages
         this.scene.clearInfo()
@@ -182,18 +195,20 @@ class Teeko {
 
             case this.state.WAIT_FOR_FREE_CELL:
                 if (this.piecesPlaced == this.NUM_PIECES) {
-                    if (this.currMode == this.mode.BOTvsBOT) {
+                    if (this.currMode == this.mode.BOTvsBOT)
                         this.generateBotMove()
+                    else {
+                        if (this.isBotTurn())
+                            this.generateBotMove()
+                        else
+                            this.currState = this.state.WAIT_FOR_PIECE
                     }
-                    else
-                        this.currState = this.state.WAIT_FOR_PIECE
                 } else {
-                    if (this.currMode == this.mode.BOTvsBOT) {
-                       this.generateBotCell()
-                    } else if (this.currMode == this.mode.PLAYERvsBOT) {
-                        // if it is the bot's turn
-                        if (this.currPlayer == this.redPlayer)
+                    if (this.isBotTurn()) {
+                        if (this.CURR_RED_NUM < 5)
                             this.generateBotCell()
+                        else
+                            this.generateBotMove()
                     }
                 }
                 break;
@@ -215,14 +230,11 @@ class Teeko {
                 break;
 
             case this.state.GAME_END:
-                if (this.winner == 'black') {
+                if (this.winner == 'black')
                     this.blackPlayer.updateScore()
-                    console.log("BLACK PLAYER WON!")
-                }
-                else if (this.winner == 'red') {
+                else if (this.winner == 'red')
                     this.redPlayer.updateScore()
-                    console.log("RED PLAYER WON!")
-                }
+
                 this.clearPanel()
                 break;
 
@@ -273,7 +285,7 @@ class Teeko {
             this.CURR_BLACK_NUM++
             game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null, compId))
         }
-        
+
         this.placePiece(cell, this.currPlayer.id)
         this.piecesPlaced++
     }
@@ -292,15 +304,12 @@ class Teeko {
         }
     }
 
-    isBotTurn() {
-        return (this.currMode == this.mode.PLAYERvsBOT && this.currPlayer == this.redPlayer) 
-        || this.currMode == this.mode.BOTvsBOT;
-    }
-
     /** OTHER FUNCTIONALITIES */
 
     undo() {
         if (this.currState != this.state.GAME_START) {
+
+            this.funcState = this.state.UNDO
 
             let moveStack = this.currPlayer.moveStack
 
@@ -332,11 +341,15 @@ class Teeko {
                     this.scene.info = 'Unable to undo: no moves available!'
                 }
             }
+
+            this.funcState = this.state.NO_FUNC
         }
     }
 
     movie() {
         if (this.currState != this.state.GAME_START) {
+
+            this.funcState = this.state.MOVIE
 
             // restore initial board
             this.board = this.initBoard
@@ -356,15 +369,20 @@ class Teeko {
 
             // perform movie moves
             for (let key in moves) {
-                let move = moves[key]  
+                let move = moves[key]
 
-                setTimeout(function() { 
-                    this.moviePlay(move) 
+                setTimeout(function () {
+                    this.moviePlay(move)
                 }.bind(this),
-                playTime*numPlay)
+                playTime * numPlay)
 
                 numPlay++
             }
+
+            setTimeout(function () {
+                this.funcState = this.state.NO_FUNC
+            }.bind(this),
+            playTime * moves.length)
         }
     }
 
@@ -583,7 +601,6 @@ class Teeko {
         this.client.getPrologRequest(request,
             (data) => {
                 game.board = data.target.response
-                //game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null, piece))
 
                 game.currState = this.state.WAIT_FOR_FREE_CELL
 
@@ -621,7 +638,7 @@ class Teeko {
         this.client.getPrologRequest(request,
             (data) => {
                 game.board = data.target.response
-                game.currPlayer.moveStack.push(new MyMove(game.moveId++, type, initCell, finalCell,piece.id))
+                game.currPlayer.moveStack.push(new MyMove(game.moveId++, type, initCell, finalCell, piece.id))
 
                 game.updatePieceCell(piece, finalCell)
                 game.updateTurn()
@@ -630,7 +647,7 @@ class Teeko {
                 if (this.isBotTurn())
                     game.currState = game.state.GENERATE_BOT_MOVE
                 else
-                    game.currState = game.state.WAIT_FOR_PIECE      
+                    game.currState = game.state.WAIT_FOR_PIECE
 
                 game.nextState()
             },

@@ -43,6 +43,8 @@ class MyPlayer {
         if (this.time == 0) {
             this.game.scene.info = 'Turn\'s over!'
             this.game.updateTurn()
+            if (this.game.isBotTurn())
+                this.game.nextState()
         }
     }
 
