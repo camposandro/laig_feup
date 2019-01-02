@@ -142,7 +142,7 @@ class MyPiece extends MyComponent {
         if (this.state != 'Initial State') {
 
             if (this.state == 'On Board')
-                this.pickAnimation(false);
+                this.pickAnimation(0);
 
             this.moveAnimation([this.initialXPosition, this.initialZPosition]);
 

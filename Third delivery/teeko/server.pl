@@ -147,5 +147,11 @@ parse_input(generateBotMovement(Board,Piece),Move) :-
 	generateBotMovement(Board,Piece,Row,Col,FinalRow,FinalCol),
 	Move = [Row,Col,FinalRow,FinalCol].
 
+parse_input(generateBotBestMovement(Board,Piece),Move) :-
+	sleep(1),
+	selectBotInitialCell(Board,Piece,Row,Col),
+	chooseMove(Board,Piece,Row,Col,FinalRow,FinalCol),
+	Move = [Row,Col,FinalRow,FinalCol].
+
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).

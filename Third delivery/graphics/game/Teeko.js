@@ -68,13 +68,15 @@ class Teeko {
     }
 
     quitGame() {
-        this.currState = this.state.GAME_END
+        if (this.funcState == this.state.NO_FUNC) {
+            this.currState = this.state.GAME_END
+                
+            let pieces = this.getPieces()
+            pieces.forEach((piece) => piece.resetAnimation())
 
-        let pieces = this.getPieces()
-        pieces.forEach((piece) => piece.resetAnimation())
-
-        this.nextState()
-        this.resetParam()
+            this.nextState()
+            this.resetParam()
+        }
     }
 
     parseParam() {
@@ -273,17 +275,16 @@ class Teeko {
     }
 
     setPieceCell(cell) {
-        var game = this
         if (this.currPlayer == this.redPlayer) {
             let compId = 'redPiece' + this.CURR_RED_NUM
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_RED_NUM++
-            game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null, compId))
+            this.currPlayer.moveStack.push(new MyMove(this.moveId++, 'place', cell, null, compId, this.currPlayer.id))
         } else if (this.currPlayer == this.blackPlayer) {
             let compId = 'blackPiece' + this.CURR_BLACK_NUM
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_BLACK_NUM++
-            game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null, compId))
+            this.currPlayer.moveStack.push(new MyMove(this.moveId++, 'place', cell, null, compId, this.currPlayer.id))
         }
 
         this.placePiece(cell, this.currPlayer.id)
@@ -349,13 +350,13 @@ class Teeko {
     movie() {
         if (this.currState != this.state.GAME_START) {
 
-            this.funcState = this.state.MOVIE
-
             // restore initial board
             this.board = this.initBoard
 
             // quit current game
             this.quitGame()
+
+            this.funcState = this.state.MOVIE
 
             // retrieve all moves, sorted by asc order
             let moves = this.getSortedMoves()
@@ -368,12 +369,18 @@ class Teeko {
             let numPlay = 1
 
             // perform movie moves
-            for (let key in moves) {
-                let move = moves[key]
-
+            let lastMove = moves[0]
+            for (let i = 1; i <= moves.length; i++) {
+                
                 setTimeout(function () {
-                    this.moviePlay(move)
-                }.bind(this),
+                    this.moviePlay(lastMove)
+                    if (i < moves.length) {
+                        let move = moves[i]
+                        if (lastMove.player != move.player)
+                            this.updateTurn()
+                        lastMove = move
+                    }
+                }.bind(this), 
                 playTime * numPlay)
 
                 numPlay++
@@ -381,6 +388,8 @@ class Teeko {
 
             setTimeout(function () {
                 this.funcState = this.state.NO_FUNC
+                this.currState = this.state.GAME_END
+                this.nextState()
             }.bind(this),
             playTime * moves.length)
         }
@@ -638,7 +647,7 @@ class Teeko {
         this.client.getPrologRequest(request,
             (data) => {
                 game.board = data.target.response
-                game.currPlayer.moveStack.push(new MyMove(game.moveId++, type, initCell, finalCell, piece.id))
+                game.currPlayer.moveStack.push(new MyMove(game.moveId++, type, initCell, finalCell, piece.id, game.currPlayer.id))
 
                 game.updatePieceCell(piece, finalCell)
                 game.updateTurn()
@@ -660,7 +669,11 @@ class Teeko {
     generateBotMove() {
         var game = this
 
-        let request = this.parseRequestToStr('generateBotMovement', [this.board, this.currPlayer.id])
+        let request = null
+        if (this.currLevel == this.level.RANDOM)
+            request = this.parseRequestToStr('generateBotMovement', [this.board, this.currPlayer.id])
+        else if (this.currLevel == this.level.BEST_PLAY)
+            request = this.parseRequestToStr('generateBotBestMovement', [this.board, this.currPlayer.id])
 
         this.client.getPrologRequest(
             request,
