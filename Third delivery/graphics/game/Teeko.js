@@ -265,16 +265,20 @@ class Teeko {
     }
 
     setPieceCell(cell) {
+        var game = this
         if (this.currPlayer == this.redPlayer) {
             let compId = 'redPiece' + this.CURR_RED_NUM
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_RED_NUM++
+            game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null,compId))
         } else if (this.currPlayer == this.blackPlayer) {
             let compId = 'blackPiece' + this.CURR_BLACK_NUM
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_BLACK_NUM++
+            game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null,compId))
         }
-
+        
+        
         this.placePiece(cell, this.currPlayer.id)
         this.piecesPlaced++
     }
@@ -347,25 +351,24 @@ class Teeko {
             this.restartGame()
             this.nextState()
 
-            let pieces = this.getPieces()
 
             for (let key in moves) {
                 let move = moves[key]
-                
-                let piece = pieces[(move.id - 1) % 8]
+                let pieceId = move.piece;
 
+                let piece = this.scene.graph.components[pieceId];
                 switch (move.type) {
                     case 'place':
                         piece.setOnBoard()
-                        piece.setOnCell(move)
+                        piece.setOnCell(move.initCell)
                         break;
                     case 'move':
                         piece.pickAnimation(0)
-                        piece.moveAnimation(move)
+                        piece.moveAnimation(move.finalCell)
                         break;
                     case 'undo':
                         piece.pickAnimation(1)
-                        piece.moveAnimation(move)
+                        piece.moveAnimation(move.initCell)
                         break;
                     default:
                         break;
@@ -570,7 +573,7 @@ class Teeko {
         this.client.getPrologRequest(request,
             (data) => {
                 game.board = data.target.response
-                game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null))
+                //game.currPlayer.moveStack.push(new MyMove(game.moveId++, 'place', cell, null, piece))
 
                 game.currState = this.state.WAIT_FOR_FREE_CELL
 
@@ -603,13 +606,12 @@ class Teeko {
         let row = initCell[0], col = initCell[1]
         let finalRow = finalCell[0], finalCol = finalCell[1]
         let piece = this.getBoardPiece(initCell)
-
         let request = this.parseRequestToStr('movePiece', [this.board, row, col, finalRow, finalCol])
 
         this.client.getPrologRequest(request,
             (data) => {
                 game.board = data.target.response
-                game.currPlayer.moveStack.push(new MyMove(game.moveId++, type, initCell, finalCell))
+                game.currPlayer.moveStack.push(new MyMove(game.moveId++, type, initCell, finalCell,piece.id))
 
                 game.updatePieceCell(piece, finalCell)
                 game.updateTurn()
@@ -689,4 +691,5 @@ class Teeko {
         str = str.replace(/[^A-Za-z0-9]+/gi, '')
         return str.split('')
     }
+
 }
