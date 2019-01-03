@@ -293,6 +293,7 @@ class Teeko {
 
     updatePieceCell(piece, cell) {
         piece.updateState('nextState', cell)
+        this.scene.graph.clearHighlitedCells();
     }
 
     isValidMove(finalCell) {
@@ -591,7 +592,8 @@ class Teeko {
         this.client.getPrologRequest(
             request,
             (data) => {
-                game.possibleMoves = data.target.response
+                let possMoves = data.target.response
+                this.highliteCells(possMoves);
                 game.currState = this.state.WAIT_FOR_VALID_CELL
             },
             () => {
@@ -733,6 +735,25 @@ class Teeko {
     parseToArray(str) {
         str = str.replace(/[^A-Za-z0-9]+/gi, '')
         return str.split('')
+    }
+
+    highliteCells(cells) {
+        if(this.possibleMoves != null){
+            let possMoves = this.parseToArray(this.possibleMoves);
+            for(let i = 0; i < possMoves.length; i++) {
+                this.scene.graph.components['cell' + possMoves[i] + possMoves[++i]].setHighlited(false);
+            }
+        }
+        this.possibleMoves = cells;
+        cells = this.parseToArray(this.possibleMoves);
+        let highCells = new Array();
+        for(let i = 0; i < cells.length - 1; i++) {
+            var cell = 'cell' + cells[i] + cells[++i]
+            this.scene.graph.components[cell].setHighlited(true);
+            highCells.push(cell);
+        }
+
+        this.scene.graph.addHighlitedCells(highCells);
     }
 
 }
