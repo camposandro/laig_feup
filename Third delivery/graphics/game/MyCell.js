@@ -6,7 +6,7 @@ class MyCell extends MyComponent {
   constructor(scene, id) {
     super(scene, id)
     this.getCoordinates()
-    this.highlighted = false
+    this.highlighted = false;
   }
 
   getCoordinates() {
@@ -15,15 +15,17 @@ class MyCell extends MyComponent {
     this.col = values % 10
   }
 
-  display(mat,tex) {
-    // Sets highlighting shader active
-    //if (this.highlighted);
-      //this.scene.setActiveShader(this.scene.shaders[0]);
+  setHighlited(highlighted) {
+    this.highlighted = highlighted;
+  }
 
+  display(mat,tex,display) {
+    // Sets highlighting shader active
+    if(this.highlighted)
+      if(!display)
+        return;
+    
     super.display(mat,tex);
 
-    // Sets default shader
-    //if (this.highlighted);
-      //this.scene.setActiveShader(this.scene.defaultShader);
   }
 }

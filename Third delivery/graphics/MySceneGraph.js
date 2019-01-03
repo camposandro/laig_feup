@@ -55,9 +55,10 @@ class MySceneGraph {
         this.components = new Array();
         this.selectable = new Array();
         this.pickIndex = 0;
+        this.highlitedCells = new Array();
         // File reading 
         this.reader = new CGFXMLreader();
-
+        
         /*
          * Read the contents of the xml file, and refer to this class for loading and error handlers.
          * After the file is read, the reader calls onXMLReady on this object.
@@ -1582,18 +1583,38 @@ class MySceneGraph {
 
         // display scene graph starting at the root component
         root.display(root.materials[root.currentMaterialIndex][1], root.texture);
+        // displays the background of the scene
         var obj = this.components[this.scene.currBackground];
-        //console.log(this.scene.gameBackGround);
         obj.display(obj.materials[obj.currentMaterialIndex][1], obj.texture)
+
+        // displays cells with shaders
+        if(this.highlitedCells.length != 0)
+            this.displayHighlitedCells(root.currentMaterialIndex[1], root.texture);
     }
 
     registerPicking(idComp, index) {
         this.scene.clearPickRegistration();
         this.scene.registerForPick(index, idComp);
     }
-    
-    picked(obj) {
-        if(this.components[obj] instanceof MyPiece)
-            this.components[obj].updateState('nextState',[1,2]);
+
+    clearHighlitedCells() {
+        for(let i = 0; i < this.highlitedCells.length; i++)
+            this.components[this.highlitedCells[i]].setHighlited(false);
+
+        this.highlitedCells = [];
+    }
+ 
+    addHighlitedCells(cells) {
+        this.highlitedCells = cells;
+    }
+
+    displayHighlitedCells(mat,tex) {
+        this.scene.setActiveShader(this.scene.shaders[0]);
+        console.log(this.highlitedCells);
+
+        for(let i = 0; i < this.highlitedCells.length; i++)
+            this.components[this.highlitedCells[i]].display(mat,tex,true);
+        
+        this.scene.setActiveShader(this.scene.defaultShader);
     }
 }
