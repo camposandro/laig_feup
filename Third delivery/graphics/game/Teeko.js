@@ -293,7 +293,7 @@ class Teeko {
 
     updatePieceCell(piece, cell) {
         piece.updateState('nextState', cell)
-        this.scene.graph.clearHighlitedCells();
+        this.scene.graph.clearHighlightedCells();
     }
 
     isValidMove(finalCell) {
@@ -445,6 +445,11 @@ class Teeko {
     /** PANEL - TURNS & TIMERS */
 
     updateTurn() {
+        if (this.selectedPiece != null) {
+            this.selectedPiece.updateState('On Board')
+            this.scene.graph.clearHighlightedCells()
+        }
+
         if (this.currPlayer == this.blackPlayer) {
             this.blackPlayer.stopTimer()
             this.currPlayer = this.redPlayer
@@ -593,7 +598,7 @@ class Teeko {
             request,
             (data) => {
                 let possMoves = data.target.response
-                this.highliteCells(possMoves);
+                this.highlightCells(possMoves);
                 game.currState = this.state.WAIT_FOR_VALID_CELL
             },
             () => {
@@ -737,11 +742,11 @@ class Teeko {
         return str.split('')
     }
 
-    highliteCells(cells) {
+    highlightCells(cells) {
         if(this.possibleMoves != null){
             let possMoves = this.parseToArray(this.possibleMoves);
             for(let i = 0; i < possMoves.length; i++) {
-                this.scene.graph.components['cell' + possMoves[i] + possMoves[++i]].setHighlited(false);
+                this.scene.graph.components['cell' + possMoves[i] + possMoves[++i]].setHighlighted(false);
             }
         }
         this.possibleMoves = cells;
@@ -749,11 +754,11 @@ class Teeko {
         let highCells = new Array();
         for(let i = 0; i < cells.length - 1; i++) {
             var cell = 'cell' + cells[i] + cells[++i]
-            this.scene.graph.components[cell].setHighlited(true);
+            this.scene.graph.components[cell].setHighlighted(true);
             highCells.push(cell);
         }
 
-        this.scene.graph.addHighlitedCells(highCells);
+        this.scene.graph.addHighlightedCells(highCells);
     }
-
+    
 }

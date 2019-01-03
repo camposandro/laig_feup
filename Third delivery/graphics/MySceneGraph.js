@@ -55,7 +55,7 @@ class MySceneGraph {
         this.components = new Array();
         this.selectable = new Array();
         this.pickIndex = 0;
-        this.highlitedCells = new Array();
+        this.highlightedCells = new Array();
         // File reading 
         this.reader = new CGFXMLreader();
         
@@ -1588,8 +1588,8 @@ class MySceneGraph {
         obj.display(obj.materials[obj.currentMaterialIndex][1], obj.texture)
 
         // displays cells with shaders
-        if(this.highlitedCells.length != 0)
-            this.displayHighlitedCells(root.currentMaterialIndex[1], root.texture);
+        if(this.highlightedCells.length != 0)
+            this.displayHighlightedCells(root.currentMaterialIndex[1], root.texture);
     }
 
     registerPicking(idComp, index) {
@@ -1597,24 +1597,22 @@ class MySceneGraph {
         this.scene.registerForPick(index, idComp);
     }
 
-    clearHighlitedCells() {
-        for(let i = 0; i < this.highlitedCells.length; i++)
-            this.components[this.highlitedCells[i]].setHighlited(false);
+    clearHighlightedCells() {
+        for(let i = 0; i < this.highlightedCells.length; i++)
+            this.components[this.highlightedCells[i]].setHighlighted(false);
 
-        this.highlitedCells = [];
+        this.highlightedCells = [];
     }
  
-    addHighlitedCells(cells) {
-        this.highlitedCells = cells;
+    addHighlightedCells(cells) {
+        this.highlightedCells = cells;
     }
 
-    displayHighlitedCells(mat,tex) {
+    displayHighlightedCells(mat,tex) {
         this.scene.setActiveShader(this.scene.shaders[0]);
 
-        for(let i = 0; i < this.highlitedCells.length; i++) {
-            this.components[this.highlitedCells[i]].display(mat,tex,true);
-        }
-            
+        for(let i = 0; i < this.highlightedCells.length; i++)
+            this.components[this.highlightedCells[i]].display(mat,tex,true);
         
         this.scene.setActiveShader(this.scene.defaultShader);
     }

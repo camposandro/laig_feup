@@ -15,7 +15,7 @@ class MyCell extends MyComponent {
     this.col = values % 10
   }
 
-  setHighlited(highlighted) {
+  setHighlighted(highlighted) {
     this.highlighted = highlighted;
   }
 
