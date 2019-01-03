@@ -26,6 +26,5 @@ class MyCell extends MyComponent {
         return;
     
     super.display(mat,tex);
-
   }
 }

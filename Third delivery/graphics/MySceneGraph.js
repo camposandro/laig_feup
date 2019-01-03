@@ -1610,10 +1610,11 @@ class MySceneGraph {
 
     displayHighlitedCells(mat,tex) {
         this.scene.setActiveShader(this.scene.shaders[0]);
-        console.log(this.highlitedCells);
 
-        for(let i = 0; i < this.highlitedCells.length; i++)
+        for(let i = 0; i < this.highlitedCells.length; i++) {
             this.components[this.highlitedCells[i]].display(mat,tex,true);
+        }
+            
         
         this.scene.setActiveShader(this.scene.defaultShader);
     }
