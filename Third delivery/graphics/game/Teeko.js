@@ -445,7 +445,7 @@ class Teeko {
     /** PANEL - TURNS & TIMERS */
 
     updateTurn() {
-        if (this.selectedPiece != null) {
+        if (this.funcState != this.state.MOVIE && this.selectedPiece != null) {
             this.selectedPiece.updateState('On Board')
             this.scene.graph.clearHighlightedCells()
         }
