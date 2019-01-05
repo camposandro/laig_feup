@@ -74,7 +74,6 @@ class Teeko {
             let pieces = this.getPieces()
             pieces.forEach((piece) => piece.resetAnimation())
 
-            this.nextState()
             this.resetParam()
         }
     }
@@ -116,13 +115,19 @@ class Teeko {
     }
 
     restartGame() {
-        this.currPlayer = this.blackPlayer
-        this.currPlayer.startTimer()
-        this.playerTime = this.currPlayer.time
-
         this.piecesPlaced = 0
         this.CURR_BLACK_NUM = 1
         this.CURR_RED_NUM = 1
+        this.winner = undefined
+        this.firstToReachAll = undefined
+        this.selectedPiece = null
+
+        this.blackPlayer.clearMoves()
+        this.redPlayer.clearMoves()
+
+        this.currPlayer = this.blackPlayer
+        this.currPlayer.startTimer()
+        this.playerTime = this.currPlayer.time
     }
 
     /** LOGIC */

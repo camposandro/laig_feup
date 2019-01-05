@@ -59,4 +59,8 @@ class MyPlayer {
     updateScore() {
         this.score++
     }
+
+    clearMoves() {
+        this.moveStack = []
+    }
 }
