@@ -112,6 +112,9 @@ class Teeko {
         this.currLevel = 'Random'
         this.currState = this.state.GAME_START
         this.funcState = this.state.NO_FUNC
+
+        this.blackPlayer.stopTimer()
+        this.redPlayer.stopTimer()
     }
 
     restartGame() {
@@ -284,12 +287,12 @@ class Teeko {
             let compId = 'redPiece' + this.CURR_RED_NUM
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_RED_NUM++
-            this.currPlayer.moveStack.push(new MyMove(this.moveId++, 'place', cell, null, compId, this.currPlayer.id))
+            this.currPlayer.addMove(new MyMove(this.moveId++, 'place', cell, null, compId, this.currPlayer.id))
         } else if (this.currPlayer == this.blackPlayer) {
             let compId = 'blackPiece' + this.CURR_BLACK_NUM
             this.scene.graph.components[compId].updateState('nextState', cell)
             this.CURR_BLACK_NUM++
-            this.currPlayer.moveStack.push(new MyMove(this.moveId++, 'place', cell, null, compId, this.currPlayer.id))
+            this.currPlayer.addMove(new MyMove(this.moveId++, 'place', cell, null, compId, this.currPlayer.id))
         }
 
         this.placePiece(cell, this.currPlayer.id)
@@ -318,35 +321,21 @@ class Teeko {
 
             this.funcState = this.state.UNDO
 
-            let moveStack = this.currPlayer.moveStack
+            let lastMove = this.currPlayer.getLastMove()
 
-            if (moveStack.length > 0) {
-
-                // retrieve last move and corresponding piece
-                let lastMove = null
-                while (moveStack.length > 0) {
-                    let move = this.dequeue(moveStack)
-                    if (move.type == 'move') {
-                        lastMove = move
-                        break
-                    }
-                }
-
-                if (lastMove != null) {
-                    let piece = this.getBoardPiece(lastMove.finalCell)
-
-                    // if initial cell of the last move is free
-                    if (this.getBoardPiece(lastMove.initCell) == null) {
-                        // pick piece
-                        piece.updateState('Picked')
-                        // update latest board
-                        this.movePiece('undo', lastMove.finalCell, lastMove.initCell)
-                    } else {
-                        this.scene.info = 'Unable to undo: last cell is occupied!'
-                    }
+            if (lastMove != null) {
+                let piece = this.getBoardPiece(lastMove.finalCell)
+                // if initial cell of the last move is free
+                if (this.getBoardPiece(lastMove.initCell) == null) {
+                    // pick piece
+                    piece.updateState('Picked')
+                    // update latest board
+                    this.movePiece('undo', lastMove.finalCell, lastMove.initCell)
                 } else {
-                    this.scene.info = 'Unable to undo: no moves available!'
+                    this.scene.info = 'Unable to undo: last cell is occupied!'
                 }
+            } else {
+                this.scene.info = 'Unable to undo: no moves available!'
             }
 
             this.funcState = this.state.NO_FUNC
@@ -414,8 +403,8 @@ class Teeko {
                 piece.moveAnimation(move.finalCell)
                 break;
             case 'undo':
-                piece.pickAnimation(1)
-                piece.moveAnimation(move.initCell)
+                piece.pickAnimation(0)
+                piece.moveAnimation(move.finalCell)
                 break;
             default:
                 console.log('Undefined movie play!')
@@ -659,7 +648,7 @@ class Teeko {
         this.client.getPrologRequest(request,
             (data) => {
                 game.board = data.target.response
-                game.currPlayer.moveStack.push(new MyMove(game.moveId++, type, initCell, finalCell, piece.id, game.currPlayer.id))
+                game.currPlayer.addMove(new MyMove(game.moveId++, type, initCell, finalCell, piece.id, game.currPlayer.id))
 
                 game.updatePieceCell(piece, finalCell)
                 game.updateTurn()
@@ -713,18 +702,6 @@ class Teeko {
 
     enqueue(arr, element) {
         arr.push(element)
-    }
-
-    dequeue(arr) {
-        if (arr.length > 0) {
-            return arr.splice(arr.length - 1)[0]
-        }
-    }
-
-    lastElement(arr) {
-        if (arr.length > 0) {
-            return arr[arr.length - 1]
-        }
     }
 
     parseRequestToStr(pred, args = []) {
