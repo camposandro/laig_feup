@@ -90,7 +90,6 @@ class Teeko {
                 this.currMode = this.mode.BOTvsBOT
                 break;
             default:
-                console.log('Invalid game mode!\n')
                 break;
         }
 
@@ -102,14 +101,11 @@ class Teeko {
                 this.currLevel = this.level.BEST_PLAY
                 break;
             default:
-                console.log('Invalid game level!\n')
                 break;
         }
     }
 
     resetParam() {
-        this.currMode = 'Player vs Player'
-        this.currLevel = 'Random'
         this.currState = this.state.GAME_START
         this.funcState = this.state.NO_FUNC
 
@@ -398,11 +394,7 @@ class Teeko {
                 piece.setOnBoard()
                 piece.setOnCell(move.initCell)
                 break;
-            case 'move':
-                piece.pickAnimation(0)
-                piece.moveAnimation(move.finalCell)
-                break;
-            case 'undo':
+            case 'move': case 'undo':
                 piece.pickAnimation(0)
                 piece.moveAnimation(move.finalCell)
                 break;

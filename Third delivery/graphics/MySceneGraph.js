@@ -1587,7 +1587,7 @@ class MySceneGraph {
         var obj = this.components[this.scene.currBackground];
         obj.display(obj.materials[obj.currentMaterialIndex][1], obj.texture)
 
-        // displays cells with shaders
+        // displays cells with shader
         if(this.highlightedCells.length != 0)
             this.displayHighlightedCells(root.currentMaterialIndex[1], root.texture);
     }
