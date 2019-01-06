@@ -452,7 +452,6 @@ class Teeko {
     clearPanel() {
         this.blackPlayer.stopTimer()
         this.redPlayer.stopTimer()
-        this.currPlayer = undefined
     }
 
     /** PROLOG REQUESTS */

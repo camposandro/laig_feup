@@ -127,8 +127,7 @@ class XMLscene extends CGFscene {
             if (this.lightValues.hasOwnProperty(key)) {
                 if (this.lightValues[key]) {
                     this.clearPickRegistration();
-                    this.lights[i].setVisible(true);
-
+                    this.lights[i].setVisible(false);
                     this.lights[i].enable();
                 }
                 else {
@@ -227,7 +226,7 @@ class XMLscene extends CGFscene {
 
         if (this.sceneInited) {
             // draw axis
-            this.axis.display();
+            //this.axis.display();
 
             // update lights
             this.updateLights();
